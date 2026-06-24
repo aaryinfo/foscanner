@@ -1,0 +1,4 @@
+gann_ai.py
+test_*.py
+*.csv.gz
+*.pkl

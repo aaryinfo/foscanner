@@ -512,14 +512,14 @@ def run_market_screener(market="NSE"):
             _screener_cache[market]["is_loading"] = False
 
 def start_background_scan(market="NSE"):
-    is_vercel = os.environ.get("VERCEL") == "1"
-    if is_vercel:
-        # Force synchronous execution on Vercel.
-        run_market_screener(market)
-    else:
-        # Run in background thread locally so server starts immediately.
-        import threading
-        threading.Thread(target=run_market_screener, args=(market,), daemon=True).start()
+def start_background_scan(market: str):
+    if not _screener_cache[market]["is_loading"]:
+        _screener_cache[market]["is_loading"] = True
+        if os.environ.get("VERCEL") == "1":
+            run_market_screener(market)
+        else:
+            import threading
+            threading.Thread(target=run_market_screener, args=(market,), daemon=True).start()
 
 # ── API Endpoints ─────────────────────────────────────────────────────────────
 @app.route("/api/analyse")
