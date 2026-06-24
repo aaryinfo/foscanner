@@ -1,0 +1,123 @@
+<style>
+  .dd-widget { font-family: 'Inter', sans-serif; background: #0B0F1A; color: #D0DBF0; border: 1px solid #1E2D45; border-radius: 8px; overflow: hidden; }
+  .dd-tabs { display: flex; background: #111827; border-bottom: 1px solid #1E2D45; overflow-x: auto; }
+  .dd-tab { padding: 12px 16px; font-family: 'Share Tech Mono', monospace; font-size: 12px; cursor: pointer; color: #5A6A88; transition: 0.2s; white-space: nowrap; border-bottom: 2px solid transparent; }
+  .dd-tab:hover { color: #D0DBF0; }
+  .dd-tab.active { color: #C9A84C; border-bottom-color: #C9A84C; background: rgba(201,168,76,0.1); }
+  .dd-content { padding: 20px; display: none; }
+  .dd-content.active { display: block; }
+  .dd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+  .dd-card { background: #1A2236; border: 1px solid #1E2D45; padding: 16px; border-radius: 6px; }
+  .dd-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: #5A6A88; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .dd-val { font-size: 18px; font-weight: 600; color: #D0DBF0; }
+  .dd-val.green { color: #00C896; }
+  .dd-val.red { color: #FF3B5C; }
+  .dd-val.gold { color: #C9A84C; }
+  .dd-text { font-size: 13px; line-height: 1.6; color: #D0DBF0; }
+  .dd-text ul { padding-left: 20px; margin-top: 8px; }
+  .dd-text li { margin-bottom: 4px; }
+  .dd-footer { background: #111827; padding: 12px 20px; font-size: 11px; color: #5A6A88; border-top: 1px solid #1E2D45; display: flex; justify-content: space-between; }
+</style>
+
+<div class="dd-widget">
+  <div class="dd-tabs">
+    <div class="dd-tab active" onclick="showTab(this, 'snapshot')">Snapshot</div>
+    <div class="dd-tab" onclick="showTab(this, 'valuation')">Valuation</div>
+    <div class="dd-tab" onclick="showTab(this, 'growth')">Growth</div>
+    <div class="dd-tab" onclick="showTab(this, 'health')">Health</div>
+    <div class="dd-tab" onclick="showTab(this, 'returns')">Returns</div>
+    <div class="dd-tab" onclick="showTab(this, 'peers')">Peers</div>
+    <div class="dd-tab" onclick="showTab(this, 'ownership')">Ownership</div>
+    <div class="dd-tab" onclick="showTab(this, 'view')">View</div>
+  </div>
+
+  <div id="snapshot" class="dd-content active">
+    <div class="dd-grid">
+      <div class="dd-card"><div class="dd-label">CMP</div><div class="dd-val">[PLACEHOLDER_CMP]</div></div>
+      <div class="dd-card"><div class="dd-label">Market Cap</div><div class="dd-val">[PLACEHOLDER_MCAP]</div></div>
+      <div class="dd-card"><div class="dd-label">52W High/Low</div><div class="dd-val">[PLACEHOLDER_52W]</div></div>
+      <div class="dd-card"><div class="dd-label">Sector</div><div class="dd-val">[PLACEHOLDER_SECTOR]</div></div>
+    </div>
+  </div>
+
+  <div id="valuation" class="dd-content">
+    <div class="dd-grid">
+      <div class="dd-card"><div class="dd-label">Current P/E</div><div class="dd-val">[PLACEHOLDER_PE]</div></div>
+      <div class="dd-card"><div class="dd-label">Sector P/E</div><div class="dd-val">[PLACEHOLDER_SECTOR_PE]</div></div>
+      <div class="dd-card"><div class="dd-label">5Yr Avg P/E</div><div class="dd-val">[PLACEHOLDER_AVG_PE]</div></div>
+      <div class="dd-card"><div class="dd-label">P/B Ratio</div><div class="dd-val">[PLACEHOLDER_PB]</div></div>
+      <div class="dd-card"><div class="dd-label">EV/EBITDA</div><div class="dd-val">[PLACEHOLDER_EV]</div></div>
+    </div>
+    <div class="dd-text" style="margin-top:16px;"><strong>Verdict:</strong> [PLACEHOLDER_VALUATION_VERDICT]</div>
+  </div>
+
+  <div id="growth" class="dd-content">
+    <div class="dd-grid">
+      <div class="dd-card"><div class="dd-label">Revenue (3Y CAGR)</div><div class="dd-val">[PLACEHOLDER_REV_3Y]</div></div>
+      <div class="dd-card"><div class="dd-label">Net Profit (3Y CAGR)</div><div class="dd-val">[PLACEHOLDER_PAT_3Y]</div></div>
+      <div class="dd-card"><div class="dd-label">EPS (3Y CAGR)</div><div class="dd-val">[PLACEHOLDER_EPS_3Y]</div></div>
+    </div>
+    <div class="dd-text" style="margin-top:16px;"><strong>Trend:</strong> [PLACEHOLDER_GROWTH_TREND]</div>
+  </div>
+
+  <div id="health" class="dd-content">
+    <div class="dd-grid">
+      <div class="dd-card"><div class="dd-label">Debt to Equity</div><div class="dd-val">[PLACEHOLDER_DEBT]</div></div>
+      <div class="dd-card"><div class="dd-label">Interest Coverage</div><div class="dd-val">[PLACEHOLDER_INT_COV]</div></div>
+      <div class="dd-card"><div class="dd-label">Current Ratio</div><div class="dd-val">[PLACEHOLDER_CURR_RATIO]</div></div>
+      <div class="dd-card"><div class="dd-label">Free Cash Flow</div><div class="dd-val">[PLACEHOLDER_FCF]</div></div>
+    </div>
+    <div class="dd-text" style="margin-top:16px;"><strong>Health Status:</strong> [PLACEHOLDER_HEALTH_VERDICT]</div>
+  </div>
+
+  <div id="returns" class="dd-content">
+    <div class="dd-grid">
+      <div class="dd-card"><div class="dd-label">ROE</div><div class="dd-val">[PLACEHOLDER_ROE]</div></div>
+      <div class="dd-card"><div class="dd-label">ROCE</div><div class="dd-val">[PLACEHOLDER_ROCE]</div></div>
+      <div class="dd-card"><div class="dd-label">Dividend Yield</div><div class="dd-val">[PLACEHOLDER_DIV_YIELD]</div></div>
+      <div class="dd-card"><div class="dd-label">Payout Ratio</div><div class="dd-val">[PLACEHOLDER_PAYOUT]</div></div>
+    </div>
+  </div>
+
+  <div id="peers" class="dd-content">
+    <div class="dd-text">[PLACEHOLDER_PEERS_COMPARISON]</div>
+  </div>
+
+  <div id="ownership" class="dd-content">
+    <div class="dd-grid">
+      <div class="dd-card"><div class="dd-label">Promoter Holding</div><div class="dd-val">[PLACEHOLDER_PROMOTER]</div></div>
+      <div class="dd-card"><div class="dd-label">Pledged</div><div class="dd-val">[PLACEHOLDER_PLEDGED]</div></div>
+      <div class="dd-card"><div class="dd-label">FII Holding</div><div class="dd-val">[PLACEHOLDER_FII]</div></div>
+      <div class="dd-card"><div class="dd-label">DII Holding</div><div class="dd-val">[PLACEHOLDER_DII]</div></div>
+    </div>
+  </div>
+
+  <div id="view" class="dd-content">
+    <div class="dd-text">
+      <h4 style="color:#C9A84C;margin-bottom:8px;">Strengths</h4>
+      <ul>[PLACEHOLDER_STRENGTHS]</ul>
+      <h4 style="color:#C9A84C;margin-top:16px;margin-bottom:8px;">Watch-points</h4>
+      <ul>[PLACEHOLDER_WATCHPOINTS]</ul>
+      <h4 style="color:#C9A84C;margin-top:16px;margin-bottom:8px;">Thing to Track</h4>
+      <p>[PLACEHOLDER_TRACK]</p>
+      <div style="margin-top:16px;padding:12px;background:rgba(201,168,76,0.1);border-left:4px solid #C9A84C;border-radius:4px;">
+        <strong>Overall Quality:</strong> [PLACEHOLDER_QUALITY]
+      </div>
+    </div>
+  </div>
+
+  <div class="dd-footer">
+    <div>Confidence: <span style="color:#D0DBF0">[PLACEHOLDER_CONFIDENCE]</span></div>
+    <div>Disclaimer: Educational only. Not investment advice.</div>
+  </div>
+</div>
+
+<script>
+  function showTab(element, id) {
+    const widget = element.closest('.dd-widget');
+    widget.querySelectorAll('.dd-tab').forEach(t => t.classList.remove('active'));
+    widget.querySelectorAll('.dd-content').forEach(c => c.classList.remove('active'));
+    element.classList.add('active');
+    widget.querySelector('#' + id).classList.add('active');
+  }
+</script>

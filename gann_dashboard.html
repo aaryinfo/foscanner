@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reversal Time Cycle — NSE F&amp;O</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset & Base ─────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:       #0B0F1A;
+  --bg2:      #111827;
+  --bg3:      #1A2236;
+  --border:   #1E2D45;
+  --gold:     #C9A84C;
+  --gold-dim: #8A6E2F;
+  --cyan:     #00D4FF;
+  --green:    #00C896;
+  --red:      #FF3B5C;
+  --text:     #D0DBF0;
+  --muted:    #5A6A88;
+  --mono:     'Share Tech Mono', monospace;
+  --sans:     'Inter', sans-serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans)}
+
+/* ── Layout ───────────────────────────────────────────────── */
+.app{display:grid;grid-template-columns:280px 1fr 320px;grid-template-rows:56px 1fr;height:100vh;gap:0}
+.topbar{grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;gap:20px;z-index:10}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);
+  overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:18px}
+.main{overflow:hidden;display:flex;flex-direction:column;gap:0}
+.rightpanel{background:var(--bg2);border-left:1px solid var(--border);
+  overflow-y:auto;padding:16px}
+
+/* ── Topbar ───────────────────────────────────────────────── */
+.logo{font-family:var(--mono);font-size:15px;color:var(--gold);letter-spacing:2px;white-space:nowrap}
+.logo span{color:var(--muted)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 8px var(--green);flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.topbar-info{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;
+  display:flex;gap:24px}
+.topbar-info span{color:var(--text)}
+
+/* ── Section headers ──────────────────────────────────────── */
+.sec-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;
+  color:var(--gold-dim);text-transform:uppercase;padding-bottom:8px;
+  border-bottom:1px solid var(--border);margin-bottom:12px}
+
+/* ── Form controls ────────────────────────────────────────── */
+label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+select,input{width:100%;background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);font-family:var(--mono);font-size:12px;padding:8px 10px;
+  border-radius:4px;outline:none;transition:border .2s}
+select:focus,input:focus{border-color:var(--gold)}
+.btn{width:100%;padding:10px;background:var(--gold);color:#000;
+  font-family:var(--mono);font-size:12px;letter-spacing:2px;font-weight:700;
+  border:none;border-radius:4px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.btn:hover{background:#E8C060;box-shadow:0 0 20px rgba(201,168,76,.4)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{background:var(--gold-dim);cursor:not-allowed}
+
+.market-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+.market-tab { flex: 1; padding: 6px; text-align: center; background: var(--bg3); color: var(--muted); border: 1px solid var(--border); font-family: var(--mono); font-size: 11px; cursor: pointer; transition: all 0.2s; border-radius: 4px; }
+.market-tab.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
+
+/* ── Gann Wheel ───────────────────────────────────────────── */
+.wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+#gannWheel{animation:spin 3s ease-out forwards}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.wheel-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:2px;text-align:center}
+
+/* ── Metric cards ─────────────────────────────────────────── */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px}
+.metric-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.metric-val{font-family:var(--mono);font-size:16px;font-weight:700;margin-top:4px}
+.metric-val.gold{color:var(--gold)}
+.metric-val.green{color:var(--green)}
+.metric-val.red{color:var(--red)}
+.metric-val.cyan{color:var(--cyan)}
+
+/* ── Chart area ───────────────────────────────────────────── */
+#chartBox{flex:1;position:relative;min-height:0}
+.chart-controls{display:flex;gap:8px;padding:10px 16px;background:var(--bg2);
+  border-bottom:1px solid var(--border)}
+.toggle-btn{padding:4px 12px;background:transparent;border:1px solid var(--border);
+  color:var(--muted);font-family:var(--mono);font-size:10px;border-radius:20px;
+  cursor:pointer;transition:all .2s}
+.toggle-btn.active{border-color:var(--gold);color:var(--gold);
+  background:rgba(201,168,76,.1)}
+
+/* ── Right Panel ──────────────────────────────────────────── */
+.confluence-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.cf-card{border:1px solid var(--border);border-radius:6px;padding:12px;
+  background:var(--bg3);position:relative;overflow:hidden;transition:border .2s}
+.cf-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.cf-card.STRONG::before{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.cf-card.MODERATE::before{background:var(--cyan)}
+.cf-card.WEAK::before{background:var(--muted)}
+.cf-card:hover{border-color:var(--gold-dim)}
+.cf-date{font-family:var(--mono);font-size:13px;color:var(--text);font-weight:600}
+.cf-signal{font-size:10px;font-family:var(--mono);margin-top:3px}
+.cf-signal.bull{color:var(--green)}
+.cf-signal.bear{color:var(--red)}
+.cf-signal.rev{color:var(--gold)}
+.cf-days{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px}
+.cf-cycles{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6}
+.badge{display:inline-block;padding:1px 6px;border-radius:3px;
+  font-family:var(--mono);font-size:9px;font-weight:700;margin-right:4px}
+.badge.STRONG{background:rgba(201,168,76,.2);color:var(--gold);border:1px solid var(--gold-dim)}
+.badge.MODERATE{background:rgba(0,212,255,.1);color:var(--cyan);border:1px solid var(--cyan)}
+.badge.WEAK{background:rgba(90,106,136,.2);color:var(--muted);border:1px solid var(--muted)}
+
+/* ── Square of 9 ─────────────────────────────────────────── */
+.sq9-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.sq9-row{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
+  padding:7px 10px;display:flex;justify-content:space-between;align-items:center}
+.sq9-angle{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.sq9-price{font-family:var(--mono);font-size:12px}
+.sq9-price.up{color:var(--green)}
+.sq9-price.dn{color:var(--red)}
+
+/* ── Swing table ──────────────────────────────────────────── */
+.swing-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+.swing-table th{color:var(--muted);font-size:9px;letter-spacing:1px;
+  text-align:left;padding:4px 8px;border-bottom:1px solid var(--border)}
+.swing-table td{padding:5px 8px;border-bottom:1px solid rgba(30,45,69,.5)}
+.swing-table .h{color:var(--red)}
+.swing-table .l{color:var(--green)}
+
+/* ── Loading overlay ──────────────────────────────────────── */
+#overlay{position:fixed;inset:0;background:rgba(11,15,26,.9);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:100}
+.hidden{display:none !important;}
+.spinner{width:48px;height:48px;border:3px solid var(--border);
+  border-top-color:var(--gold);border-radius:50%;animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.overlay-text{font-family:var(--mono);color:var(--gold);font-size:12px;letter-spacing:3px}
+.error-msg{background:rgba(255,59,92,.1);border:1px solid var(--red);
+  color:var(--red);padding:10px 14px;border-radius:4px;font-size:11px;
+  font-family:var(--mono);display:none;margin-top:8px}
+
+/* ── Modal Styles ─────────────────────────────────────────── */
+#screenerModal.hidden { display: none !important; }
+#screenerEmptyMsg.hidden { display: none !important; }
+.screener-row { border-bottom: 1px solid rgba(30,45,69,0.5); transition: background 0.2s; height: 50px; }
+.screener-row:hover { background: rgba(30,45,69,0.3); }
+.screener-row td { padding: 10px; vertical-align: middle; }
+
+#reportModal.hidden { display: none !important; }
+.report-row { border-bottom: 1px solid rgba(30,45,69,0.3); height: 35px; }
+.report-row td { padding: 8px 10px; vertical-align: middle; }
+.report-row.success { color: var(--green); }
+.report-row.failed { color: var(--muted); }
+
+/* Report typography styling inside modal */
+#reportDescription h3 { font-family: var(--mono); color: var(--gold); font-size: 14px; margin-bottom: 8px; letter-spacing: 1px; }
+#reportDescription h4 { font-family: var(--mono); color: var(--gold); font-size: 12px; margin-top: 14px; margin-bottom: 6px; letter-spacing: 1px; }
+#reportDescription p { margin-bottom: 10px; }
+#reportDescription ul { margin-left: 16px; margin-bottom: 10px; }
+#reportDescription li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div id="overlay">
+  <svg id="gannWheel" width="80" height="80" viewBox="0 0 80 80">
+    <circle cx="40" cy="40" r="36" fill="none" stroke="#1E2D45" stroke-width="2"/>
+    <circle cx="40" cy="40" r="26" fill="none" stroke="#1E2D45" stroke-width="1"/>
+    <circle cx="40" cy="40" r="16" fill="none" stroke="#1E2D45" stroke-width="1"/>
+    <!-- 8 spokes at 45° intervals -->
+    <g stroke="#C9A84C" stroke-width="1" opacity="0.7">
+      <line x1="40" y1="4"  x2="40" y2="76"/>
+      <line x1="4"  y1="40" x2="76" y2="40"/>
+      <line x1="14" y1="14" x2="66" y2="66"/>
+      <line x1="66" y1="14" x2="14" y2="66"/>
+    </g>
+    <!-- Degree marks -->
+    <g fill="#C9A84C" font-family="Share Tech Mono" font-size="7">
+      <text x="37" y="11"  text-anchor="middle">0°</text>
+      <text x="68" y="44"  text-anchor="start">90°</text>
+      <text x="37" y="75"  text-anchor="middle">180°</text>
+      <text x="3"  y="44"  text-anchor="start">270°</text>
+    </g>
+    <circle cx="40" cy="40" r="4" fill="#C9A84C"/>
+  </svg>
+  <div class="overlay-text">LOADING TIME CYCLES…</div>
+</div>
+
+<div class="app">
+
+  <!-- ── Top Bar ─────────────────────────────────────────────── -->
+  <header class="topbar">
+    <div class="logo"><span>REVERSAL</span> TIME CYCLE <span>// NSE F&amp;O</span></div>
+    <div class="status-dot"></div>
+    <div class="topbar-info">
+      <div>SYMBOL <span id="tbSymbol">—</span></div>
+      <div>CURRENT PRICE <span id="tbClose">—</span></div>
+      <div>AS OF <span id="tbDate">—</span></div>
+      <div>NEXT CONFLUENCE <span id="tbNext" style="color:var(--gold)">—</span></div>
+    </div>
+  </header>
+
+  <!-- ── Sidebar ─────────────────────────────────────────────── -->
+  <aside class="sidebar">
+
+    <div class="wheel-wrap">
+      <svg id="sideWheel" width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="55" fill="none" stroke="#1E2D45" stroke-width="1.5"/>
+        <circle cx="60" cy="60" r="40" fill="none" stroke="#1E2D45" stroke-width="1"/>
+        <circle cx="60" cy="60" r="25" fill="none" stroke="#1E2D45" stroke-width="1"/>
+        <g stroke="#C9A84C" stroke-width="1" opacity="0.5">
+          <line x1="60" y1="5"  x2="60" y2="115"/>
+          <line x1="5"  y1="60" x2="115" y2="60"/>
+          <line x1="21" y1="21" x2="99" y2="99"/>
+          <line x1="99" y1="21" x2="21" y2="99"/>
+        </g>
+        <!-- 16 tick marks at 22.5° -->
+        <g id="ticks"></g>
+        <circle cx="60" cy="60" r="5" fill="#C9A84C"/>
+        <circle cx="60" cy="60" r="2" fill="#0B0F1A"/>
+      </svg>
+      <div class="wheel-label">SQUARE OF NINE</div>
+    </div>
+
+    <div>
+      <div class="sec-title">Configuration</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="market-tabs">
+          <div class="market-tab active" onclick="switchMarket('NSE')" id="tabNSE">NSE F&amp;O</div>
+          <div class="market-tab" onclick="switchMarket('GLOBAL')" id="tabGLOBAL">GLOBAL</div>
+        </div>
+        <div>
+          <label id="symbolSelectLabel">NSE F&amp;O SYMBOL</label>
+          <select id="symbolSelect" onchange="document.getElementById('symbolInput').value=''">
+            <!-- Populated dynamically from API -->
+          </select>
+        </div>
+        <div>
+          <label>OR ENTER SYMBOL</label>
+          <input id="symbolInput" type="text" placeholder="e.g. NIFTY, BEL, HAL …"/>
+        </div>
+        <div>
+          <label>DATA PERIOD</label>
+          <select id="periodSelect">
+            <option value="1y">1 Year</option>
+            <option value="2y" selected>2 Years</option>
+            <option value="3y">3 Years</option>
+            <option value="5y">5 Years</option>
+            <option value="10y">10 Years</option>
+            <option value="20y">20 Years</option>
+          </select>
+        </div>
+        <div>
+          <label>SWING SENSITIVITY (days)</label>
+          <input id="windowInput" type="number" value="10" min="3" max="30"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr;gap:8px;">
+          <button class="btn" id="analyseBtn" onclick="runAnalysis()">▶ ANALYSE</button>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button class="btn" id="scanBtn" onclick="openScreener()" style="background:#00D4FF;color:#000;box-shadow:0 0 10px rgba(0,212,255,0.2);padding:10px 5px;font-size:10px;">🔍 SCREENER</button>
+            <button class="btn" id="reportBtn" onclick="openReport()" style="background:#C9A84C;color:#000;box-shadow:0 0 10px rgba(201,168,76,0.2);padding:10px 5px;font-size:10px;">📊 REPORT</button>
+          </div>
+          <button class="btn" id="techBtn" onclick="openTechnical()" style="background:#5A6A88;color:#FFF;box-shadow:0 0 10px rgba(90,106,136,0.2);padding:10px 5px;font-size:10px;margin-top:2px;">📈 SWING STOCKS</button>
+        </div>
+        <div class="error-msg" id="errMsg"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-title">Time Cycles</div>
+      <div style="display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:11px">
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>30D  — 1 Month</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>45D  — 45 Days</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>60D  — 2 Months</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>90D  — Quarter</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>120D — 4 Months</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>144D — Cycle 144</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>180D — 6 Months</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>270D — 9 Months</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>360D — Annual</span><span style="color:var(--gold)">✓</span></div>
+        <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>720D — 2 Year</span><span style="color:var(--gold)">✓</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-title">Key Metrics</div>
+      <div class="metrics" id="metricsBox">
+        <div class="metric"><div class="metric-label">Swing Highs</div><div class="metric-val gold" id="mH">—</div></div>
+        <div class="metric"><div class="metric-label">Swing Lows</div><div class="metric-val green" id="mL">—</div></div>
+        <div class="metric"><div class="metric-label">Future Zones</div><div class="metric-val cyan" id="mZ">—</div></div>
+        <div class="metric"><div class="metric-label">Strong Zones</div><div class="metric-val gold" id="mS">—</div></div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── Main Chart Area ─────────────────────────────────────── -->
+  <main class="main">
+    <div class="chart-controls">
+      <button class="toggle-btn active" id="btnCycles" onclick="toggleLayer('cycles',this)">TIME CYCLES</button>
+      <button class="toggle-btn active" id="btnConfluence" onclick="toggleLayer('confluence',this)">CONFLUENCE</button>
+      <button class="toggle-btn active" id="btnSwings" onclick="toggleLayer('swings',this)">SWING PIVOTS</button>
+      <button class="toggle-btn active" id="btnSq9" onclick="toggleLayer('sq9',this)">SQUARE OF 9</button>
+      <div style="margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1">
+        <span style="color:var(--gold)">⚲</span> Pin Marker Confluence  
+        <span style="color:var(--red)">▼</span> Swing High  
+        <span style="color:var(--green)">▲</span> Swing Low  
+        <span style="color:var(--cyan)">- - -</span> Price Levels
+      </div>
+    </div>
+    <div id="chartBox">
+      <!-- Lightweight Candlestick Chart renders here -->
+    </div>
+  </main>
+
+  <!-- ── Right Panel ─────────────────────────────────────────── -->
+  <aside class="rightpanel">
+
+    <div class="sec-title" style="margin-bottom:14px">Confluence Zones</div>
+    <div class="confluence-list" id="confluenceList">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;padding:20px 0">
+        Run analysis to see<br/>reversal cycle confluence zones
+      </div>
+    </div>
+
+    <div class="sec-title" style="margin-top:4px;margin-bottom:10px">Swing Pivots</div>
+    <table class="swing-table" id="swingTable">
+      <thead><tr><th>TYPE</th><th>DATE</th><th>PRICE</th></tr></thead>
+      <tbody id="swingBody"><tr><td colspan="3" style="color:var(--muted);text-align:center;padding:12px">—</td></tr></tbody>
+    </table>
+
+    <div class="sec-title" style="margin-top:18px;margin-bottom:10px">Square of 9 — Price Levels</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px" id="sq9Base">Base: —</div>
+    <div class="sq9-grid" id="sq9Grid">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-align:center;grid-column:1/-1;padding:8px">Run analysis to populate</div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- Screener Modal Overlay -->
+<div id="screenerModal" class="hidden" style="position:fixed;inset:0;background:rgba(11,15,26,0.95);backdrop-filter:blur(8px);z-index:99;display:flex;justify-content:center;align-items:center;padding:24px;">
+  <div style="width:100%;max-width:1100px;height:85vh;background:var(--bg2);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;overflow:hidden;position:relative;">
+    <!-- Topbar/Header -->
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <h2 id="screenerTitle" style="font-family:var(--mono);color:var(--gold);font-size:16px;letter-spacing:2px;text-transform:uppercase;">⚡ Market Screener</h2>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Upcoming cycle confluence reversal turning points (Active Trading Session, Filtered by Backtest)</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button onclick="refreshScreener(true)" id="screenerRefreshBtn" class="toggle-btn" style="border-color:var(--gold);color:var(--gold);padding:6px 16px;border-radius:20px;cursor:pointer;">🔄 RE-SCAN MARKET</button>
+        <button onclick="closeScreener()" class="toggle-btn" style="padding:6px 16px;border-radius:20px;cursor:pointer;">CLOSE [ESC]</button>
+      </div>
+    </div>
+    
+    <!-- Body -->
+    <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative;">
+      <!-- Loading State -->
+      <div id="screenerLoading" style="position:absolute;inset:0;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;">
+        <div class="spinner"></div>
+        <div id="screenerStatusText" style="font-family:var(--mono);color:var(--gold);font-size:12px;letter-spacing:2px;text-transform:uppercase;">SCANNING 211 NSE F&amp;O STOCKS...</div>
+      </div>
+      
+      <!-- Table View -->
+      <div id="screenerContent" style="flex:1;overflow-y:auto;padding:20px 24px;">
+        <table style="width:100%;border-collapse:collapse;font-family:var(--sans);font-size:12px;text-align:left;">
+          <thead>
+            <tr style="color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);height:40px;">
+              <th style="padding:10px;">Symbol</th>
+              <th style="padding:10px;">Company Name</th>
+              <th style="padding:10px;">Price</th>
+              <th style="padding:10px;">Target Price</th>
+              <th style="padding:10px;">Target Date</th>
+              <th style="padding:10px;">Timing</th>
+              <th style="padding:10px;">Signal</th>
+              <th style="padding:10px;text-align:center;">Backtest Acc.</th>
+              <th style="padding:10px;text-align:center;">Strength</th>
+              <th style="padding:10px;text-align:right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="screenerTableBody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+        <div id="screenerEmptyMsg" class="hidden" style="font-family:var(--mono);color:var(--muted);text-align:center;padding:40px;">
+          No stocks with validated confluences found for the next trading day.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detailed Report Modal Overlay -->
+<div id="reportModal" class="hidden" style="position:fixed;inset:0;background:rgba(11,15,26,0.95);backdrop-filter:blur(8px);z-index:99;display:flex;justify-content:center;align-items:center;padding:24px;">
+  <div style="width:100%;max-width:850px;height:80vh;background:var(--bg2);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;overflow:hidden;">
+    <!-- Header -->
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <h2 style="font-family:var(--mono);color:var(--gold);font-size:16px;letter-spacing:2px;text-transform:uppercase;">📊 Reversal Analysis &amp; Backtest Report</h2>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="reportSubtitle">Detailed analysis for STOCK</div>
+      </div>
+      <button onclick="closeReport()" class="toggle-btn" style="padding:6px 16px;border-radius:20px;cursor:pointer;">CLOSE [ESC]</button>
+    </div>
+    
+    <!-- Body Content -->
+    <div style="flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px;">
+      <!-- Analyst Description Section -->
+      <div id="reportDescription" style="font-size:13px;line-height:1.6;color:var(--text);">
+        <!-- Populated dynamically -->
+      </div>
+      
+      <!-- Backtest History Table -->
+      <div>
+        <h4 style="font-family:var(--mono);color:var(--gold);font-size:12px;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase;">Historical Confluence Backtest Log (Last 30 Zones)</h4>
+        <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;text-align:left;">
+          <thead>
+            <tr style="color:var(--muted);border-bottom:1px solid var(--border);height:30px;">
+              <th>Zone Date</th>
+              <th>Signal Type</th>
+              <th>Strength</th>
+              <th>Actual Pivot</th>
+              <th>Pivot Date</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody id="reportBacktestBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Technical Analysis Modal Overlay -->
+<div id="techModal" class="hidden" style="position:fixed;inset:0;background:rgba(11,15,26,0.95);backdrop-filter:blur(8px);z-index:99;display:flex;justify-content:center;align-items:center;padding:24px;">
+  <div style="width:100%;max-width:850px;height:85vh;background:var(--bg2);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;overflow:hidden;">
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <h2 style="font-family:var(--mono);color:#5A6A88;font-size:16px;letter-spacing:2px;text-transform:uppercase;">📈 Swing Trade Technical Screener</h2>
+
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button onclick="runTechnical()" id="techRefreshBtn" class="toggle-btn" style="border-color:#5A6A88;color:#FFF;padding:6px 16px;border-radius:20px;cursor:pointer;">SCAN MARKET</button>
+        <button onclick="closeTechnical()" class="toggle-btn" style="padding:6px 16px;border-radius:20px;cursor:pointer;">CLOSE [ESC]</button>
+      </div>
+    </div>
+    <div id="techContent" style="flex:1;overflow-y:auto;padding:24px;color:var(--text);font-size:13px;line-height:1.6;">
+      <div style="text-align:center;color:var(--muted);padding-top:40px;font-family:var(--mono);">
+        Click SCAN MARKET to find swing trade setups.<br/><br/>
+        <div id="techLoading" class="hidden" style="display:flex;justify-content:center;margin-top:20px;">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TradingView Lightweight Charts (Candlestick Engine) -->
+<script defer src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let tvChart = null;
+let appData = null;
+let layers  = {cycles:true, confluence:true, swings:true, sq9:true};
+let currentMarket = "NSE";
+window.appStocks = { NSE: [], GLOBAL: [] };
+
+// ── Spin the side wheel ticks ─────────────────────────────────────────────────
+(function buildTicks(){
+  const g = document.getElementById('ticks');
+  for(let i=0;i<16;i++){
+    const angle = i * (360/16) * Math.PI/180;
+    const r1=50, r2=55, cx=60, cy=60;
+    const x1=cx+r1*Math.sin(angle), y1=cy-r1*Math.cos(angle);
+    const x2=cx+r2*Math.sin(angle), y2=cy-r2*Math.cos(angle);
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',x1);line.setAttribute('y1',y1);
+    line.setAttribute('x2',x2);line.setAttribute('y2',y2);
+    line.setAttribute('stroke','#C9A84C');line.setAttribute('stroke-width','1');line.setAttribute('opacity','0.6');
+    g.appendChild(line);
+  }
+})();
+
+// ── Layer toggle ──────────────────────────────────────────────────────────────
+function toggleLayer(name, btn){
+  layers[name] = !layers[name];
+  btn.classList.toggle('active', layers[name]);
+  if(appData) renderChart(appData);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const fmt  = n => typeof n==='number' ? n.toLocaleString('en-IN',{maximumFractionDigits:2}) : n;
+const fmtD = s => { 
+  if (!s) return '-';
+  if (s.includes && s.includes(' to ')) {
+    const parts = s.split(' to ');
+    const d1 = new Date(parts[0]);
+    const d2 = new Date(parts[1]);
+    return d1.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'}) + ' - ' + d2.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'});
+  }
+  const d=new Date(s); 
+  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'}); 
+};
+
+function daysLabel(n){
+  if(n===0) return 'TODAY';
+  if(n<0)   return Math.abs(n)+'d ago';
+  return 'in '+n+'d';
+}
+
+// ── Load dynamic stock list ──────────────────────────────────────────────────
+async function loadStocks() {
+  try {
+    const res = await fetch('/api/stocks');
+    const json = await res.json();
+    if (json.ok) {
+      window.appStocks.NSE = json.stocks || [];
+      window.appStocks.GLOBAL = json.global || [];
+      renderStockDropdown();
+    }
+  } catch (e) {
+    console.error('Failed to load stocks dropdown:', e);
+  }
+}
+
+function renderStockDropdown() {
+  const select = document.getElementById('symbolSelect');
+  const label = document.getElementById('symbolSelectLabel');
+  const list = window.appStocks[currentMarket] || [];
+  label.textContent = currentMarket === 'NSE' ? 'NSE F&O SYMBOL' : 'GLOBAL ASSET SYMBOL';
+  select.innerHTML = list.map(s => 
+    `<option value="${s.symbol}">${s.symbol} — ${s.name}</option>`
+  ).join('');
+}
+
+function switchMarket(market) {
+  currentMarket = market;
+  document.getElementById('tabNSE').classList.toggle('active', market === 'NSE');
+  document.getElementById('tabGLOBAL').classList.toggle('active', market === 'GLOBAL');
+  renderStockDropdown();
+}
+
+// ── Screener Logic ────────────────────────────────────────────────────────────
+let screenerInterval = null;
+
+function openScreener() {
+  document.getElementById('screenerTitle').textContent = `⚡ Market Screener (${currentMarket})`;
+  document.getElementById('screenerModal').classList.remove('hidden');
+  refreshScreener(false);
+}
+
+function closeScreener() {
+  document.getElementById('screenerModal').classList.add('hidden');
+  if (screenerInterval) {
+    clearInterval(screenerInterval);
+    screenerInterval = null;
+  }
+}
+
+async function refreshScreener(force = false) {
+  const loading = document.getElementById('screenerLoading');
+  const statusTxt = document.getElementById('screenerStatusText');
+  const tableBody = document.getElementById('screenerTableBody');
+  const emptyMsg = document.getElementById('screenerEmptyMsg');
+  const refreshBtn = document.getElementById('screenerRefreshBtn');
+
+  refreshBtn.disabled = true;
+  loading.style.display = 'flex';
+  emptyMsg.classList.add('hidden');
+
+  try {
+    const url = `/api/screener?market=${currentMarket}${force ? '&force=true' : ''}`;
+    const res = await fetch(url);
+    const json = await res.json();
+
+    if (!json.ok) throw new Error(json.error || 'Failed to fetch screener data');
+
+    if (!json.ready) {
+      statusTxt.textContent = json.status || 'SCANNING IN PROGRESS...';
+      if (!screenerInterval) {
+        screenerInterval = setInterval(() => refreshScreener(false), 3000);
+      }
+    } else {
+      if (screenerInterval) {
+        clearInterval(screenerInterval);
+        screenerInterval = null;
+      }
+      
+      loading.style.display = 'none';
+      refreshBtn.disabled = false;
+      
+      const results = json.results || [];
+      if (results.length === 0) {
+        tableBody.innerHTML = '';
+        emptyMsg.classList.remove('hidden');
+      } else {
+        tableBody.innerHTML = results.map(r => {
+          const sigClass = r.signal.includes('BULL') ? 'green' : r.signal.includes('BEAR') ? 'red' : 'gold';
+          const badgeClass = r.strength === 'STRONG' ? 'STRONG' : r.strength === 'MODERATE' ? 'MODERATE' : 'WEAK';
+          
+          return `<tr class="screener-row">
+            <td style="font-weight:600;color:var(--text);font-family:var(--mono);">${r.symbol}</td>
+            <td style="color:var(--muted);">${r.name}</td>
+            <td style="font-family:var(--mono);">₹${fmt(r.last_close)}</td>
+            <td style="font-family:var(--mono);color:var(--gold);">${typeof r.target_price === 'number' ? '₹'+fmt(r.target_price) : (r.target_price || '-')}</td>
+            <td style="font-family:var(--mono);">${fmtD(r.date_display || r.date)}</td>
+            <td style="font-family:var(--mono);color:var(--muted);">${daysLabel(r.days_away)}</td>
+            <td style="font-family:var(--mono);font-weight:600;" class="metric-val ${sigClass}">${r.signal}</td>
+            <td style="text-align:center;font-family:var(--mono);color:var(--gold);font-weight:600;">${r.accuracy}%</td>
+            <td style="text-align:center;"><span class="badge ${badgeClass}">${r.strength}</span></td>
+            <td style="text-align:right;">
+              <button onclick="analyseFromScreener('${r.symbol}')" class="toggle-btn" style="border-color:var(--gold);color:var(--gold);cursor:pointer;padding:4px 10px;">ANALYSE</button>
+            </td>
+          </tr>`;
+        }).join('');
+      }
+    }
+  } catch (e) {
+    statusTxt.textContent = 'ERROR: ' + e.message;
+    refreshBtn.disabled = false;
+  }
+}
+
+function analyseFromScreener(symbol) {
+  closeScreener();
+  const select = document.getElementById('symbolSelect');
+  const input = document.getElementById('symbolInput');
+  
+  let found = false;
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value === symbol) {
+      select.selectedIndex = i;
+      found = true;
+      break;
+    }
+  }
+  
+  if (found) {
+    input.value = '';
+  } else {
+    input.value = symbol;
+  }
+  
+  runAnalysis();
+}
+
+// ── Report Logic ──────────────────────────────────────────────────────────────
+function openReport() {
+  if (!appData) {
+    alert("Please run an analysis first!");
+    return;
+  }
+  document.getElementById('reportModal').classList.remove('hidden');
+  renderReport(appData);
+}
+
+function closeReport() {
+  document.getElementById('reportModal').classList.add('hidden');
+}
+
+function renderReport(d) {
+  document.getElementById('reportSubtitle').textContent = `Detailed analytical posture and backtest logs for ${d.symbol}`;
+  document.getElementById('reportDescription').innerHTML = d.description;
+
+  const backtest = d.backtest || {};
+  const results = backtest.results || [];
+  const body = document.getElementById('reportBacktestBody');
+
+  if (results.length === 0) {
+    body.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:12px;">No historical confluences evaluated.</td></tr>';
+  } else {
+    // Show newest first
+    const reversed = [...results].reverse();
+    body.innerHTML = reversed.map(r => {
+      const cls = r.success ? 'success' : 'failed';
+      const verdict = r.success ? '✓ SUCCESS' : '✗ FAILED';
+      return `<tr class="report-row ${cls}">
+        <td>${fmtD(r.date)}</td>
+        <td>${r.signal}</td>
+        <td>${r.strength} (${r.count}c)</td>
+        <td>${r.matched_type || '—'}</td>
+        <td>${r.matched_date ? fmtD(r.matched_date) : '—'}</td>
+        <td style="font-weight:700;">${verdict}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+// ── Technical Logic ────────────────────────────────────────────────────────
+function openTechnical() {
+  document.getElementById('techModal').classList.remove('hidden');
+}
+
+function closeTechnical() {
+  document.getElementById('techModal').classList.add('hidden');
+}
+
+async function runTechnical() {
+  const content = document.getElementById('techContent');
+  const btn = document.getElementById('techRefreshBtn');
+  
+  btn.disabled = true;
+  btn.textContent = 'SCANNING...';
+  
+  content.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;">
+      <div class="spinner" style="border-top-color:#5A6A88;"></div>
+      <div style="font-family:var(--mono);color:var(--muted);letter-spacing:2px;">SCANNING ${currentMarket} FOR TECHNICAL SETUPS...</div>
+    </div>
+  `;
+  
+  try {
+    const res = await fetch(`/api/technical?market=${currentMarket}`);
+    const json = await res.json();
+    
+    if (!json.ok) throw new Error(json.error || 'Failed to generate analysis');
+    
+    const results = json.results || [];
+    
+    if (results.length === 0) {
+      content.innerHTML = '<div style="text-align:center;color:var(--muted);padding:40px;font-family:var(--mono);">No stocks currently meet the criteria.</div>';
+    } else {
+      let html = `
+        <table style="width:100%;border-collapse:collapse;font-family:var(--sans);font-size:12px;text-align:left;">
+          <thead>
+            <tr style="color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);height:40px;">
+              <th style="padding:10px;">Symbol</th>
+              <th style="padding:10px;">Name</th>
+              <th style="padding:10px;">Close</th>
+              <th style="padding:10px;">Signal</th>
+              <th style="padding:10px;">RSI</th>
+              <th style="padding:10px;text-align:right;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      results.forEach(r => {
+        const sigClass = r.signal === 'BULLISH' ? 'green' : 'red';
+        html += `
+          <tr class="screener-row">
+            <td style="font-weight:600;color:var(--text);font-family:var(--mono);padding:10px;">${r.symbol}</td>
+            <td style="color:var(--muted);padding:10px;">${r.name}</td>
+            <td style="font-family:var(--mono);padding:10px;">₹${r.close}</td>
+            <td style="font-family:var(--mono);font-weight:600;padding:10px;" class="metric-val ${sigClass}">${r.signal}</td>
+            <td style="font-family:var(--mono);padding:10px;">${r.rsi}</td>
+            <td style="text-align:right;padding:10px;">
+              <button onclick="analyseFromScreener('${r.symbol}'); closeTechnical();" class="toggle-btn" style="border-color:var(--gold);color:var(--gold);cursor:pointer;padding:4px 10px;">ANALYSE</button>
+            </td>
+          </tr>
+        `;
+      });
+      
+      html += `</tbody></table>`;
+      content.innerHTML = html;
+    }
+    
+  } catch (e) {
+    content.innerHTML = `<div class="error-msg" style="display:block;">${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'SCAN MARKET';
+  }
+}
+
+// ── Main Analysis ─────────────────────────────────────────────────────────────
+async function runAnalysis(){
+  const rawSym = document.getElementById('symbolInput').value.trim().toUpperCase()
+                 || document.getElementById('symbolSelect').value;
+  const period = document.getElementById('periodSelect').value;
+  const window = document.getElementById('windowInput').value;
+  const btn    = document.getElementById('analyseBtn');
+  const err    = document.getElementById('errMsg');
+
+  err.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = '⟳ LOADING…';
+  document.getElementById('overlay').classList.remove('hidden');
+
+  try {
+    const res  = await fetch(`/api/analyse?symbol=${encodeURIComponent(rawSym)}&market=${currentMarket}&period=${period}&window=${window}`);
+    const json = await res.json();
+
+    if(!json.ok) throw new Error(json.error || 'Unknown error');
+
+    appData = json.data;
+    renderAll(appData);
+
+  } catch(e){
+    err.textContent = '✗ ' + e.message;
+    err.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '▶ ANALYSE';
+    document.getElementById('overlay').classList.add('hidden');
+  }
+}
+
+// ── Render Everything ─────────────────────────────────────────────────────────
+function renderAll(d){
+  // Topbar
+  document.getElementById('tbSymbol').textContent = d.symbol;
+  document.getElementById('tbClose').textContent  = '₹'+fmt(d.last_close);
+  document.getElementById('tbDate').textContent   = fmtD(d.last_date);
+
+  const futureConf = d.confluence.filter(c=>c.days_away>=0);
+  if(futureConf.length){
+    const nxt = futureConf[0];
+    document.getElementById('tbNext').textContent = fmtD(nxt.date_display || nxt.date)+' ('+daysLabel(nxt.days_away)+')';
+  } else {
+    document.getElementById('tbNext').textContent = 'None in 365d';
+  }
+
+  // Metrics
+  const strong = d.confluence.filter(c=>c.strength==='STRONG'&&c.days_away>=0).length;
+  document.getElementById('mH').textContent = d.swing_highs.length;
+  document.getElementById('mL').textContent = d.swing_lows.length;
+  document.getElementById('mZ').textContent = futureConf.length;
+  document.getElementById('mS').textContent = strong;
+
+  // Chart
+  renderChart(d);
+
+  // Confluence list
+  renderConfluence(d.confluence);
+
+  // Swing table
+  renderSwings(d.swing_highs, d.swing_lows);
+
+  // Square of 9
+  renderSq9(d.square_of_9);
+}
+
+// ── Confluence List Renderer ──────────────────────────────────────────────────
+function renderConfluence(confluence) {
+  const list = document.getElementById('confluenceList');
+  if (!list) return;
+
+  const future = confluence.filter(c => c.days_away >= 0);
+  const past   = confluence.filter(c => c.days_away < 0).slice(-5).reverse();
+  const all    = [...future, ...past];
+
+  if (all.length === 0) {
+    list.innerHTML = '<div style="font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;padding:20px 0;">No confluence zones in window</div>';
+    return;
+  }
+
+  list.innerHTML = all.map(c => {
+    const sigClass = c.signal.includes('BULL') ? 'bull' : c.signal.includes('BEAR') ? 'bear' : 'rev';
+    const isPast   = c.days_away < 0;
+    const cardStyle = isPast ? 'opacity:0.5;' : '';
+    const cyclesSnip = (c.cycles || []).slice(0, 3).join('<br>');
+
+    return `<div class="cf-card ${c.strength}" style="${cardStyle}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div class="cf-date">${fmtD(c.date_display || c.date)}</div>
+        <span class="badge ${c.strength}">${c.strength}</span>
+      </div>
+      <div class="cf-signal ${sigClass}">${c.signal} &nbsp;·&nbsp; ${daysLabel(c.days_away)} &nbsp;·&nbsp; ${c.count} cycles</div>
+      <div class="cf-cycles">${cyclesSnip}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Swing Table Renderer ──────────────────────────────────────────────────────
+function renderSwings(highs, lows) {
+  const body = document.getElementById('swingBody');
+  if (!body) return;
+
+  // Merge and sort by date descending, tag type
+  const combined = [
+    ...highs.map(([d, p]) => ({ date: d, price: p, type: 'H' })),
+    ...lows.map(([d,  p]) => ({ date: d, price: p, type: 'L' }))
+  ].sort((a, b) => b.date.localeCompare(a.date));
+
+  if (combined.length === 0) {
+    body.innerHTML = '<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:12px;">—</td></tr>';
+    return;
+  }
+
+  body.innerHTML = combined.map(r => {
+    const cls = r.type === 'H' ? 'h' : 'l';
+    const label = r.type === 'H' ? '▼ HIGH' : '▲ LOW';
+    return `<tr>
+      <td>${fmtD(r.date)}</td>
+      <td class="${cls}">${label}</td>
+      <td class="${cls}" style="text-align:right;">₹${fmt(r.price)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Square of 9 Renderer ──────────────────────────────────────────────────────
+function renderSq9(sq9) {
+  const base = document.getElementById('sq9Base');
+  const grid = document.getElementById('sq9Grid');
+  if (!base || !grid) return;
+
+  base.textContent = `Base: ₹${fmt(sq9.base_price)}  √ = ${sq9.sqrt_price}`;
+
+  const angles = ['+360°', '+270°', '+180°', '+90°', '-90°', '-180°', '-270°', '-360°'];
+  grid.innerHTML = angles.map(k => {
+    const val = sq9.levels[k];
+    const isUp = k.startsWith('+');
+    const cls  = isUp ? 'up' : 'dn';
+    return `<div class="sq9-row">
+      <div class="sq9-angle">${k}</div>
+      <div class="sq9-price ${cls}">₹${fmt(val)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Candlestick Chart Rendering (TradingView Lightweight Charts) ────────────────
+function renderChart(d) {
+  const container = document.getElementById('chartBox');
+  container.innerHTML = ''; // Clear container
+  
+  if (tvChart) {
+    tvChart = null;
+  }
+
+  // Create lightweight chart
+  tvChart = LightweightCharts.createChart(container, {
+    layout: {
+      background: { type: LightweightCharts.ColorType.Solid, color: '#0B0F1A' },
+      textColor: '#D0DBF0',
+      fontFamily: 'Share Tech Mono',
+    },
+    grid: {
+      vertLines: { color: 'rgba(30, 45, 69, 0.25)' },
+      horzLines: { color: 'rgba(30, 45, 69, 0.25)' },
+    },
+    rightPriceScale: {
+      borderColor: '#1E2D45',
+    },
+    timeScale: {
+      borderColor: '#1E2D45',
+      timeVisible: true,
+      secondsVisible: false,
+    },
+  });
+
+  const candleSeries = tvChart.addCandlestickSeries({
+    upColor: '#00C896',
+    downColor: '#FF3B5C',
+    borderDownColor: '#FF3B5C',
+    borderUpColor: '#00C896',
+    wickDownColor: '#FF3B5C',
+    wickUpColor: '#00C896',
+  });
+
+  // Convert chart OHLC data
+  const candleData = d.ohlc.map(r => ({
+    time: r.date,
+    open: r.open,
+    high: r.high,
+    low: r.low,
+    close: r.close
+  }));
+
+  candleSeries.setData(candleData);
+
+  // Build markers (Swing points & Confluence zones)
+  const markers = [];
+
+  if (layers.swings) {
+    d.swing_highs.forEach(([dt, pr]) => {
+      // Align with candle times
+      markers.push({
+        time: dt,
+        position: 'aboveBar',
+        color: '#FF3B5C',
+        shape: 'arrowDown',
+        text: 'SH ₹' + fmt(pr)
+      });
+    });
+    d.swing_lows.forEach(([dt, pr]) => {
+      markers.push({
+        time: dt,
+        position: 'belowBar',
+        color: '#00C896',
+        shape: 'arrowUp',
+        text: 'SL ₹' + fmt(pr)
+      });
+    });
+  }
+
+  if (layers.confluence) {
+    d.confluence.forEach(c => {
+      const color = c.strength === 'STRONG' ? '#C9A84C' : c.strength === 'MODERATE' ? '#00D4FF' : '#5A6A88';
+      const marker = {
+        time: c.date,
+        position: 'aboveBar',
+        color: color,
+        shape: 'pin'
+      };
+      // Only show text labels for STRONG confluences or future ones to reduce chart clutter
+      if (c.strength === 'STRONG' || c.days_away >= 0) {
+        marker.text = 'CONF (' + c.signal + ')';
+      }
+      markers.push(marker);
+    });
+  }
+
+  // Calculate Entry, SL, Target based on the most recent past confluence
+  const pastConfluences = d.confluence.filter(c => c.days_away <= 0).sort((a,b) => b.date.localeCompare(a.date));
+  if (pastConfluences.length > 0) {
+    const lastConf = pastConfluences[0];
+    const confCandle = d.ohlc.find(c => c.date === lastConf.date);
+    
+    if (confCandle) {
+      let entry, sl, tgt;
+      let isValid = false;
+      if (lastConf.signal.includes('BULL')) {
+        entry = confCandle.high;
+        sl = confCandle.low;
+        tgt = entry + (entry - sl) * 1.5;
+        isValid = true;
+      } else if (lastConf.signal.includes('BEAR')) {
+        entry = confCandle.low;
+        sl = confCandle.high;
+        tgt = entry - (sl - entry) * 1.5;
+        isValid = true;
+      }
+      
+      if (isValid && entry !== sl) {
+        candleSeries.createPriceLine({ price: entry, color: '#00D4FF', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Solid, axisLabelVisible: true, title: 'ENTRY' });
+        candleSeries.createPriceLine({ price: sl, color: '#FF3B5C', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'SL' });
+        candleSeries.createPriceLine({ price: tgt, color: '#00C896', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'TGT (1:1.5)' });
+      }
+    }
+  }
+
+  // Sort markers by time
+  markers.sort((a, b) => a.time.localeCompare(b.time));
+  candleSeries.setMarkers(markers);
+
+  // Draw Square of 9 levels as horizontal price lines
+  if (layers.sq9 && d.square_of_9) {
+    const levels = d.square_of_9.levels;
+    ['+90°','+180°','+270°','+360°'].forEach(k => {
+      const val = levels[k];
+      candleSeries.createPriceLine({
+        price: val,
+        color: 'rgba(0, 200, 150, 0.4)',
+        lineWidth: 1,
+        lineStyle: LightweightCharts.LineStyle.Dashed,
+        axisLabelVisible: true,
+        title: 'SQ9 ' + k + ' (₹' + fmt(val) + ')'
+      });
+    });
+    ['-90°','-180°'].forEach(k => {
+      const val = levels[k];
+      if (val > 0) {
+        candleSeries.createPriceLine({
+          price: val,
+          color: 'rgba(255, 59, 92, 0.4)',
+          lineWidth: 1,
+          lineStyle: LightweightCharts.LineStyle.Dashed,
+          axisLabelVisible: true,
+          title: 'SQ9 ' + k + ' (₹' + fmt(val) + ')'
+        });
+      }
+    });
+  }
+
+  // Fit content on load
+  tvChart.timeScale().fitContent();
+
+  // Handle responsiveness
+  const resizeHandler = () => {
+    if (tvChart && container) {
+      tvChart.resize(container.clientWidth, container.clientHeight);
+    }
+  };
+  window.removeEventListener('resize', resizeHandler);
+  window.addEventListener('resize', resizeHandler);
+}
+
+// Close on Escape key press
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeScreener();
+    closeReport();
+  }
+});
+
+// ── Auto-load on start ────────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  await loadStocks();
+  // Auto-run analysis for the first stock to populate the chart initially
+  runAnalysis();
+});
+</script>
+</body>
+</html>
