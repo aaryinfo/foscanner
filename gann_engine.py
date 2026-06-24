@@ -6,7 +6,7 @@ Computes swing points, cycle projections, confluence zones, Square of 9 levels, 
 import json
 import math
 from datetime import datetime, timedelta
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Union
 
 import numpy as np
 import pandas as pd
