@@ -12,16 +12,24 @@ from pathlib import Path
 from datetime import datetime, timedelta
 
 # ── Try to import heavy deps gracefully ──────────────────────────────────────
+import traceback
 try:
     import numpy as np
     import pandas as pd
     import yfinance as yf
     from flask import Flask, jsonify, request, send_from_directory
     from gann_engine import analyse
-except ImportError as e:
-    print(f"Missing dependency: {e}")
-    print("Run: pip install flask yfinance pandas numpy")
-    sys.exit(1)
+except Exception as e:
+    err_msg = traceback.format_exc()
+    try:
+        from flask import Flask
+        app = Flask(__name__)
+        @app.route("/", defaults={"path": ""})
+        @app.route("/<path:path>")
+        def catch_all(path):
+            return f"<h1>App Crashed on Startup</h1><pre>{err_msg}</pre>", 500
+    except ImportError:
+        sys.exit(1)
 
 app = Flask(__name__, static_folder=".")
 
