@@ -513,7 +513,6 @@ def run_market_screener(market="NSE"):
 
 def start_background_scan(market: str = "NSE"):
     if not _screener_cache[market]["is_loading"]:
-        _screener_cache[market]["is_loading"] = True
         if os.environ.get("VERCEL") == "1":
             run_market_screener(market)
         else:
