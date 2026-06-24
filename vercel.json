@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "vercel_app.py",
+      "src": "gann_app.py",
       "use": "@vercel/python",
       "config": {
         "maxDuration": 60
@@ -12,7 +12,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/vercel_app.py"
+      "destination": "/gann_app.py"
     }
   ],
   "env": {
