@@ -6,7 +6,7 @@ Computes swing points, cycle projections, confluence zones, Square of 9 levels, 
 import json
 import math
 from datetime import datetime, timedelta
-from typing import List, Dict, Tuple, Union
+from typing import List, Dict, Tuple, Union, Optional
 
 import numpy as np
 import pandas as pd
@@ -44,20 +44,46 @@ def find_swing_points(df: pd.DataFrame, window: int = 10) -> Tuple[List, List]:
     return highs, lows
 
 # ── Cycle Projections ────────────────────────────────────────────────────
-# ── Market Holidays & Non-Trading Days ───────────────────────────────────────
-NSE_HOLIDAYS_2026 = {
-    "2026-01-26", "2026-03-03", "2026-03-26", "2026-03-31",
-    "2026-04-03", "2026-04-14", "2026-05-01", "2026-05-28",
-    "2026-06-26", "2026-09-14", "2026-10-02", "2026-10-20",
-    "2026-11-10", "2026-11-24", "2026-12-25"
-}
+# ── Market Holidays — Auto-Detected ──────────────────────────────────────────
+# Uses the `holidays` library to automatically find Indian national holidays
+# for ANY year. No hardcoded dates — works for 2024, 2025, 2026, 2030, etc.
+_HOLIDAY_CACHE = {}
+
+try:
+    import holidays as _holidays_lib
+    _HAS_HOLIDAYS_LIB = True
+except ImportError:
+    _HAS_HOLIDAYS_LIB = False
+
+def get_nse_holidays(year: int) -> set:
+    """
+    Get all NSE non-trading holidays for a given year.
+    Auto-detected using the `holidays` library (Indian national/gazette holidays).
+    Results are cached per year for performance.
+    """
+    if year in _HOLIDAY_CACHE:
+        return _HOLIDAY_CACHE[year]
+
+    holiday_dates = set()
+    if _HAS_HOLIDAYS_LIB:
+        # India() covers all gazette holidays: Republic Day, Holi, Good Friday,
+        # Ambedkar Jayanti, May Day, Independence Day, Gandhi Jayanti, Dussehra,
+        # Diwali, Guru Nanak Jayanti, Christmas, Eid, Muharram, etc.
+        india_holidays = _holidays_lib.India(years=year)
+        for dt, name in india_holidays.items():
+            holiday_dates.add(dt.strftime("%Y-%m-%d"))
+
+    _HOLIDAY_CACHE[year] = holiday_dates
+    return holiday_dates
 
 def is_non_trading_day(dt_date, market="NSE") -> bool:
+    """Check if a date is a non-trading day (weekend or market holiday)."""
     if dt_date.weekday() in (5, 6):
         return True
     if market == "NSE":
         date_str = dt_date.strftime("%Y-%m-%d")
-        if date_str in NSE_HOLIDAYS_2026:
+        holidays = get_nse_holidays(dt_date.year)
+        if date_str in holidays:
             return True
     return False
 
@@ -228,6 +254,151 @@ def square_of_9(price: float) -> Dict:
         "levels":      levels,
     }
 
+def compute_intraday_levels(last_close: float, sq9: Dict, signal: str,
+                            win_rate: float = 0.393, min_rr: float = 1.6,
+                            max_risk_pct: float = 5.0) -> Optional[Dict]:
+    """
+    Antigravity Positive Expectancy Filter.
+    
+    Computes intraday Entry/SL/Target levels using Square of 9, enforcing:
+    1. Structural SL anchored to -90° or -180° Gann levels (not arbitrary %)
+    2. Dynamic target cascade: try ±90° → ±180° → ±360° (pick first with R:R ≥ min_rr)
+    3. Expectancy calculation: EV = (win_rate × Reward) - ((1 - win_rate) × Risk)
+    4. Only returns valid setups where EV > 0
+    
+    Returns None if no valid positive-EV setup exists.
+    """
+    levels = sq9['levels']
+    loss_rate = round(1.0 - win_rate, 4)
+    
+    if 'BULL' in signal.upper():
+        bias = 'BULLISH'
+        entry = round(levels['+45°'], 2)
+        # Structural SL: anchor to -90° (strong Gann support)
+        sl_primary = round(levels['-90°'], 2)
+        sl_fallback = round(levels['-45°'], 2)
+        # Target cascade: try +90° → +180° → +360°
+        target_cascade = [
+            ('+90°',  round(levels['+90°'], 2)),
+            ('+180°', round(levels['+180°'], 2)),
+            ('+360°', round(levels['+360°'], 2)),
+        ]
+    else:
+        bias = 'BEARISH'
+        entry = round(levels['-45°'], 2)
+        # Structural SL: anchor to +90° (strong Gann resistance)
+        sl_primary = round(levels['+90°'], 2)
+        sl_fallback = round(levels['+45°'], 2)
+        # Target cascade: try -90° → -180° → -360°
+        target_cascade = [
+            ('-90°',  round(levels['-90°'], 2)),
+            ('-180°', round(levels['-180°'], 2)),
+            ('-360°', round(levels['-360°'], 2)),
+        ]
+    
+    if entry <= 0:
+        return None
+    
+    # ── Stop Loss Optimization ────────────────────────────────────────────
+    # Use structural -90° level. If risk exceeds max_risk_pct, fall back to -45°
+    sl = sl_primary
+    risk_check = round(abs(entry - sl) / entry * 100, 2)
+    sl_level = '-90°' if bias == 'BULLISH' else '+90°'
+    
+    if risk_check > max_risk_pct:
+        sl = sl_fallback
+        sl_level = '-45°' if bias == 'BULLISH' else '+45°'
+    
+    risk = round(abs(entry - sl), 2)
+    if risk <= 0:
+        return None
+    
+    risk_pct = round((risk / entry) * 100, 2)
+    
+    # ── Dynamic Target Selection (Cascade) ────────────────────────────────
+    # Try each SQ9 level in order; pick the first that satisfies R:R ≥ min_rr
+    selected_target = None
+    selected_level = None
+    rejection_log = []
+    
+    for level_name, target_price in target_cascade:
+        reward = round(abs(target_price - entry), 2)
+        rr = round(reward / risk, 2) if risk > 0 else 0
+        if rr >= min_rr:
+            selected_target = target_price
+            selected_level = level_name
+            break
+        else:
+            rejection_log.append(f"{level_name} R:R 1:{rr} (below 1:{min_rr})")
+    
+    if selected_target is None:
+        # No SQ9 level provides adequate R:R — discard setup entirely
+        return {
+            'signal': signal, 'bias': bias, 'entry': entry, 'sl': sl,
+            't1': target_cascade[0][1], 't2': target_cascade[1][1],
+            'risk': risk, 'risk_pct': risk_pct,
+            'reward1': 0, 'reward1_pct': 0, 'reward2': 0, 'reward2_pct': 0,
+            'risk_reward_t1': '1:0', 'risk_reward_t2': '1:0',
+            'rr1_num': 0, 'rr2_num': 0,
+            'target_level': 'NONE', 'sl_level': sl_level,
+            'expectancy': round(-(loss_rate * risk), 2),
+            'expectancy_pct': round(-(loss_rate * risk_pct), 2),
+            'win_rate': win_rate,
+            'is_valid': False,
+            'rejection_reason': 'No SQ9 level meets minimum R:R of 1:' + str(min_rr),
+            'rejection_log': rejection_log,
+            'valid_for': 'REJECTED'
+        }
+    
+    # ── Compute final metrics for selected target ─────────────────────────
+    t1 = selected_target
+    reward1 = round(abs(t1 - entry), 2)
+    reward1_pct = round((reward1 / entry) * 100, 2)
+    rr1 = round(reward1 / risk, 2) if risk > 0 else 0
+    
+    # T2 is the next level after the selected one in the cascade
+    t2_candidates = [tp for ln, tp in target_cascade if abs(tp - entry) > abs(t1 - entry)]
+    t2 = t2_candidates[0] if t2_candidates else t1
+    reward2 = round(abs(t2 - entry), 2)
+    reward2_pct = round((reward2 / entry) * 100, 2)
+    rr2 = round(reward2 / risk, 2) if risk > 0 else 0
+    
+    # ── Expectancy Calculation ────────────────────────────────────────────
+    # EV = (WinRate × Reward) - (LossRate × Risk)
+    ev = round((win_rate * reward1) - (loss_rate * risk), 2)
+    ev_pct = round((win_rate * reward1_pct) - (loss_rate * risk_pct), 2)
+    
+    is_valid = ev > 0
+    rejection_reason = None if is_valid else f'Negative EV: ₹{ev} (win {win_rate*100}% × ₹{reward1} - lose {loss_rate*100}% × ₹{risk})'
+    
+    return {
+        'signal': signal,
+        'bias': bias,
+        'entry': entry,
+        'sl': sl,
+        't1': t1,
+        't2': t2,
+        'risk': risk,
+        'risk_pct': risk_pct,
+        'reward1': reward1,
+        'reward1_pct': reward1_pct,
+        'reward2': reward2,
+        'reward2_pct': reward2_pct,
+        'risk_reward_t1': f'1:{rr1}',
+        'risk_reward_t2': f'1:{rr2}',
+        'rr1_num': rr1,
+        'rr2_num': rr2,
+        'target_level': selected_level,
+        'sl_level': sl_level,
+        'expectancy': ev,
+        'expectancy_pct': ev_pct,
+        'win_rate': win_rate,
+        'is_valid': is_valid,
+        'rejection_reason': rejection_reason,
+        'rejection_log': rejection_log,
+        'valid_for': 'Next intraday session' if is_valid else 'REJECTED'
+    }
+
 # ── Backtest Logic ────────────────────────────────────────────────────────────
 def backtest_confluences(highs: List, lows: List, confluence_zones: List[Dict]) -> Dict:
     """
@@ -368,20 +539,45 @@ def generate_description(symbol: str, last_close: float, last_date: str,
         html += f"<p>Price is currently hovering near underlying support (₹{sq9['levels']['-90°']:.2f}).</p>"
     html += "</div>"
 
-    # Trade Setup Section
+    # Trade Setup Section — Antigravity Positive Expectancy Filter
+    intraday = compute_intraday_levels(last_close, sq9, nxt_signal if nxt_signal else "BULL REVERSAL")
     html += "<div class='report-section' style='margin-top:14px; padding-top:12px; border-top:1px solid var(--border);'>"
-    html += f"<h4>Actionable Trade Setup ({current_bias}):</h4>"
-    html += f"<p>Based on the predicted <strong>{current_bias}</strong> momentum shift around the Confluence Date:</p>"
-    html += "<ul>"
-    if current_bias == "BULLISH":
-        html += f"<li><strong>Entry:</strong> Buy momentum breakout above <strong>₹{sq9['levels']['+45°']:.2f}</strong></li>"
-        html += f"<li><strong>Stop Loss (SL):</strong> Strict closing basis below <strong>₹{sq9['levels']['-45°']:.2f}</strong></li>"
-        html += f"<li><strong>Targets:</strong> <strong>₹{sq9['levels']['+90°']:.2f}</strong> (T1) and <strong>₹{sq9['levels']['+180°']:.2f}</strong> (T2)</li>"
+    
+    if intraday and intraday.get('is_valid'):
+        html += f"<h4>✅ Intraday Trade Setup ({intraday['bias']}) — Positive Expectancy:</h4>"
+        html += f"<p>Antigravity filter passed. Target selected at <strong>{intraday['target_level']}</strong> SQ9 level. "
+        html += f"SL anchored to structural <strong>{intraday['sl_level']}</strong> Gann level.</p>"
+        
+        # Show rejection log if lower levels were skipped
+        if intraday.get('rejection_log'):
+            html += "<p style='font-size:11px;color:var(--muted);'>Target cascade: "
+            html += " → ".join(intraday['rejection_log'])
+            html += f" → <strong style='color:var(--green);'>{intraday['target_level']} ✓</strong></p>"
+        
+        html += "<ul>"
+        html += f"<li><strong>Entry:</strong> ₹{intraday['entry']:,.2f}</li>"
+        html += f"<li><strong>Stop Loss ({intraday['sl_level']}):</strong> ₹{intraday['sl']:,.2f} &nbsp;(Risk: ₹{intraday['risk']:,.2f} | {intraday['risk_pct']}%)</li>"
+        html += f"<li><strong>Target 1 ({intraday['target_level']}):</strong> ₹{intraday['t1']:,.2f} &nbsp;(Reward: ₹{intraday['reward1']:,.2f} | R:R {intraday['risk_reward_t1']})</li>"
+        html += f"<li><strong>Target 2:</strong> ₹{intraday['t2']:,.2f} &nbsp;(R:R {intraday['risk_reward_t2']})</li>"
+        html += "</ul>"
+        
+        # Expectancy box
+        ev_color = 'var(--green)' if intraday['expectancy'] > 0 else 'var(--red)'
+        html += f"<div style='margin-top:10px;padding:8px 12px;background:rgba(0,200,150,0.08);border:1px solid rgba(0,200,150,0.2);border-radius:6px;'>"
+        html += f"<strong>Expected Value (EV):</strong> <span style='color:{ev_color};font-weight:700;font-size:14px;'>₹{intraday['expectancy']:,.2f}</span> per trade"
+        html += f"<br><span style='font-size:11px;color:var(--muted);'>Formula: ({intraday['win_rate']*100:.1f}% × ₹{intraday['reward1']:,.2f}) − ({(1-intraday['win_rate'])*100:.1f}% × ₹{intraday['risk']:,.2f})</span>"
+        html += "</div>"
+        html += "<p style='font-size:11px;color:var(--muted);margin-top:8px;'><em>⚠ Levels valid for intraday session only. Recalculate for next session.</em></p>"
+    elif intraday:
+        html += f"<h4>❌ No Valid Setup — Negative Expectancy:</h4>"
+        html += f"<p style='color:var(--red);'>{intraday.get('rejection_reason', 'Setup rejected by Antigravity filter.')}</p>"
+        if intraday.get('rejection_log'):
+            html += "<p style='font-size:11px;color:var(--muted);'>Checked: " + " → ".join(intraday['rejection_log']) + "</p>"
+        html += f"<p style='font-size:11px;color:var(--muted);'>EV = ₹{intraday.get('expectancy', 0):,.2f} (negative — trade would lose money over time)</p>"
     else:
-        html += f"<li><strong>Entry:</strong> Sell breakdown below <strong>₹{sq9['levels']['-45°']:.2f}</strong></li>"
-        html += f"<li><strong>Stop Loss (SL):</strong> Strict closing basis above <strong>₹{sq9['levels']['+45°']:.2f}</strong></li>"
-        html += f"<li><strong>Targets:</strong> <strong>₹{sq9['levels']['-90°']:.2f}</strong> (T1) and <strong>₹{sq9['levels']['-180°']:.2f}</strong> (T2)</li>"
-    html += "</ul>"
+        html += "<h4>❌ No Valid Setup Available</h4>"
+        html += "<p style='color:var(--muted);'>Insufficient data to compute intraday levels.</p>"
+    
     html += "</div>"
     
     html += "<div class='report-section' style='margin-top:14px; padding-top:12px; border-top:1px solid var(--border);'>"
@@ -490,6 +686,12 @@ def analyse(df: pd.DataFrame, symbol: str, swing_window: int = 10, period: str =
         if "date_obj" in c:
             del c["date_obj"]
 
+    # Compute intraday trade levels (Antigravity Positive Expectancy Filter)
+    future_conf = [c for c in filtered_confluence if c.get('days_away', -1) >= 0]
+    intraday_signal = future_conf[0]['signal'] if future_conf else ('BULL REVERSAL' if top_highs and top_lows and str(top_highs[-1][0]) > str(top_lows[-1][0]) else 'BEAR REVERSAL')
+    intraday_levels = compute_intraday_levels(last_close, sq9, intraday_signal)
+    setup_valid = intraday_levels is not None and intraday_levels.get('is_valid', False)
+
     return {
         "symbol":       symbol,
         "last_close":   last_close,
@@ -512,6 +714,8 @@ def analyse(df: pd.DataFrame, symbol: str, swing_window: int = 10, period: str =
         "square_of_9":  sq9,
         "ohlc":         ohlc,
         "backtest":     backtest,
+        "intraday_levels": intraday_levels,
+        "setup_valid":  setup_valid,
         "description":  description
     }
 
@@ -530,6 +734,26 @@ if __name__ == "__main__":
     print(f"Swing Highs : {result['swing_highs']}")
     print(f"Swing Lows  : {result['swing_lows']}")
     print(f"Confluence  : {len(result['confluence'])} zones found")
-    print(f"Sq9 +90°    : {result['square_of_9']['levels']['+90°']}")
+    print(f"Sq9 +90     : {result['square_of_9']['levels']['+90°']}")
     print(f"Backtest Acc: {result['backtest']['accuracy']}%")
+    
+    # Antigravity EV validation
+    intra = result.get('intraday_levels')
+    if intra:
+        print(f"\n-- Antigravity Filter --")
+        print(f"  Setup Valid : {intra.get('is_valid', 'N/A')}")
+        print(f"  Bias        : {intra.get('bias')}")
+        print(f"  Entry       : Rs.{intra.get('entry')}")
+        print(f"  SL ({intra.get('sl_level','?')}): Rs.{intra.get('sl')}  Risk: {intra.get('risk_pct')}%")
+        print(f"  T1 ({intra.get('target_level','?')}): Rs.{intra.get('t1')}  R:R {intra.get('risk_reward_t1')}")
+        print(f"  T2          : Rs.{intra.get('t2')}  R:R {intra.get('risk_reward_t2')}")
+        print(f"  Expectancy  : Rs.{intra.get('expectancy')} ({intra.get('expectancy_pct')}%)")
+        if intra.get('rejection_log'):
+            print(f"  Cascade Log : {' -> '.join(intra['rejection_log'])}")
+        if not intra.get('is_valid'):
+            print(f"  REJECTED    : {intra.get('rejection_reason')}")
+    else:
+        print("  Intraday levels: None (no data)")
+    
+    print(f"Setup Valid : {result.get('setup_valid', False)}")
     print("Engine OK")

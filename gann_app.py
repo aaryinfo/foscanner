@@ -18,7 +18,7 @@ try:
     import pandas as pd
     import yfinance as yf
     from flask import Flask, jsonify, request, send_from_directory
-    from gann_engine import analyse
+    from gann_engine import analyse, compute_intraday_levels
 except Exception as e:
     print(f"Missing dependency: {e}")
     sys.exit(1)
@@ -315,7 +315,7 @@ def fetch_data(symbol: str, market: str = "NSE", period: str = "2y") -> pd.DataF
     _cache[key] = {"df": df, "ts": time.time()}
     return df
 
-from gann_engine import NSE_HOLIDAYS_2026, is_non_trading_day
+from gann_engine import is_non_trading_day
 
 # ── Background Market Screener Task ───────────────────────────────────────────
 def run_market_screener(market="NSE"):
@@ -434,32 +434,46 @@ def run_market_screener(market="NSE"):
                 stock_results = []
                 # Only include stocks with validated patterns (accuracy >= 30.0)
                 if success_count > 0 and accuracy >= 30.0:
-                    for conf in res["confluence"]:
-                        if conf["date"] in target_dates and conf["count"] >= 3:
-                            sq9 = res.get("square_of_9", {"levels": {}})
-                            tgt_up = next((v for k, v in sq9.get("levels", {}).items() if k.startswith("+90")), 0)
-                            tgt_down = next((v for k, v in sq9.get("levels", {}).items() if k.startswith("-90")), 0)
-
-                            if "BULL" in conf["signal"]:
-                                tgt = tgt_up
-                            elif "BEAR" in conf["signal"]:
-                                tgt = tgt_down
-                            else:
-                                tgt = f"{tgt_down} / {tgt_up}"
-
-                            stock_results.append({
-                                "symbol": sym,
-                                "name": item["name"],
-                                "last_close": res["last_close"],
-                                "target_price": tgt,
-                                "date": next_trading_day.strftime("%Y-%m-%d"),
-                                "date_display": conf.get("date_display", next_trading_day.strftime("%Y-%m-%d")),
-                                "days_away": conf["days_away"],
-                                "signal": conf["signal"],
-                                "strength": conf["strength"],
-                                "count": conf["count"],
-                                "accuracy": accuracy
-                            })
+                    # Use the analysis result's own intraday_levels for signal consistency
+                    # This ensures the screener signal matches what ANALYSE shows
+                    intra = res.get("intraday_levels")
+                    setup_valid = res.get("setup_valid", False)
+                    
+                    if not setup_valid or intra is None or not intra.get('is_valid', False):
+                        return None
+                    
+                    # Find the best matching confluence for the target trading dates
+                    matching_confs = [c for c in res["confluence"] 
+                                     if c["date"] in target_dates and c["count"] >= 3]
+                    
+                    if matching_confs:
+                        # Use the strongest confluence for metadata
+                        best_conf = max(matching_confs, key=lambda c: c["count"])
+                        
+                        stock_results.append({
+                            "symbol": sym,
+                            "name": item["name"],
+                            "last_close": res["last_close"],
+                            "entry": intra["entry"],
+                            "sl": intra["sl"],
+                            "t1": intra["t1"],
+                            "t2": intra["t2"],
+                            "risk_pct": intra["risk_pct"],
+                            "risk_reward": intra["risk_reward_t1"],
+                            "rr1_num": intra["rr1_num"],
+                            "target_level": intra["target_level"],
+                            "sl_level": intra["sl_level"],
+                            "expectancy": intra["expectancy"],
+                            "expectancy_pct": intra["expectancy_pct"],
+                            "date": next_trading_day.strftime("%Y-%m-%d"),
+                            "date_display": best_conf.get("date_display", next_trading_day.strftime("%Y-%m-%d")),
+                            "days_away": best_conf["days_away"],
+                            "signal": intra["signal"],   # Use intra signal for consistency with ANALYSE page
+                            "strength": best_conf["strength"],
+                            "count": best_conf["count"],
+                            "accuracy": accuracy,
+                            "active_cycles": best_conf.get("cycles", [])[:4]
+                        })
                 return stock_results
             except Exception:
                 return None
@@ -487,19 +501,19 @@ def run_market_screener(market="NSE"):
                     deduped[sym] = r
                 elif existing["date"] == next_trading_day_str and r["date"] != next_trading_day_str:
                     pass
-                elif r["count"] > existing["count"]:
+                elif r["expectancy"] > existing["expectancy"]:
                     deduped[sym] = r
         results = list(deduped.values())
                 
-        # Sort results: highest accuracy first, then earliest date, then strength, then count
+        # Sort results: highest EV first, then R:R, then strength
         strength_order = {"STRONG": 0, "MODERATE": 1, "WEAK": 2}
-        results.sort(key=lambda x: (-x["accuracy"], x["date"], strength_order.get(x["strength"], 9), -x["count"]))
+        results.sort(key=lambda x: (-x["expectancy"], -x["rr1_num"], strength_order.get(x["strength"], 9)))
         
-        # Keep only the top 5 highest-quality backtest-validated setups
-        top_5_results = results[:5]
+        # Keep top 10 highest-EV backtest-validated setups
+        top_results = results[:10]
         
         with SCREENER_LOCK:
-            _screener_cache[market]["results"] = top_5_results
+            _screener_cache[market]["results"] = top_results
             _screener_cache[market]["last_updated"] = time.time()
             _screener_cache[market]["status"] = "Completed"
             
