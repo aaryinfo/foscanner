@@ -99,6 +99,40 @@ def project_cycles(pivot_date: Union[str, datetime, pd.Timestamp], pivot_price: 
         })
     return projections
 
+# ── Cluster Signal Determination ──────────────────────────────────────────────
+def _determine_cluster_signal(pivots: List[Dict]) -> str:
+    """
+    Determine the reversal signal for a confluence cluster based on Gann Time Cycle theory.
+    
+    Gann logic:
+    - Cycles projected from a Swing HIGH: the stock peaked then fell.
+      When the cycle completes, price is expected to reverse back UP → BULL REVERSAL.
+    - Cycles projected from a Swing LOW: the stock bottomed then rose.
+      When the cycle completes, price is expected to reverse back DOWN → BEAR REVERSAL.
+    
+    For mixed clusters (cycles from both highs and lows):
+    - Use the majority pivot type.
+    - If equal count, use the most recent pivot's type.
+    """
+    high_count = sum(1 for p in pivots if p["pivot_type"] == "high")
+    low_count = sum(1 for p in pivots if p["pivot_type"] == "low")
+    
+    if high_count > 0 and low_count == 0:
+        return "BULL REVERSAL"   # All from highs → reversal back up
+    elif low_count > 0 and high_count == 0:
+        return "BEAR REVERSAL"   # All from lows → reversal back down
+    else:
+        # Mixed cluster: use majority, or most recent pivot if tied
+        if high_count > low_count:
+            return "BULL REVERSAL"
+        elif low_count > high_count:
+            return "BEAR REVERSAL"
+        else:
+            # Equal count — use the most recent pivot date to break the tie
+            most_recent = max(pivots, key=lambda p: p["pivot_date"])
+            return "BULL REVERSAL" if most_recent["pivot_type"] == "high" else "BEAR REVERSAL"
+
+
 # ── Confluence Detection ──────────────────────────────────────────────────────
 def find_confluence_zones(all_projections: List[Dict],
                            tolerance_days: int = 3) -> List[Dict]:
@@ -159,8 +193,7 @@ def find_confluence_zones(all_projections: List[Dict],
                     "date_obj":     d, # store native date object for fast backtesting
                     "count":        strength,
                     "cycles":       [f"{p['cycle_label']} from {p['pivot_type'].upper()} {p['pivot_date']}" for p in unique],
-                    "signal":       "REVERSAL" if len(pivot_types) > 1 else
-                                    ("BEAR REVERSAL" if "high" in pivot_types else "BULL REVERSAL"),
+                    "signal":       _determine_cluster_signal(unique),
                     "strength":     "STRONG" if strength >= 4 else
                                     "MODERATE" if strength >= 2 else "WEAK",
                     "days_away":    (d.date() - datetime.today().date()).days,
@@ -319,15 +352,14 @@ def generate_description(symbol: str, last_close: float, last_date: str,
         if last_high_dt > last_low_dt:
             html += f"<p>The most recent structural pivot was a <strong>Swing High</strong> at ₹{last_high_price:,.2f} on {last_high_dt.strftime('%d %b %Y')}. "
             html += f"Prior to that, a <strong>Swing Low</strong> was established at ₹{last_low_price:,.2f} on {last_low_dt.strftime('%d %b %Y')}.</p>"
-            current_bias = "BEARISH" if nxt_signal in ["REVERSAL", "BEAR REVERSAL"] else "BULLISH"
         else:
             html += f"<p>The most recent structural pivot was a <strong>Swing Low</strong> at ₹{last_low_price:,.2f} on {last_low_dt.strftime('%d %b %Y')}. "
             html += f"Prior to that, a <strong>Swing High</strong> was established at ₹{last_high_price:,.2f} on {last_high_dt.strftime('%d %b %Y')}.</p>"
-            current_bias = "BULLISH" if nxt_signal in ["REVERSAL", "BULL REVERSAL"] else "BEARISH"
     else:
-        current_bias = "BULLISH" if "BULL" in nxt_signal else "BEARISH"
         html += "<p>Insufficient recent structural swings to establish short-term trend.</p>"
-        
+    
+    # Derive trade bias directly from the confluence signal (which is now correctly determined)
+    current_bias = "BEARISH" if "BEAR" in nxt_signal else "BULLISH"
     dist_high = abs(last_close - sq9['levels']['+90°'])
     dist_low = abs(last_close - sq9['levels']['-90°'])
     if dist_high < dist_low:
@@ -432,39 +464,23 @@ def analyse(df: pd.DataFrame, symbol: str, swing_window: int = 10, period: str =
         chart_df = df
 
     dates = chart_df.index.strftime("%Y-%m-%d").tolist()
-    opens = chart_df["Open"].values
-    highs = chart_df["High"].values
-    lows = chart_df["Low"].values
-    closes = chart_df["Close"].values
+    chart_opens = chart_df["Open"].values
+    chart_highs = chart_df["High"].values
+    chart_lows = chart_df["Low"].values
+    chart_closes = chart_df["Close"].values
     ohlc = [
         {
             "date": dates[i],
-            "open": round(float(opens[i]), 2),
-            "high": round(float(highs[i]), 2),
-            "low": round(float(lows[i]), 2),
-            "close": round(float(closes[i]), 2),
+            "open": round(float(chart_opens[i]), 2),
+            "high": round(float(chart_highs[i]), 2),
+            "low": round(float(chart_lows[i]), 2),
+            "close": round(float(chart_closes[i]), 2),
         }
         for i in range(len(chart_df))
     ]
 
-    # Update signals based on actual current market structure bias to sync report and screener
-    last_high_dt = None
-    last_low_dt = None
-    if top_highs:
-        last_high_dt = datetime.strptime(str(top_highs[-1][0])[:10], "%Y-%m-%d")
-    if top_lows:
-        last_low_dt = datetime.strptime(str(top_lows[-1][0])[:10], "%Y-%m-%d")
-
-    current_trend = "UNKNOWN"
-    if last_high_dt and last_low_dt:
-        if last_high_dt > last_low_dt:
-            current_trend = "DOWN" # Trend is down, next reversal is BULLISH
-        else:
-            current_trend = "UP"   # Trend is up, next reversal is BEARISH
-
-    for c in filtered_confluence:
-        if current_trend != "UNKNOWN":
-            c["signal"] = "BULL REVERSAL" if current_trend == "DOWN" else "BEAR REVERSAL"
+    # Signal is now correctly determined by _determine_cluster_signal() in find_confluence_zones()
+    # No blanket override needed — each confluence zone has the right signal based on its cycle sources
 
     # Generate detailed description
     description = generate_description(symbol, last_close, last_date, filtered_confluence, sq9, backtest, top_highs, top_lows)
