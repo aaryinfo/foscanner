@@ -762,13 +762,17 @@ def auth_login():
     
     # Check trial expiry (15 days)
     trial_start = datetime.fromisoformat(trial_start_date)
-    if datetime.utcnow() > trial_start + timedelta(days=15):
+    trial_end = trial_start + timedelta(days=15)
+    
+    if datetime.utcnow() > trial_end:
         return jsonify({"ok": True, "status": "expired"})
         
-    if not has_agreed_tos:
-        return jsonify({"ok": True, "status": "needs_tos"})
+    remaining_days = (trial_end - datetime.utcnow()).days
         
-    return jsonify({"ok": True, "status": "active"})
+    if not has_agreed_tos:
+        return jsonify({"ok": True, "status": "needs_tos", "remaining_days": remaining_days})
+        
+    return jsonify({"ok": True, "status": "active", "remaining_days": remaining_days})
 
 @app.route("/api/auth/agree_tos", methods=["POST"])
 def auth_agree_tos():

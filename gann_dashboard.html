@@ -271,6 +271,7 @@ select:focus,input:focus{border-color:var(--gold)}
       <div>CURRENT PRICE <span id="tbClose">—</span></div>
       <div>AS OF <span id="tbDate">—</span></div>
       <div>NEXT CONFLUENCE <span id="tbNext" style="color:var(--gold)">—</span></div>
+      <div>TRIAL REMAINING: <span id="tbTrial" style="color:var(--red)">—</span></div>
     </div>
     <div id="user-button-container" style="margin-left: 16px;"></div>
   </header>
@@ -1405,8 +1406,10 @@ async function initAuth() {
       } else if (!agreed) {
          window.location.href = '/interactive_disclaimer_spa.html?session_id=' + encodeURIComponent(clerk.session.id);
       } else {
-         // Active!
          document.getElementById('authOverlay').classList.add('hidden');
+         if(data.remaining_days !== undefined) {
+             document.getElementById('tbTrial').innerText = data.remaining_days + ' Days';
+         }
          const userBtnContainer = document.getElementById('user-button-container');
          if(userBtnContainer) {
             clerk.mountUserButton(userBtnContainer);
