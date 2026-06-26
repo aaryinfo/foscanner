@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Legal Disclaimer & Terms of Use</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #fafaf9; 
+            color: #1e293b;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        /* Stable CSS Animation */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-2 sm:p-4 md:p-8 flex items-center justify-center">
+
+    <div class="max-w-6xl w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-stone-200 flex flex-col md:flex-row h-[95vh] md:h-[80vh]">
+        
+        <!-- Sidebar Navigation -->
+        <div class="w-full md:w-1/3 bg-stone-100 border-b md:border-b-0 md:border-r border-stone-200 flex flex-col h-[35vh] md:h-full">
+            <div class="p-4 md:p-6 border-b border-stone-200 bg-stone-50 shrink-0">
+                <h1 class="text-lg md:text-xl font-bold text-slate-900 mb-1">&#9888; Required Review</h1>
+                <p class="text-xs md:text-sm text-slate-600 hidden sm:block">Please review and acknowledge all terms to proceed.</p>
+                
+                <div class="mt-3 md:mt-4">
+                    <div class="flex justify-between text-xs font-semibold mb-1 text-slate-500">
+                        <span>Progress</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-stone-300 rounded-full h-2 md:h-2.5">
+                        <div id="progress-bar" class="bg-red-600 h-2 md:h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="nav-container" class="flex-1 overflow-y-auto hide-scrollbar p-2">
+                <!-- Navigation buttons injected here -->
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="w-full md:w-2/3 flex flex-col flex-1 h-[60vh] md:h-full bg-white relative">
+            <div class="p-6 md:p-10 overflow-y-auto flex-1 hide-scrollbar" id="content-container">
+                <!-- Content injected here -->
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="p-4 md:p-6 border-t border-stone-100 bg-stone-50 flex justify-between items-center shrink-0">
+                <button id="btn-prev" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-stone-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    &#8592; <span class="hidden sm:inline">Previous</span>
+                </button>
+                
+                <button id="btn-acknowledge" class="px-4 py-2 md:px-6 md:py-2 rounded-lg text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors shadow-sm">
+                    Acknowledge
+                </button>
+
+                <button id="btn-next" class="px-3 py-2 md:px-4 md:py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-stone-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span class="hidden sm:inline">Next</span> &#8594;
+                </button>
+            </div>
+            
+            <!-- Final Overlay Screen -->
+            <div id="final-overlay" class="absolute inset-0 bg-white/95 backdrop-blur flex flex-col items-center justify-center p-4 md:p-8 text-center hidden z-10 overflow-y-auto">
+                <div class="text-5xl md:text-6xl mb-2 md:mb-4 text-green-500">&#10003;</div>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-2">Terms Acknowledged</h2>
+                <p class="text-sm md:text-base text-slate-600 max-w-md mb-6 md:mb-8">You have successfully reviewed all educational and risk disclaimers. Remember, all usage is at your own risk.</p>
+                
+                <div class="w-full max-w-md mb-6 md:mb-8">
+                    <h3 class="text-xs md:text-sm font-bold uppercase tracking-wider text-slate-500 mb-2 md:mb-4">Risk & Liability Allocation</h3>
+                    <div class="chart-container">
+                        <canvas id="liabilityChart"></canvas>
+                    </div>
+                </div>
+
+                <button onclick="enterPlatform()" class="px-6 py-2 md:px-8 md:py-3 bg-slate-900 text-white rounded-xl font-bold shadow-lg hover:bg-slate-800 transition-transform transform hover:scale-105">
+                    Enter Platform
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const disclaimerData = [
+            {
+                id: "intro",
+                title: "Important Notice",
+                icon: "&#10071;",
+                content: `
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">LEGAL DISCLAIMER & TERMS OF USE</h2>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-4 font-semibold text-red-600">PLEASE READ THIS DISCLAIMER CAREFULLY BEFORE USING THIS WEBSITE OR ANY OF ITS SCANNER TOOLS.</p>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-4">By accessing, browsing, or using this website and its stock scanning tools, you acknowledge that you have read, understood, and agree to be bound by the terms of this Disclaimer.</p>
+                    <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-r-lg mt-6">
+                        <p class="text-red-800 text-sm font-medium">If you do not agree with these terms, you must exit this website immediately.</p>
+                    </div>
+                `
+            },
+            {
+                id: "sebi",
+                title: "1. Not SEBI Registered",
+                icon: "&#127985;",
+                content: `
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">1. NOT SEBI REGISTERED</h2>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-4">We are <strong class="text-slate-900">NOT</strong> registered with the Securities and Exchange Board of India (SEBI) as an Investment Adviser (IA), Research Analyst (RA), or Portfolio Manager.</p>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed">The creators, operators, and owners of this website do not hold any regulatory licenses to provide financial advice, stock tips, or investment recommendations under the SEBI (Investment Advisers) Regulations, 2013, or any other governing laws.</p>
+                `
+            },
+            {
+                id: "edu",
+                title: "2. Educational Use Only",
+                icon: "&#128218;",
+                content: `
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">2. EDUCATIONAL PURPOSES</h2>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-4">All information, data, charts, algorithmic outputs, and scanner results provided on this website are strictly for <strong class="text-slate-900">educational, informational, and research purposes only</strong>.</p>
+                    <ul class="list-none space-y-3 mt-6">
+                        <li class="flex items-start">
+                            <span class="mr-3 text-red-600">&#10148;</span>
+                            <span class="text-sm md:text-base text-slate-700">The tools provided are designed to demonstrate the application of mathematical models, time cycles, and technical analysis theories.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-3 text-red-600">&#10148;</span>
+                            <span class="text-sm md:text-base text-slate-700">None of the content published on this platform should be construed as an offer, solicitation, or recommendation to buy, sell, or hold any security, stock, derivative, or financial instrument.</span>
+                        </li>
+                    </ul>
+                `
+            },
+            {
+                id: "signals",
+                title: "3. System Outputs",
+                icon: "&#128187;",
+                content: `
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">3. "BUY/SELL" SIGNALS</h2>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-4">Any references to "Buy", "Sell", "Bull Reversal", "Entry", "Target", or "Stop Loss" generated by our scanner are <strong class="text-slate-900">purely algorithmic outputs</strong>.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                            <div class="text-xl mb-2">&#128200;</div>
+                            <p class="text-xs md:text-sm text-slate-700">Intended solely for <strong>paper trading, forward-testing, and academic study</strong> of market geometry.</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                            <div class="text-xl mb-2">&#128683;</div>
+                            <p class="text-xs md:text-sm text-slate-700">They are <strong>NOT</strong> trade calls, tips, or advisory signals.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "risk",
+                title: "4. Financial Risk",
+                icon: "&#9889;",
+                content: `
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">4. ASSUMPTION OF FINANCIAL RISK</h2>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-4">Trading and investing in the stock market involves a substantial risk of loss and is not suitable for every investor. You may lose more than your original investment.</p>
+                    <div class="bg-slate-900 text-stone-50 p-4 md:p-6 rounded-xl mt-6 shadow-md">
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="mr-3 text-red-400 font-bold">&#10003;</span>
+                                <span class="text-sm">You assume total responsibility and risk for your use of this website.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-3 text-red-400 font-bold">&#10003;</span>
+                                <span class="text-sm">We shall not be held liable or responsible for any financial losses or damages incurred by you as a result of using this platform.</span>
+                            </li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: "advisor",
+                title: "5. Professional Advisor",
+                icon: "&#128100;",
+                content: `
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">5. CONSULT A PROFESSIONAL ADVISOR</h2>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-4">You are solely responsible for your own investment and trading decisions.</p>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-4">We strongly advise that before making any real financial investments or placing any trades based on technical analysis or scanner data, you must independently verify the information and consult with a <strong class="text-slate-900 border-b-2 border-red-500">SEBI-registered financial advisor</strong> or certified wealth manager who understands your personal financial profile and risk appetite.</p>
+                `
+            },
+            {
+                id: "accuracy",
+                title: "6. No Guarantee",
+                icon: "&#128269;",
+                content: `
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4">6. NO GUARANTEE OF ACCURACY</h2>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed mb-6">While we strive to provide accurate mathematical calculations based on market data feeds, we do not warrant or guarantee the completeness, accuracy, timeliness, or reliability of any data, stock quotes, or scanner reports on this website.</p>
+                    <div class="inline-flex items-center justify-center px-4 py-2 bg-stone-100 rounded-lg text-sm text-slate-600 font-medium mb-8">
+                        <span class="mr-2">&#9200;</span> Data may be delayed, and algorithmic errors may occur.
+                    </div>
+                    <hr class="border-stone-200 mb-6">
+                    <p class="text-slate-800 font-bold text-sm md:text-base text-center leading-relaxed">
+                        By continuing to use this website, you legally agree that the usage is at your own risk and that you will not hold the website developers, owners, or affiliates legally or financially responsible for any trading decisions you make.
+                    </p>
+                `
+            }
+        ];
+
+        let currentIndex = 0;
+        let acknowledgedSections = new Set();
+        let chartInstance = null;
+
+        const navContainer = document.getElementById('nav-container');
+        const contentContainer = document.getElementById('content-container');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const btnAcknowledge = document.getElementById('btn-acknowledge');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const finalOverlay = document.getElementById('final-overlay');
+
+        function renderNav() {
+            navContainer.innerHTML = '';
+            disclaimerData.forEach((item, index) => {
+                const isAcknowledged = acknowledgedSections.has(item.id);
+                const isActive = index === currentIndex;
+                
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3 md:p-4 rounded-xl mb-2 flex items-center transition-all duration-200 ${isActive ? 'bg-white shadow-sm border-l-4 border-red-600' : 'hover:bg-stone-200/50'}`;
+                
+                btn.innerHTML = `
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 ${isAcknowledged ? 'bg-green-100 text-green-600' : 'bg-stone-200 text-stone-500'} ${isActive && !isAcknowledged ? 'bg-red-100 text-red-600' : ''}">
+                        ${isAcknowledged ? '&#10003;' : item.icon}
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-xs md:text-sm ${isActive ? 'text-slate-900' : 'text-slate-600'}">${item.title}</div>
+                    </div>
+                `;
+                
+                btn.onclick = () => {
+                    currentIndex = index;
+                    updateUI();
+                };
+                
+                navContainer.appendChild(btn);
+            });
+        }
+
+        function renderContent() {
+            const currentItem = disclaimerData[currentIndex];
+            contentContainer.innerHTML = `
+                <div class="fade-in">
+                    ${currentItem.content}
+                </div>
+            `;
+        }
+
+        function updateProgress() {
+            const percentage = Math.round((acknowledgedSections.size / disclaimerData.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+
+            if (percentage === 100) {
+                setTimeout(() => {
+                    finalOverlay.classList.remove('hidden');
+                    renderFinalChart();
+                }, 500);
+            }
+        }
+
+        function updateUI() {
+            renderNav();
+            renderContent();
+            
+            btnPrev.disabled = currentIndex === 0;
+            btnNext.disabled = currentIndex === disclaimerData.length - 1;
+            
+            const currentId = disclaimerData[currentIndex].id;
+            if (acknowledgedSections.has(currentId)) {
+                btnAcknowledge.innerHTML = '&#10003; <span class="hidden sm:inline">Acknowledged</span>';
+                btnAcknowledge.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btnAcknowledge.classList.add('bg-green-500', 'hover:bg-green-600');
+            } else {
+                btnAcknowledge.innerHTML = '<span class="hidden sm:inline">Acknowledge Clause</span><span class="sm:hidden">Acknowledge</span>';
+                btnAcknowledge.classList.remove('bg-green-500', 'hover:bg-green-600');
+                btnAcknowledge.classList.add('bg-red-600', 'hover:bg-red-700');
+            }
+        }
+
+        btnPrev.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateUI();
+            }
+        });
+
+        btnNext.addEventListener('click', () => {
+            if (currentIndex < disclaimerData.length - 1) {
+                currentIndex++;
+                updateUI();
+            }
+        });
+
+        btnAcknowledge.addEventListener('click', () => {
+            const currentId = disclaimerData[currentIndex].id;
+            if (!acknowledgedSections.has(currentId)) {
+                acknowledgedSections.add(currentId);
+                updateProgress();
+                
+                if (currentIndex < disclaimerData.length - 1) {
+                    setTimeout(() => {
+                        currentIndex++;
+                        updateUI();
+                    }, 400); 
+                } else {
+                    updateUI(); 
+                }
+            }
+        });
+
+        function renderFinalChart() {
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+            const ctx = document.getElementById('liabilityChart').getContext('2d');
+            
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Platform Liability', 'User Responsibility'],
+                    datasets: [{
+                        data: [0, 100],
+                        backgroundColor: [
+                            '#e2e8f0', 
+                            '#dc2626'  
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: 'system-ui',
+                                    size: 12
+                                },
+                                color: '#475569'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
+        }
+
+        // Initial render
+        updateUI();
+
+        async function enterPlatform() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id');
+            if (sessionId) {
+                sessionStorage.setItem('agreed_tos_' + sessionId, 'true');
+            }
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

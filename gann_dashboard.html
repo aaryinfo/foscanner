@@ -183,9 +183,57 @@ select:focus,input:focus{border-color:var(--gold)}
 #reportDescription p { margin-bottom: 10px; }
 #reportDescription ul { margin-left: 16px; margin-bottom: 10px; }
 #reportDescription li { margin-bottom: 4px; }
+
+/* ── Auth Overlays ────────────────────────────────────────── */
+#authOverlay, #disclaimerOverlay, #accessDeniedOverlay {
+  position:fixed;inset:0;background:var(--bg);z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;
+}
+#clerk-container { width: 400px; max-width: 100%; display: flex; justify-content: center;}
+.disclaimer-box { background:var(--bg2); border:1px solid var(--border); padding:30px; border-radius:8px; max-width:600px; width:90%; text-align:center; }
+.disclaimer-title { color:var(--red); font-family:var(--mono); font-size:24px; margin-bottom:16px; letter-spacing:2px; }
+.disclaimer-text { color:var(--text); font-size:14px; line-height:1.6; margin-bottom:24px; text-align:left;}
+.disclaimer-btns { display:flex; gap:16px; justify-content:center; }
+.btn-red { background:var(--red); color:#fff; }
+.btn-red:hover { background:#ff5c77; box-shadow:0 0 20px rgba(255,59,92,.4); }
 </style>
 </head>
 <body>
+
+<div id="authOverlay">
+  <div style="margin-bottom:20px; text-align:center;">
+    <div class="logo" style="font-size:20px;"><span>REVERSAL</span> TIME CYCLE</div>
+    <div style="color:var(--muted); font-size:12px; margin-top:8px;">Please log in to continue</div>
+  </div>
+  <div id="clerk-container"></div>
+</div>
+
+<div id="disclaimerOverlay" class="hidden">
+  <div class="disclaimer-box">
+    <div class="disclaimer-title">LEGAL DISCLAIMER</div>
+    <div class="disclaimer-text">
+      <p>Trading in Financial Markets (including Equities, Futures & Options) involves high risk and may not be suitable for all investors. The information provided by this scanner is for educational and informational purposes only and does not constitute financial advice.</p>
+      <br/>
+      <p>By clicking "I Agree", you acknowledge that you understand the risks involved and agree to our Terms of Service.</p>
+    </div>
+    <div class="disclaimer-btns">
+      <button class="btn" style="width:120px;" onclick="agreeToS()">I AGREE</button>
+      <button class="btn btn-red" style="width:120px;" onclick="denyToS()">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<div id="accessDeniedOverlay" class="hidden">
+  <div class="disclaimer-box">
+    <div class="disclaimer-title" style="color:var(--gold);">ACCESS DENIED</div>
+    <div class="disclaimer-text" style="text-align:center; margin-bottom: 24px;">
+      You cannot access this page without agreeing to the legal disclaimer.
+    </div>
+    <button class="btn" style="width:160px; margin:0 auto;" onclick="location.reload()">TRY AGAIN</button>
+  </div>
+</div>
+
 
 <div id="overlay">
   <svg id="gannWheel" width="80" height="80" viewBox="0 0 80 80">
@@ -223,6 +271,7 @@ select:focus,input:focus{border-color:var(--gold)}
       <div>AS OF <span id="tbDate">—</span></div>
       <div>NEXT CONFLUENCE <span id="tbNext" style="color:var(--gold)">—</span></div>
     </div>
+    <div id="user-button-container" style="margin-left: 16px;"></div>
   </header>
 
   <!-- ── Sidebar ─────────────────────────────────────────────── -->
@@ -1302,12 +1351,110 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// ── Auto-load on start ────────────────────────────────────────────────────────
-window.addEventListener('load', async () => {
+// ── Auth & Auto-load on start ────────────────────────────────────────────────────────
+let fpPromise;
+if(window.requestIdleCallback) {
+  requestIdleCallback(() => {
+    fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load()).catch(e => { console.warn('Fingerprint blocked'); return null; });
+  });
+} else {
+  setTimeout(() => {
+    fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load()).catch(e => { console.warn('Fingerprint blocked'); return null; });
+  }, 500);
+}
+
+let authData = null;
+
+async function initAuth() {
+  const clerk = window.Clerk;
+  try {
+    await clerk.load();
+    if (clerk.user) {
+      // User is logged in
+      document.getElementById('clerk-container').innerHTML = '<div style="color:var(--gold); font-family:var(--mono);">Verifying session...</div>';
+      
+      let visitorId = "blocked_by_browser";
+      if(fpPromise) {
+         try {
+            const fp = await fpPromise;
+            if(fp) {
+               const result = await fp.get();
+               visitorId = result.visitorId;
+            }
+         } catch(e) {
+            console.warn("Fingerprint get() failed:", e);
+         }
+      }
+      
+      const res = await fetch('/api/auth/login', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({
+            clerk_id: clerk.user.id,
+            email: clerk.user.primaryEmailAddress ? clerk.user.primaryEmailAddress.emailAddress : '',
+            machine_number: visitorId
+         })
+      });
+      const data = await res.json();
+      
+      const agreed = sessionStorage.getItem('agreed_tos_' + clerk.session.id);
+      
+      if(data.status === 'expired') {
+         window.location.href = '/payment.html';
+      } else if (!agreed) {
+         window.location.href = '/interactive_disclaimer_spa.html?session_id=' + encodeURIComponent(clerk.session.id);
+      } else {
+         // Active!
+         document.getElementById('authOverlay').classList.add('hidden');
+         const userBtnContainer = document.getElementById('user-button-container');
+         if(userBtnContainer) {
+            clerk.mountUserButton(userBtnContainer);
+         }
+         await loadStocks();
+         runAnalysis();
+      }
+    } else {
+      // Not logged in, mount Clerk
+      clerk.mountSignIn(document.getElementById('clerk-container'));
+    }
+  } catch (err) {
+    console.error("Auth Error:", err);
+    document.getElementById('clerk-container').innerHTML = `
+      <div style="color:var(--red); font-family:var(--mono); text-align:center; max-width: 400px;">
+        <b>Error Details:</b><br/>
+        <span style="color:#fff;">${err.message || err}</span><br/><br/>
+        Check browser console or ensure you are connected to the internet.
+      </div>`;
+  }
+}
+
+async function agreeToS() {
+  if(!authData) return;
+  await fetch('/api/auth/agree_tos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ clerk_id: authData })
+  });
+  document.getElementById('disclaimerOverlay').classList.add('hidden');
   await loadStocks();
-  // Auto-run analysis for the first stock to populate the chart initially
   runAnalysis();
+}
+
+function denyToS() {
+  document.getElementById('disclaimerOverlay').classList.add('hidden');
+  document.getElementById('accessDeniedOverlay').classList.remove('hidden');
+}
+
+window.addEventListener('load', () => {
+  // We wait for clerk script to load
+  const checkClerk = setInterval(() => {
+    if(window.Clerk) {
+      clearInterval(checkClerk);
+      initAuth();
+    }
+  }, 100);
 });
 </script>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_ZGFybGluZy1yYXZlbi0xLmNsZXJrLmFjY291bnRzLmRldiQ" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js" type="text/javascript"></script>
 </body>
 </html>

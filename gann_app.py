@@ -8,6 +8,7 @@ import os
 import time
 import sys
 import threading
+import sqlite3
 from pathlib import Path
 from datetime import datetime, timedelta
 
@@ -24,6 +25,30 @@ except Exception as e:
     sys.exit(1)
 
 app = Flask(__name__, static_folder=".")
+
+def init_db():
+    conn = sqlite3.connect('auth.db')
+    c = conn.cursor()
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            clerk_id TEXT PRIMARY KEY,
+            email TEXT,
+            trial_start_date TEXT,
+            has_agreed_tos BOOLEAN
+        )
+    ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS devices (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            clerk_id TEXT,
+            machine_number TEXT,
+            last_login_at TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+init_db()
 
 # ── F&O Stocks Universe (211 Stocks) ──────────────────────────────────────────
 FNO_STOCKS = [
@@ -692,6 +717,79 @@ def api_technical():
         return jsonify({"ok": True, "results": matches})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/api/auth/login", methods=["POST"])
+def auth_login():
+    data = request.json
+    clerk_id = data.get("clerk_id")
+    email = data.get("email")
+    machine_number = data.get("machine_number")
+    
+    if not clerk_id or not machine_number:
+        return jsonify({"ok": False, "error": "Missing clerk_id or machine_number"}), 400
+
+    conn = sqlite3.connect('auth.db')
+    c = conn.cursor()
+    
+    # Check if user exists
+    c.execute("SELECT trial_start_date, has_agreed_tos FROM users WHERE clerk_id = ?", (clerk_id,))
+    user = c.fetchone()
+    
+    now_str = datetime.utcnow().isoformat()
+    
+    if not user:
+        # New user
+        c.execute("INSERT INTO users (clerk_id, email, trial_start_date, has_agreed_tos) VALUES (?, ?, ?, ?)",
+                  (clerk_id, email, now_str, False))
+        trial_start_date = now_str
+        has_agreed_tos = False
+    else:
+        trial_start_date = user[0]
+        has_agreed_tos = bool(user[1])
+        
+    # Log device
+    c.execute("INSERT INTO devices (clerk_id, machine_number, last_login_at) VALUES (?, ?, ?)",
+              (clerk_id, machine_number, now_str))
+              
+    # Optional: count devices or emails per machine here if you want to block
+    # For now we just log it as requested.
+
+    conn.commit()
+    conn.close()
+    
+    # Check trial expiry (30 days)
+    trial_start = datetime.fromisoformat(trial_start_date)
+    if datetime.utcnow() > trial_start + timedelta(days=30):
+        return jsonify({"ok": True, "status": "expired"})
+        
+    if not has_agreed_tos:
+        return jsonify({"ok": True, "status": "needs_tos"})
+        
+    return jsonify({"ok": True, "status": "active"})
+
+@app.route("/api/auth/agree_tos", methods=["POST"])
+def auth_agree_tos():
+    data = request.json
+    clerk_id = data.get("clerk_id")
+    
+    if not clerk_id:
+        return jsonify({"ok": False, "error": "Missing clerk_id"}), 400
+        
+    conn = sqlite3.connect('auth.db')
+    c = conn.cursor()
+    c.execute("UPDATE users SET has_agreed_tos = 1 WHERE clerk_id = ?", (clerk_id,))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"ok": True})
+
+@app.route("/payment.html")
+def payment_page():
+    return send_from_directory(".", "payment.html")
+
+@app.route("/interactive_disclaimer_spa.html")
+def interactive_disclaimer_page():
+    return send_from_directory(".", "interactive_disclaimer_spa.html")
 
 @app.route("/")
 def index():
