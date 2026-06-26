@@ -1,6 +1,9 @@
 name: Daily Market Data Update
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # Runs at 12:00 UTC every day (approx 5:30 PM IST, after Indian markets close)
     - cron: '0 12 * * 1-5'
