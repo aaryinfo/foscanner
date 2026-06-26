@@ -12,6 +12,9 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime, timedelta
 
+# Vercel's filesystem is read-only, so we must use /tmp/ for the local sqlite database
+DB_PATH = '/tmp/auth.db' if os.environ.get('VERCEL') else 'auth.db'
+
 # ── Try to import heavy deps gracefully ──────────────────────────────────────
 import traceback
 try:
@@ -27,7 +30,7 @@ except Exception as e:
 app = Flask(__name__, static_folder=".")
 
 def init_db():
-    conn = sqlite3.connect('auth.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS users (
@@ -727,8 +730,8 @@ def auth_login():
     
     if not clerk_id or not machine_number:
         return jsonify({"ok": False, "error": "Missing clerk_id or machine_number"}), 400
-
-    conn = sqlite3.connect('auth.db')
+    
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     
     # Check if user exists
@@ -775,7 +778,7 @@ def auth_agree_tos():
     if not clerk_id:
         return jsonify({"ok": False, "error": "Missing clerk_id"}), 400
         
-    conn = sqlite3.connect('auth.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("UPDATE users SET has_agreed_tos = 1 WHERE clerk_id = ?", (clerk_id,))
     conn.commit()
