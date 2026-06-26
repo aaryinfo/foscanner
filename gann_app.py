@@ -423,6 +423,14 @@ def run_market_screener(market="NSE"):
             target_dates_list.append(prev)
             prev -= timedelta(days=1)
             
+        # Also include the PREVIOUS actual trading day to show recent setups
+        # that might still be perfectly valid for entry today.
+        target_dates_list.append(prev)
+        prev2 = prev - timedelta(days=1)
+        while is_non_trading_day(prev2, market):
+            target_dates_list.append(prev2)
+            prev2 -= timedelta(days=1)
+            
         target_dates = [d.strftime("%Y-%m-%d") for d in target_dates_list]
         
         results = []
