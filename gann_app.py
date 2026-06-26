@@ -545,8 +545,8 @@ def run_market_screener(market="NSE"):
         strength_order = {"STRONG": 0, "MODERATE": 1, "WEAK": 2}
         results.sort(key=lambda x: (-x["expectancy"], -x["rr1_num"], strength_order.get(x["strength"], 9)))
         
-        # Keep top 10 highest-EV backtest-validated setups
-        top_results = results[:10]
+        # Keep top 5 highest-EV backtest-validated setups
+        top_results = results[:5]
         
         with SCREENER_LOCK:
             _screener_cache[market]["results"] = top_results
