@@ -760,9 +760,9 @@ def auth_login():
     conn.commit()
     conn.close()
     
-    # Check trial expiry (30 days)
+    # Check trial expiry (15 days)
     trial_start = datetime.fromisoformat(trial_start_date)
-    if datetime.utcnow() > trial_start + timedelta(days=30):
+    if datetime.utcnow() > trial_start + timedelta(days=15):
         return jsonify({"ok": True, "status": "expired"})
         
     if not has_agreed_tos:
