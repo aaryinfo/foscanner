@@ -6,7 +6,7 @@
       "use": "@vercel/python",
       "config": {
         "maxDuration": 60,
-        "includeFiles": "*.csv.gz"
+        "includeFiles": ["*.csv.gz", "assets/*"]
       }
     }
   ],

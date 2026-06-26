@@ -790,6 +790,10 @@ def auth_agree_tos():
 def payment_page():
     return send_from_directory(".", "payment.html")
 
+@app.route("/assets/<path:filename>")
+def serve_assets(filename):
+    return send_from_directory("assets", filename)
+
 @app.route("/interactive_disclaimer_spa.html")
 def interactive_disclaimer_page():
     return send_from_directory(".", "interactive_disclaimer_spa.html")

@@ -1457,11 +1457,7 @@ window.addEventListener('load', () => {
 });
 
 // Set random premium background
-const backgrounds = [
-  'https://raw.githubusercontent.com/aaryinfo/foscanner/main/assets/bg1.png',
-  'https://raw.githubusercontent.com/aaryinfo/foscanner/main/assets/bg2.png',
-  'https://raw.githubusercontent.com/aaryinfo/foscanner/main/assets/bg3.png'
-];
+const backgrounds = ['/assets/bg1.png', '/assets/bg2.png', '/assets/bg3.png'];
 const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 document.body.style.backgroundImage = `url(${randomBg})`;
 </script>
