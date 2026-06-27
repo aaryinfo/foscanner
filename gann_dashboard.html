@@ -432,6 +432,7 @@ select:focus,input:focus{border-color:var(--gold)}
         <div style="font-size:11px;color:var(--muted);margin-top:4px;">Antigravity Filter: Only positive-EV setups shown (R:R ≥ 1:1.6 · Win Rate 39.3%)</div>
       </div>
       <div style="display:flex;gap:12px;align-items:center;">
+        <button onclick="toggleAfterMarketFilter()" id="afterMarketBtn" class="toggle-btn" style="border-color:var(--cyan);color:var(--cyan);padding:6px 16px;border-radius:20px;cursor:pointer;">🌙 AFTER MARKET ONLY</button>
         <button onclick="refreshScreener(true)" id="screenerRefreshBtn" class="toggle-btn" style="border-color:var(--gold);color:var(--gold);padding:6px 16px;border-radius:20px;cursor:pointer;">🔄 RE-SCAN MARKET</button>
         <button onclick="closeScreener()" class="toggle-btn" style="padding:6px 16px;border-radius:20px;cursor:pointer;">CLOSE [ESC]</button>
       </div>
@@ -630,6 +631,81 @@ function switchMarket(market) {
 
 // ── Screener Logic ────────────────────────────────────────────────────────────
 let screenerInterval = null;
+window.screenerData = [];
+window.afterMarketOnly = false;
+
+function toggleAfterMarketFilter() {
+  window.afterMarketOnly = !window.afterMarketOnly;
+  const btn = document.getElementById('afterMarketBtn');
+  if (window.afterMarketOnly) {
+    btn.style.background = 'rgba(0, 212, 255, 0.1)';
+    btn.textContent = '🌙 SHOWING AFTER MARKET';
+  } else {
+    btn.style.background = 'transparent';
+    btn.textContent = '🌙 AFTER MARKET ONLY';
+  }
+  renderScreenerTable();
+}
+
+function renderScreenerTable() {
+  const tableBody = document.getElementById('screenerTableBody');
+  const emptyMsg = document.getElementById('screenerEmptyMsg');
+  
+  if (!window.screenerData || window.screenerData.length === 0) {
+    tableBody.innerHTML = '';
+    emptyMsg.classList.remove('hidden');
+    return;
+  }
+  
+  let results = [...window.screenerData];
+  
+  if (window.afterMarketOnly && results.length > 0) {
+    const maxDate = results.reduce((max, r) => r.date > max ? r.date : max, results[0].date);
+    results = results.filter(r => r.date === maxDate);
+  }
+  
+  results.sort((a, b) => b.expectancy - a.expectancy);
+
+  if (results.length === 0) {
+    tableBody.innerHTML = '';
+    emptyMsg.classList.remove('hidden');
+    return;
+  }
+  
+  emptyMsg.classList.add('hidden');
+  let html = '';
+  
+  results.forEach(r => {
+    const sigClass = r.signal.includes('BULL') ? 'green' : r.signal.includes('BEAR') ? 'red' : 'gold';
+    const badgeClass = r.strength === 'STRONG' ? 'STRONG' : r.strength === 'MODERATE' ? 'MODERATE' : 'WEAK';
+    
+    let riskClass = 'risk-low';
+    if(r.risk_pct > 3) riskClass = 'risk-high';
+    else if(r.risk_pct > 1.5) riskClass = 'risk-med';
+
+    const evColor = r.expectancy > 50 ? 'var(--gold)' : 'var(--green)';
+
+    html += `<tr class="screener-row">
+      <td style="font-weight:600;color:var(--text);font-family:var(--mono);">${r.symbol}</td>
+      <td style="color:var(--muted);">${r.name}</td>
+      <td style="font-family:var(--mono);">₹${fmt(r.last_close)}</td>
+      <td style="font-family:var(--mono);">₹${fmt(r.entry)}</td>
+      <td style="font-family:var(--mono);color:var(--red);">₹${fmt(r.sl)}</td>
+      <td style="font-family:var(--mono);color:var(--green);">₹${fmt(r.t1)}</td>
+      <td style="font-family:var(--mono);" class="${riskClass}">${r.risk_pct}%</td>
+      <td style="font-family:var(--mono);">${r.risk_reward}</td>
+      <td style="font-family:var(--mono);font-weight:700;color:${evColor};">₹${fmt(r.expectancy)}</td>
+      <td style="font-family:var(--mono);color:var(--cyan);">${r.target_level || '—'}</td>
+      <td style="font-family:var(--mono);font-weight:600;" class="metric-val ${sigClass}">${r.signal}</td>
+      <td style="text-align:center;"><span class="badge ${badgeClass}">${r.strength}</span></td>
+      <td style="text-align:right;">
+        <button onclick="analyseFromScreener('${r.symbol}')" class="toggle-btn" style="border-color:var(--gold);color:var(--gold);cursor:pointer;padding:4px 10px;">ANALYSE</button>
+      </td>
+    </tr>`;
+  });
+  
+  tableBody.innerHTML = html;
+}
 
 function openScreener() {
   document.getElementById('screenerTitle').textContent = `⚡ Market Screener (${currentMarket})`;
@@ -677,61 +753,8 @@ async function refreshScreener(force = false) {
       loading.style.display = 'none';
       refreshBtn.disabled = false;
       
-      const results = json.results || [];
-      if (results.length === 0) {
-        tableBody.innerHTML = '';
-        emptyMsg.classList.remove('hidden');
-      } else {
-        // Sort results by date descending, then by expectancy
-        results.sort((a, b) => {
-          if (a.date !== b.date) return b.date.localeCompare(a.date);
-          return b.expectancy - a.expectancy;
-        });
-
-        let html = '';
-        let lastDate = null;
-        
-        results.forEach(r => {
-          if (r.date !== lastDate) {
-            const dateStr = r.date_display || r.date;
-            html += `<tr style="background:rgba(212,175,55,0.1); border-bottom:1px solid var(--gold);">
-              <td colspan="13" style="padding:10px; font-family:var(--mono); color:var(--gold); font-weight:700; letter-spacing:1px; text-transform:uppercase;">
-                SCAN RESULTS FOR: ${dateStr}
-              </td>
-            </tr>`;
-            lastDate = r.date;
-          }
-
-          const sigClass = r.signal.includes('BULL') ? 'green' : r.signal.includes('BEAR') ? 'red' : 'gold';
-          const badgeClass = r.strength === 'STRONG' ? 'STRONG' : r.strength === 'MODERATE' ? 'MODERATE' : 'WEAK';
-          
-          let riskClass = 'risk-low';
-          if(r.risk_pct > 3) riskClass = 'risk-high';
-          else if(r.risk_pct > 1.5) riskClass = 'risk-med';
-
-          const evColor = r.expectancy > 50 ? 'var(--gold)' : 'var(--green)';
-
-          html += `<tr class="screener-row">
-            <td style="font-weight:600;color:var(--text);font-family:var(--mono);">${r.symbol}</td>
-            <td style="color:var(--muted);">${r.name}</td>
-            <td style="font-family:var(--mono);">₹${fmt(r.last_close)}</td>
-            <td style="font-family:var(--mono);">₹${fmt(r.entry)}</td>
-            <td style="font-family:var(--mono);color:var(--red);">₹${fmt(r.sl)}</td>
-            <td style="font-family:var(--mono);color:var(--green);">₹${fmt(r.t1)}</td>
-            <td style="font-family:var(--mono);" class="${riskClass}">${r.risk_pct}%</td>
-            <td style="font-family:var(--mono);">${r.risk_reward}</td>
-            <td style="font-family:var(--mono);font-weight:700;color:${evColor};">₹${fmt(r.expectancy)}</td>
-            <td style="font-family:var(--mono);color:var(--cyan);">${r.target_level || '—'}</td>
-            <td style="font-family:var(--mono);font-weight:600;" class="metric-val ${sigClass}">${r.signal}</td>
-            <td style="text-align:center;"><span class="badge ${badgeClass}">${r.strength}</span></td>
-            <td style="text-align:right;">
-              <button onclick="analyseFromScreener('${r.symbol}')" class="toggle-btn" style="border-color:var(--gold);color:var(--gold);cursor:pointer;padding:4px 10px;">ANALYSE</button>
-            </td>
-          </tr>`;
-        });
-        
-        tableBody.innerHTML = html;
-      }
+      window.screenerData = json.results || [];
+      renderScreenerTable();
     }
   } catch (e) {
     statusTxt.textContent = 'ERROR: ' + e.message;
