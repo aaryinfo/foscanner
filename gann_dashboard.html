@@ -682,7 +682,26 @@ async function refreshScreener(force = false) {
         tableBody.innerHTML = '';
         emptyMsg.classList.remove('hidden');
       } else {
-        tableBody.innerHTML = results.map(r => {
+        // Sort results by date descending, then by expectancy
+        results.sort((a, b) => {
+          if (a.date !== b.date) return b.date.localeCompare(a.date);
+          return b.expectancy - a.expectancy;
+        });
+
+        let html = '';
+        let lastDate = null;
+        
+        results.forEach(r => {
+          if (r.date !== lastDate) {
+            const dateStr = r.date_display || r.date;
+            html += `<tr style="background:rgba(212,175,55,0.1); border-bottom:1px solid var(--gold);">
+              <td colspan="13" style="padding:10px; font-family:var(--mono); color:var(--gold); font-weight:700; letter-spacing:1px; text-transform:uppercase;">
+                SCAN RESULTS FOR: ${dateStr}
+              </td>
+            </tr>`;
+            lastDate = r.date;
+          }
+
           const sigClass = r.signal.includes('BULL') ? 'green' : r.signal.includes('BEAR') ? 'red' : 'gold';
           const badgeClass = r.strength === 'STRONG' ? 'STRONG' : r.strength === 'MODERATE' ? 'MODERATE' : 'WEAK';
           
@@ -692,7 +711,7 @@ async function refreshScreener(force = false) {
 
           const evColor = r.expectancy > 50 ? 'var(--gold)' : 'var(--green)';
 
-          return `<tr class="screener-row">
+          html += `<tr class="screener-row">
             <td style="font-weight:600;color:var(--text);font-family:var(--mono);">${r.symbol}</td>
             <td style="color:var(--muted);">${r.name}</td>
             <td style="font-family:var(--mono);">₹${fmt(r.last_close)}</td>
@@ -709,7 +728,9 @@ async function refreshScreener(force = false) {
               <button onclick="analyseFromScreener('${r.symbol}')" class="toggle-btn" style="border-color:var(--gold);color:var(--gold);cursor:pointer;padding:4px 10px;">ANALYSE</button>
             </td>
           </tr>`;
-        }).join('');
+        });
+        
+        tableBody.innerHTML = html;
       }
     }
   } catch (e) {
