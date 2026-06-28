@@ -501,8 +501,8 @@ def run_market_screener(market="NSE"):
                             "sl_level": intra["sl_level"],
                             "expectancy": intra["expectancy"],
                             "expectancy_pct": intra["expectancy_pct"],
-                            "date": best_conf["date"],
-                            "date_display": best_conf.get("date_display", best_conf["date"]),
+                            "date": next_trading_day.strftime("%Y-%m-%d"),
+                            "date_display": best_conf.get("date_display", next_trading_day.strftime("%Y-%m-%d")),
                             "days_away": best_conf["days_away"],
                             "signal": intra["signal"],   # Use intra signal for consistency with ANALYSE page
                             "strength": best_conf["strength"],
