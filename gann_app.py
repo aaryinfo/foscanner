@@ -640,6 +640,19 @@ def api_after_market_report():
     report_data = []
     import yfinance as yf
     
+    target_date = cached_results[0]["date"]
+    try:
+        test_sym = cached_results[0]["symbol"]
+        if market == "NSE" and not test_sym.endswith(".NS"):
+            test_sym += ".NS"
+        test_hist = yf.Ticker(test_sym).history(period="5d", interval="5m")
+        if not test_hist.empty:
+            latest_date_str = test_hist.index.date[-1].strftime("%Y-%m-%d")
+            if latest_date_str != target_date:
+                return jsonify({"error": f"Intraday data for the projected session ({target_date}) is not yet available. The market is closed or the session hasn't started. (Latest data: {latest_date_str})"}), 400
+    except Exception as e:
+        pass
+
     successful = 0
     failed = 0
     open_trades = 0
