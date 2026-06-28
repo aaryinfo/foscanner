@@ -668,6 +668,15 @@ def api_after_market_report():
             signal = setup["signal"]
             is_bull = "BULL" in signal.upper()
             
+            # Check for gap invalidation
+            first_candle = day_data.iloc[0]
+            if is_bull and first_candle['Open'] <= sl:
+                never_triggered += 1
+                continue
+            if not is_bull and first_candle['Open'] >= sl:
+                never_triggered += 1
+                continue
+                
             triggered = False
             trigger_time = None
             outcome = "Open"
@@ -675,6 +684,8 @@ def api_after_market_report():
             for index, row in day_data.iterrows():
                 low = row['Low']
                 high = row['High']
+                open_p = row['Open']
+                close_p = row['Close']
                 
                 if not triggered:
                     if is_bull and low <= entry:
@@ -686,17 +697,29 @@ def api_after_market_report():
                 
                 if triggered:
                     if is_bull:
-                        if low <= sl:
+                        hit_sl = low <= sl
+                        hit_t1 = high >= t1
+                        if hit_sl and hit_t1:
+                            if close_p >= t1: outcome = "Success"
+                            else: outcome = "Failed"
+                            break
+                        elif hit_sl:
                             outcome = "Failed"
                             break
-                        elif high >= t1:
+                        elif hit_t1:
                             outcome = "Success"
                             break
                     else:
-                        if high >= sl:
+                        hit_sl = high >= sl
+                        hit_t1 = low <= t1
+                        if hit_sl and hit_t1:
+                            if close_p <= t1: outcome = "Success"
+                            else: outcome = "Failed"
+                            break
+                        elif hit_sl:
                             outcome = "Failed"
                             break
-                        elif low <= t1:
+                        elif hit_t1:
                             outcome = "Success"
                             break
                             
