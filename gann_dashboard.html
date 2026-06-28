@@ -277,7 +277,10 @@ select:focus,input:focus{border-color:var(--gold)}
       <div>CURRENT PRICE <span id="tbClose">—</span></div>
       <div>AS OF <span id="tbDate">—</span></div>
       <div>NEXT CONFLUENCE <span id="tbNext" style="color:var(--gold)">—</span></div>
-      <div>TRIAL REMAINING: <span id="tbTrial" style="color:var(--red)">—</span></div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div>TRIAL REMAINING: <span id="tbTrial" style="color:var(--red)">—</span></div>
+        <a href="/subscription.html" style="background: linear-gradient(90deg, #00FFFF, #00B3B3); color: #000; font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-decoration: none; letter-spacing: 1px; box-shadow: 0 0 10px rgba(0,255,255,0.4); transition: transform 0.2s;">✨ UPGRADE TO PRO</a>
+      </div>
     </div>
     <div id="user-button-container" style="margin-left: 16px;"></div>
   </header>

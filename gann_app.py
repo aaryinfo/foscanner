@@ -971,8 +971,12 @@ def auth_agree_tos():
     return jsonify({"ok": True})
 
 @app.route("/payment.html")
-def payment_page():
+def serve_payment():
     return send_from_directory(".", "payment.html")
+
+@app.route("/subscription.html")
+def serve_subscription():
+    return send_from_directory(".", "subscription.html")
 
 @app.route("/assets/<path:filename>")
 def serve_assets(filename):
