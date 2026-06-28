@@ -627,6 +627,125 @@ def api_screener():
         "results": _screener_cache[market]["results"]
     })
 
+@app.route("/api/after_market_report")
+def api_after_market_report():
+    market = request.args.get("market", "NSE").upper()
+    
+    with SCREENER_LOCK:
+        if market not in _screener_cache or not _screener_cache[market].get("results"):
+            return jsonify({"error": "Screener results not available. Please run the scanner first."}), 400
+        # Use top 5 results as requested
+        cached_results = _screener_cache[market]["results"][:5]
+    
+    report_data = []
+    import yfinance as yf
+    
+    successful = 0
+    failed = 0
+    open_trades = 0
+    never_triggered = 0
+    
+    for setup in cached_results:
+        sym = setup["symbol"]
+        yf_sym = sym
+        if market == "NSE" and not sym.endswith(".NS"):
+            yf_sym = sym + ".NS"
+            
+        try:
+            ticker = yf.Ticker(yf_sym)
+            hist = ticker.history(period="5d", interval="5m")
+            if hist.empty:
+                never_triggered += 1
+                continue
+                
+            dates = hist.index.date
+            latest_date = dates[-1]
+            day_data = hist[hist.index.date == latest_date]
+            
+            entry = setup["entry"]
+            t1 = setup["t1"]
+            sl = setup["sl"]
+            signal = setup["signal"]
+            is_bull = "BULL" in signal.upper()
+            
+            triggered = False
+            trigger_time = None
+            outcome = "Open"
+            
+            for index, row in day_data.iterrows():
+                low = row['Low']
+                high = row['High']
+                
+                if not triggered:
+                    if is_bull and low <= entry:
+                        triggered = True
+                        trigger_time = index.strftime("%H:%M")
+                    elif not is_bull and high >= entry:
+                        triggered = True
+                        trigger_time = index.strftime("%H:%M")
+                
+                if triggered:
+                    if is_bull:
+                        if low <= sl:
+                            outcome = "Failed"
+                            break
+                        elif high >= t1:
+                            outcome = "Success"
+                            break
+                    else:
+                        if high >= sl:
+                            outcome = "Failed"
+                            break
+                        elif low <= t1:
+                            outcome = "Success"
+                            break
+                            
+            if triggered:
+                if outcome == "Success":
+                    successful += 1
+                elif outcome == "Failed":
+                    failed += 1
+                else:
+                    open_trades += 1
+                    
+                report_data.append({
+                    "symbol": sym,
+                    "signal": signal,
+                    "entry": entry,
+                    "t1": t1,
+                    "sl": sl,
+                    "trigger_time": trigger_time,
+                    "outcome": outcome,
+                    "date": latest_date.strftime("%Y-%m-%d")
+                })
+            else:
+                never_triggered += 1
+                
+        except Exception as e:
+            never_triggered += 1
+            print(f"Error evaluating {sym}: {e}")
+            
+    report_data.sort(key=lambda x: x["trigger_time"])
+    
+    total_triggered = successful + failed + open_trades
+    total_signals = len(cached_results)
+    success_rate = (successful / (successful + failed) * 100) if (successful + failed) > 0 else 0
+    
+    summary = {
+        "total_signals": total_signals,
+        "triggered_signals": total_triggered,
+        "successful": successful,
+        "failed": failed,
+        "open": open_trades,
+        "never_triggered": never_triggered,
+        "success_rate": round(success_rate, 2)
+    }
+    
+    return jsonify({
+        "summary": summary,
+        "report": report_data
+    })
+
 @app.route("/api/technical")
 def api_technical():
     market = request.args.get("market", "NSE").upper()

@@ -432,6 +432,7 @@ select:focus,input:focus{border-color:var(--gold)}
         <div style="font-size:11px;color:var(--muted);margin-top:4px;">Antigravity Filter: Only positive-EV setups shown (R:R ≥ 1:1.6 · Win Rate 39.3%)</div>
       </div>
       <div style="display:flex;gap:12px;align-items:center;">
+        <button onclick="openAfterMarketReport()" id="screenerReportBtn" class="toggle-btn" style="border-color:var(--cyan);color:var(--cyan);padding:6px 16px;border-radius:20px;cursor:pointer;">📊 AFTER MARKET REPORT</button>
         <button onclick="refreshScreener(true)" id="screenerRefreshBtn" class="toggle-btn" style="border-color:var(--gold);color:var(--gold);padding:6px 16px;border-radius:20px;cursor:pointer;">🔄 RE-SCAN MARKET</button>
         <button onclick="closeScreener()" class="toggle-btn" style="padding:6px 16px;border-radius:20px;cursor:pointer;">CLOSE [ESC]</button>
       </div>
@@ -539,6 +540,45 @@ select:focus,input:focus{border-color:var(--gold)}
           <div class="spinner"></div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- After Market Report Modal -->
+<div id="afterMarketReportModal" class="hidden" style="position:fixed;inset:0;background:rgba(11,15,26,0.95);backdrop-filter:blur(8px);z-index:99;display:flex;justify-content:center;align-items:center;padding:24px;">
+  <div style="width:100%;max-width:900px;height:80vh;background:var(--bg2);border:1px solid var(--border);border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;overflow:hidden;">
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <h2 style="font-family:var(--mono);color:var(--cyan);font-size:16px;letter-spacing:2px;text-transform:uppercase;">📊 After Market Intraday Validation</h2>
+      </div>
+      <div>
+        <button onclick="closeAfterMarketReport()" class="toggle-btn" style="padding:6px 16px;border-radius:20px;cursor:pointer;">CLOSE [ESC]</button>
+      </div>
+    </div>
+    <div id="amReportContent" style="flex:1;overflow-y:auto;padding:24px;color:var(--text);font-size:13px;line-height:1.6;">
+       <div id="amReportLoading" style="display:flex;justify-content:center;align-items:center;height:100%;flex-direction:column;gap:16px;">
+         <div class="spinner"></div>
+         <div style="font-family:var(--mono);color:var(--gold);letter-spacing:2px;">VALIDATING INTRADAY PERFORMANCE...</div>
+       </div>
+       <div id="amReportData" class="hidden">
+         <div id="amReportSummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+           <!-- Summary Cards -->
+         </div>
+         <table style="width:100%;border-collapse:collapse;font-family:var(--sans);font-size:12px;text-align:left;">
+           <thead>
+             <tr style="border-bottom:1px solid rgba(255,255,255,0.1);color:var(--muted);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;">
+               <th style="padding:10px;">Symbol</th>
+               <th style="padding:10px;">Signal</th>
+               <th style="padding:10px;">Entry Price</th>
+               <th style="padding:10px;">Trigger Time</th>
+               <th style="padding:10px;">T1</th>
+               <th style="padding:10px;">SL</th>
+               <th style="padding:10px;text-align:right;">Outcome</th>
+             </tr>
+           </thead>
+           <tbody id="amReportTableBody"></tbody>
+         </table>
+       </div>
     </div>
   </div>
 </div>
@@ -716,6 +756,65 @@ async function refreshScreener(force = false) {
     statusTxt.textContent = 'ERROR: ' + e.message;
     refreshBtn.disabled = false;
   }
+}
+
+// ── After Market Report Logic ────────────────────────────────────────────────
+function openAfterMarketReport() {
+  document.getElementById('afterMarketReportModal').classList.remove('hidden');
+  document.getElementById('amReportLoading').classList.remove('hidden');
+  document.getElementById('amReportData').classList.add('hidden');
+  
+  fetch(`/api/after_market_report?market=${currentMarket}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('amReportLoading').classList.add('hidden');
+      if (data.error) {
+        document.getElementById('amReportContent').innerHTML = `<div style="text-align:center;color:var(--red);padding:40px;">${data.error}</div>`;
+        return;
+      }
+      document.getElementById('amReportData').classList.remove('hidden');
+      
+      const s = data.summary;
+      document.getElementById('amReportSummary').innerHTML = `
+        <div class="metric" style="padding:16px;"><div class="metric-label">Total Signals Generated</div><div class="metric-val" style="color:#fff">${s.total_signals}</div></div>
+        <div class="metric" style="padding:16px;"><div class="metric-label">Triggered (Hit Entry)</div><div class="metric-val" style="color:#fff">${s.triggered_signals}</div></div>
+        <div class="metric" style="padding:16px;"><div class="metric-label">Successful (Hit T1)</div><div class="metric-val green">${s.successful}</div></div>
+        <div class="metric" style="padding:16px;"><div class="metric-label">Failed (Hit SL)</div><div class="metric-val red">${s.failed}</div></div>
+        <div class="metric" style="padding:16px;"><div class="metric-label">Open Trades</div><div class="metric-val gold">${s.open}</div></div>
+        <div class="metric" style="padding:16px;"><div class="metric-label">Success Rate</div><div class="metric-val cyan">${s.success_rate}%</div></div>
+      `;
+      
+      const tbody = document.getElementById('amReportTableBody');
+      if (data.report.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted);">No setups triggered their entry price during today\'s intraday session.</td></tr>';
+      } else {
+        tbody.innerHTML = data.report.map(r => {
+          const sigClass = r.signal.includes('BULL') ? 'green' : r.signal.includes('BEAR') ? 'red' : 'gold';
+          let outClass = 'gold';
+          let outText = 'OPEN';
+          if (r.outcome === 'Success') { outClass = 'green'; outText = 'SUCCESS ✓'; }
+          else if (r.outcome === 'Failed') { outClass = 'red'; outText = 'FAILED ✗'; }
+          
+          return `<tr class="screener-row">
+            <td style="padding:10px;font-weight:600;font-family:var(--mono);">${r.symbol}</td>
+            <td style="padding:10px;font-family:var(--mono);" class="${sigClass}">${r.signal}</td>
+            <td style="padding:10px;font-family:var(--mono);">₹${fmt(r.entry)}</td>
+            <td style="padding:10px;font-family:var(--mono);color:var(--cyan);">${r.trigger_time}</td>
+            <td style="padding:10px;font-family:var(--mono);color:var(--green);">₹${fmt(r.t1)}</td>
+            <td style="padding:10px;font-family:var(--mono);color:var(--red);">₹${fmt(r.sl)}</td>
+            <td style="padding:10px;text-align:right;font-family:var(--mono);font-weight:700;" class="${outClass}">${outText}</td>
+          </tr>`;
+        }).join('');
+      }
+    })
+    .catch(err => {
+      document.getElementById('amReportLoading').classList.add('hidden');
+      document.getElementById('amReportContent').innerHTML = `<div style="text-align:center;color:var(--red);padding:40px;">Failed to load report: ${err}</div>`;
+    });
+}
+
+function closeAfterMarketReport() {
+  document.getElementById('afterMarketReportModal').classList.add('hidden');
 }
 
 function analyseFromScreener(symbol) {
