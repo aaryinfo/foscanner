@@ -3,3 +3,4 @@ pandas>=2.0
 numpy>=1.24
 flask>=3.0
 holidays>=0.40
+psycopg2-binary>=2.9

@@ -9,11 +9,26 @@ import time
 import sys
 import threading
 import sqlite3
+import urllib.parse
+try:
+    import psycopg2
+except ImportError:
+    pass
+
 from pathlib import Path
 from datetime import datetime, timedelta
 
 # Vercel's filesystem is read-only, so we must use /tmp/ for the local sqlite database
 DB_PATH = '/tmp/auth.db' if os.environ.get('VERCEL') else 'auth.db'
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+def get_db_connection():
+    if DATABASE_URL:
+        conn = psycopg2.connect(DATABASE_URL)
+        return conn, True
+    else:
+        conn = sqlite3.connect(DB_PATH)
+        return conn, False
 
 # ── Try to import heavy deps gracefully ──────────────────────────────────────
 import traceback
@@ -30,24 +45,44 @@ except Exception as e:
 app = Flask(__name__, static_folder=".")
 
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn, is_postgres = get_db_connection()
     c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            clerk_id TEXT PRIMARY KEY,
-            email TEXT,
-            trial_start_date TEXT,
-            has_agreed_tos BOOLEAN
-        )
-    ''')
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS devices (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            clerk_id TEXT,
-            machine_number TEXT,
-            last_login_at TEXT
-        )
-    ''')
+    
+    if is_postgres:
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                clerk_id TEXT PRIMARY KEY,
+                email TEXT,
+                trial_start_date TEXT,
+                has_agreed_tos BOOLEAN
+            )
+        ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS devices (
+                id SERIAL PRIMARY KEY,
+                clerk_id TEXT,
+                machine_number TEXT,
+                last_login_at TEXT
+            )
+        ''')
+    else:
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                clerk_id TEXT PRIMARY KEY,
+                email TEXT,
+                trial_start_date TEXT,
+                has_agreed_tos BOOLEAN
+            )
+        ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS devices (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                clerk_id TEXT,
+                machine_number TEXT,
+                last_login_at TEXT
+            )
+        ''')
+    
     conn.commit()
     conn.close()
 
@@ -904,18 +939,20 @@ def auth_login():
     if not clerk_id or not machine_number:
         return jsonify({"ok": False, "error": "Missing clerk_id or machine_number"}), 400
     
-    conn = sqlite3.connect(DB_PATH)
+    conn, is_postgres = get_db_connection()
     c = conn.cursor()
     
+    param_placeholder = "%s" if is_postgres else "?"
+    
     # Check if user exists
-    c.execute("SELECT trial_start_date, has_agreed_tos FROM users WHERE clerk_id = ?", (clerk_id,))
+    c.execute(f"SELECT trial_start_date, has_agreed_tos FROM users WHERE clerk_id = {param_placeholder}", (clerk_id,))
     user = c.fetchone()
     
     now_str = datetime.utcnow().isoformat()
     
     if not user:
         # New user
-        c.execute("INSERT INTO users (clerk_id, email, trial_start_date, has_agreed_tos) VALUES (?, ?, ?, ?)",
+        c.execute(f"INSERT INTO users (clerk_id, email, trial_start_date, has_agreed_tos) VALUES ({param_placeholder}, {param_placeholder}, {param_placeholder}, {param_placeholder})",
                   (clerk_id, email, now_str, False))
         trial_start_date = now_str
         has_agreed_tos = False
@@ -924,7 +961,7 @@ def auth_login():
         has_agreed_tos = bool(user[1])
         
     # Log device
-    c.execute("INSERT INTO devices (clerk_id, machine_number, last_login_at) VALUES (?, ?, ?)",
+    c.execute(f"INSERT INTO devices (clerk_id, machine_number, last_login_at) VALUES ({param_placeholder}, {param_placeholder}, {param_placeholder})",
               (clerk_id, machine_number, now_str))
               
     # Optional: count devices or emails per machine here if you want to block
@@ -972,9 +1009,10 @@ def auth_agree_tos():
     if not clerk_id:
         return jsonify({"ok": False, "error": "Missing clerk_id"}), 400
         
-    conn = sqlite3.connect(DB_PATH)
+    conn, is_postgres = get_db_connection()
     c = conn.cursor()
-    c.execute("UPDATE users SET has_agreed_tos = 1 WHERE clerk_id = ?", (clerk_id,))
+    param_placeholder = "%s" if is_postgres else "?"
+    c.execute(f"UPDATE users SET has_agreed_tos = 1 WHERE clerk_id = {param_placeholder}", (clerk_id,))
     conn.commit()
     conn.close()
     
