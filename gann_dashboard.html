@@ -724,11 +724,10 @@ async function refreshScreener(force = false) {
       const results = json.results || [];
       currentScreenerResults = results;
       
-      if (results.length > 0 && results[0].date) {
-        document.getElementById('screenerDateText').textContent = `Scanning Date: ${results[0].date}`;
-      } else {
-        document.getElementById('screenerDateText').textContent = 'Scanning Date: N/A';
-      }
+      // Show scan date and data date for full transparency
+      const scanDate = json.scan_date || (results.length > 0 && results[0].date) || 'N/A';
+      const dataDate = json.data_date || 'unknown';
+      document.getElementById('screenerDateText').textContent = `Scanning Date: ${scanDate}  |  Data: ${dataDate}`;
       
       if (results.length === 0) {
         tableBody.innerHTML = '';

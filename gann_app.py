@@ -65,6 +65,21 @@ def init_db():
                 last_login_at TEXT
             )
         ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS screener_results (
+                id SERIAL PRIMARY KEY,
+                market TEXT NOT NULL,
+                scan_date TEXT NOT NULL,
+                data_date TEXT,
+                results_json TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+        ''')
+        # Create index for fast lookups by market + scan_date
+        c.execute('''
+            CREATE INDEX IF NOT EXISTS idx_screener_market_date 
+            ON screener_results (market, scan_date)
+        ''')
     else:
         c.execute('''
             CREATE TABLE IF NOT EXISTS users (
@@ -80,6 +95,16 @@ def init_db():
                 clerk_id TEXT,
                 machine_number TEXT,
                 last_login_at TEXT
+            )
+        ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS screener_results (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                market TEXT NOT NULL,
+                scan_date TEXT NOT NULL,
+                data_date TEXT,
+                results_json TEXT NOT NULL,
+                created_at TEXT NOT NULL
             )
         ''')
     
@@ -384,6 +409,69 @@ def fetch_data(symbol: str, market: str = "NSE", period: str = "2y") -> pd.DataF
 
 from gann_engine import is_non_trading_day
 
+# ── Helper: Get the current scan date (next trading day) ──────────────────────
+def _get_scan_date(market="NSE"):
+    """Determine the scan date = next trading day. This is the key for DB caching."""
+    from datetime import timezone
+    ist = timezone(timedelta(hours=5, minutes=30))
+    now = datetime.now(ist)
+    today = now.date()
+    
+    is_today_trading = not is_non_trading_day(today, market)
+    is_before_close = now.hour < 15 or (now.hour == 15 and now.minute < 30)
+    
+    if is_today_trading and is_before_close:
+        return today
+    else:
+        curr = today + timedelta(days=1)
+        while is_non_trading_day(curr, market):
+            curr += timedelta(days=1)
+        return curr
+
+# ── Helper: Load cached screener results from DB ─────────────────────────────
+def _load_screener_from_db(market, scan_date_str):
+    """Load previously saved screener results from the database. Returns list or None."""
+    try:
+        conn, is_postgres = get_db_connection()
+        c = conn.cursor()
+        param = "%s" if is_postgres else "?"
+        c.execute(
+            f"SELECT results_json, data_date FROM screener_results WHERE market = {param} AND scan_date = {param} ORDER BY created_at DESC LIMIT 1",
+            (market, scan_date_str)
+        )
+        row = c.fetchone()
+        conn.close()
+        if row:
+            return json.loads(row[0]), row[1]
+    except Exception as e:
+        print(f"Failed to load screener from DB: {e}")
+    return None, None
+
+# ── Helper: Save screener results to DB ───────────────────────────────────────
+def _save_screener_to_db(market, scan_date_str, data_date_str, results):
+    """Persist screener results to the database for consistent retrieval."""
+    try:
+        conn, is_postgres = get_db_connection()
+        c = conn.cursor()
+        param = "%s" if is_postgres else "?"
+        now_str = datetime.utcnow().isoformat()
+        results_json = json.dumps(results)
+        
+        # Delete old results for this market+scan_date to avoid duplicates
+        c.execute(
+            f"DELETE FROM screener_results WHERE market = {param} AND scan_date = {param}",
+            (market, scan_date_str)
+        )
+        
+        c.execute(
+            f"INSERT INTO screener_results (market, scan_date, data_date, results_json, created_at) VALUES ({param}, {param}, {param}, {param}, {param})",
+            (market, scan_date_str, data_date_str, results_json, now_str)
+        )
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Failed to save screener to DB: {e}")
+
 # ── Background Market Screener Task ───────────────────────────────────────────
 def run_market_screener(market="NSE"):
     global _screener_cache
@@ -405,35 +493,45 @@ def run_market_screener(market="NSE"):
             symbols = [item["symbol"] for item in GLOBAL_ASSETS]
             tickers = symbols
             process_items = GLOBAL_ASSETS
-            period_str = "10y"  # Less data for crypto/comm sometimes, 10y is safer
+            period_str = "10y"
             
-        # On Vercel, avoid downloading data due to serverless timeouts
+        # ── DETERMINISTIC DATA SOURCE: Use ONLY the cached CSV file ──────────
+        # This eliminates price inconsistency between cached vs live data
         if market == "NSE":
             cache_file = Path("gann_data_20y.csv.gz")
         else:
             cache_file = Path("gann_data_global.csv.gz")
-        is_vercel = os.environ.get("VERCEL") == "1"
         
+        with SCREENER_LOCK:
+            _screener_cache[market]["status"] = f"Loading {market} data from disk cache..."
+            
         data = None
-        if cache_file.exists() and (is_vercel or (time.time() - cache_file.stat().st_mtime) < 12 * 3600):
-            with SCREENER_LOCK:
-                _screener_cache[market]["status"] = f"Loading {market} data from disk cache..."
+        data_date_str = "unknown"
+        
+        if cache_file.exists():
             try:
                 data = pd.read_csv(cache_file, header=[0, 1], index_col=0)
                 data.index = pd.to_datetime(data.index)
+                # Record the last date in the data for transparency
+                data_date_str = data.index[-1].strftime("%Y-%m-%d")
             except Exception as e:
                 print(f"Failed to read cache {cache_file}: {e}")
                 data = None
-
+        
         if data is None:
+            # If no cache file exists at all, download once and save
+            is_vercel = os.environ.get("VERCEL") == "1"
+            if is_vercel:
+                raise ValueError(f"No cached data file found: {cache_file}. Run auto_update.py locally and redeploy.")
+            
             with SCREENER_LOCK:
-                _screener_cache[market]["status"] = f"Downloading {market} data (takes ~1-2 min)..."
+                _screener_cache[market]["status"] = f"Downloading {market} data (one-time, takes ~1-2 min)..."
             data = yf.download(tickers, period=period_str, interval="1d", progress=False, group_by="ticker", threads=True)
-            if not is_vercel:
-                try:
-                    data.to_csv(cache_file, compression="gzip")
-                except Exception as cache_err:
-                    print(f"Failed to save pickle cache: {cache_err}")
+            try:
+                data.to_csv(cache_file, compression="gzip")
+            except Exception as cache_err:
+                print(f"Failed to save cache: {cache_err}")
+            data_date_str = data.index[-1].strftime("%Y-%m-%d")
         
         with SCREENER_LOCK:
             _screener_cache[market]["status"] = "Running cycle calculations..."
@@ -444,16 +542,7 @@ def run_market_screener(market="NSE"):
         today = now.date()
         
         # Determine the next actual trading day when market opens
-        is_today_trading = not is_non_trading_day(today, market)
-        is_before_close = now.hour < 15 or (now.hour == 15 and now.minute < 30)
-        
-        if is_today_trading and is_before_close:
-            next_trading_day = today
-        else:
-            curr = today + timedelta(days=1)
-            while is_non_trading_day(curr, market):
-                curr += timedelta(days=1)
-            next_trading_day = curr
+        next_trading_day = _get_scan_date(market)
             
         # Include all non-trading days preceding next_trading_day
         target_dates_list = [next_trading_day]
@@ -474,16 +563,23 @@ def run_market_screener(market="NSE"):
         
         results = []
         
-        # Evaluate all stocks regardless of environment
-        pass        
-        def process_stock(item):
+        # ── DETERMINISTIC SEQUENTIAL PROCESSING ──────────────────────────────
+        # Process each stock one by one. No ThreadPoolExecutor, no race conditions.
+        # Only use data from the cached CSV. Skip stocks not in cache.
+        total_items = len(process_items)
+        for idx, item in enumerate(process_items):
             sym = item["symbol"]
-            ticker = sym if market == "GLOBAL" else sym + ".NS"
+            ticker = sym if market == "GLOBAL" else (sym if sym.endswith(".NS") or sym.startswith("^") else sym + ".NS")
+            
+            if (idx + 1) % 20 == 0:
+                with SCREENER_LOCK:
+                    _screener_cache[market]["status"] = f"Analyzing {idx+1}/{total_items} stocks..."
+            
             try:
-                # Extract fields if they exist in the downloaded batch DataFrame
+                # Extract from cached DataFrame ONLY — no yf.download fallback
                 if isinstance(data.columns, pd.MultiIndex):
                     if ticker not in data.columns.levels[0]:
-                        return None
+                        continue  # Skip — not in cache
                     ticker_df = pd.DataFrame({
                         "Open": data[ticker]["Open"],
                         "High": data[ticker]["High"],
@@ -494,10 +590,10 @@ def run_market_screener(market="NSE"):
                     if len(tickers) == 1:
                         ticker_df = data[["Open", "High", "Low", "Close"]].dropna()
                     else:
-                        return None
+                        continue  # Skip — can't extract
                 
                 if ticker_df.empty or len(ticker_df) < 50:
-                    return None
+                    continue
                 
                 # Analyze using swing window=10
                 res = analyse(ticker_df, sym, swing_window=10, period=period_str)
@@ -506,7 +602,6 @@ def run_market_screener(market="NSE"):
                 accuracy = backtest.get("accuracy", 0.0)
                 success_count = backtest.get("success_count", 0)
                 
-                stock_results = []
                 # Only include stocks with validated patterns (accuracy >= 30.0)
                 if success_count > 0 and accuracy >= 30.0:
                     # Use the analysis result's own intraday_levels for signal consistency
@@ -515,7 +610,7 @@ def run_market_screener(market="NSE"):
                     setup_valid = res.get("setup_valid", False)
                     
                     if not setup_valid or intra is None or not intra.get('is_valid', False):
-                        return None
+                        continue
                     
                     # Find the best matching confluence for the target trading dates
                     matching_confs = [c for c in res["confluence"] 
@@ -525,7 +620,7 @@ def run_market_screener(market="NSE"):
                         # Use the strongest confluence for metadata
                         best_conf = max(matching_confs, key=lambda c: c["count"])
                         
-                        stock_results.append({
+                        results.append({
                             "symbol": sym,
                             "name": item["name"],
                             "last_close": res["last_close"],
@@ -549,18 +644,8 @@ def run_market_screener(market="NSE"):
                             "accuracy": accuracy,
                             "active_cycles": best_conf.get("cycles", [])[:4]
                         })
-                return stock_results
             except Exception:
-                return None
-
-        # Execute in parallel with 16 worker threads
-        from concurrent.futures import ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=16) as executor:
-            thread_results = list(executor.map(process_stock, process_items))
-            
-        for r in thread_results:
-            if r:
-                results.extend(r)
+                continue
                 
         # Deduplicate results by symbol, keeping the one closest to next_trading_day (or highest quality)
         deduped = {}
@@ -587,10 +672,15 @@ def run_market_screener(market="NSE"):
         # Keep top 5 highest-EV backtest-validated setups
         top_results = results[:5]
         
+        # ── PERSIST TO DATABASE for consistent retrieval ──────────────────────
+        scan_date_str = next_trading_day.strftime("%Y-%m-%d")
+        _save_screener_to_db(market, scan_date_str, data_date_str, top_results)
+        
         with SCREENER_LOCK:
             _screener_cache[market]["results"] = top_results
             _screener_cache[market]["last_updated"] = time.time()
             _screener_cache[market]["status"] = "Completed"
+            _screener_cache[market]["data_date"] = data_date_str
             
     except Exception as e:
         with SCREENER_LOCK:
@@ -630,32 +720,66 @@ def api_stocks():
 
 @app.route("/api/screener")
 def api_screener():
-    """Endpoint for market screener status and results."""
+    """Endpoint for market screener status and results.
+    
+    Deterministic logic:
+    1. Check if we already have results for today's scan_date in the DB
+    2. If yes, return them immediately (consistent across all Vercel instances)
+    3. If no, run a fresh scan, persist to DB, then return
+    4. force=true bypasses DB cache and re-scans (RE-SCAN MARKET button)
+    """
     market = request.args.get("market", "NSE").upper()
     force = request.args.get("force", "false").lower() == "true"
     
     if market not in _screener_cache:
         market = "NSE"
-        
-    is_vercel = os.environ.get("VERCEL") == "1"
-    if is_vercel and _screener_cache[market]["last_updated"] == 0 and not _screener_cache[market]["is_loading"]:
-        force = True
-    if force:
-        with SCREENER_LOCK:
-            _screener_cache[market]["is_loading"] = False
-            if not _screener_cache[market]["is_loading"]:
-                start_background_scan(market)
-                
-                return jsonify({
-                    "ok": True,
-                    "ready": True,
-                    "is_loading": False,
-                    "status": _screener_cache[market]["status"],
-                    "last_updated": _screener_cache[market]["last_updated"],
-                    "error": _screener_cache[market]["error"],
-                    "results": _screener_cache[market]["results"]
-                })
-                
+    
+    scan_date = _get_scan_date(market)
+    scan_date_str = scan_date.strftime("%Y-%m-%d")
+    
+    # ── Step 1: Try DB cache first (unless force re-scan) ─────────────────
+    if not force:
+        db_results, data_date = _load_screener_from_db(market, scan_date_str)
+        if db_results is not None:
+            # We have persisted results — return immediately, 100% consistent
+            with SCREENER_LOCK:
+                _screener_cache[market]["results"] = db_results
+                _screener_cache[market]["last_updated"] = time.time()
+                _screener_cache[market]["status"] = "Completed"
+                _screener_cache[market]["data_date"] = data_date or "unknown"
+            
+            return jsonify({
+                "ok": True,
+                "ready": True,
+                "is_loading": False,
+                "status": "Completed",
+                "last_updated": _screener_cache[market]["last_updated"],
+                "error": None,
+                "results": db_results,
+                "scan_date": scan_date_str,
+                "data_date": data_date or "unknown"
+            })
+    
+    # ── Step 2: No DB cache (or force=true) — run fresh scan ──────────────
+    # Also check in-memory cache (same Vercel instance, already ran)
+    if not force and _screener_cache[market]["last_updated"] > 0 and _screener_cache[market]["results"]:
+        return jsonify({
+            "ok": True,
+            "ready": True,
+            "is_loading": False,
+            "status": _screener_cache[market]["status"],
+            "last_updated": _screener_cache[market]["last_updated"],
+            "error": _screener_cache[market]["error"],
+            "results": _screener_cache[market]["results"],
+            "scan_date": scan_date_str,
+            "data_date": _screener_cache[market].get("data_date", "unknown")
+        })
+    
+    # ── Step 3: Fresh scan needed ─────────────────────────────────────────
+    with SCREENER_LOCK:
+        _screener_cache[market]["is_loading"] = False
+    start_background_scan(market)
+            
     return jsonify({
         "ok": True,
         "ready": not _screener_cache[market]["is_loading"] and _screener_cache[market]["last_updated"] > 0,
@@ -663,7 +787,9 @@ def api_screener():
         "status": _screener_cache[market]["status"],
         "last_updated": _screener_cache[market]["last_updated"],
         "error": _screener_cache[market]["error"],
-        "results": _screener_cache[market]["results"]
+        "results": _screener_cache[market]["results"],
+        "scan_date": scan_date_str,
+        "data_date": _screener_cache[market].get("data_date", "unknown")
     })
 
 @app.route("/api/after_market_report", methods=["GET", "POST"])
