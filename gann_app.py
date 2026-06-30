@@ -363,7 +363,7 @@ def run_market_screener(market="NSE"):
     try:
         if market == "NSE":
             symbols = [item["symbol"] for item in FNO_STOCKS]
-            tickers = [s + ".NS" for s in symbols]
+            tickers = [s + ".NS" if not s.endswith(".NS") and not s.startswith("^") else s for s in symbols]
             process_items = FNO_STOCKS
             period_str = "20y"
         else:

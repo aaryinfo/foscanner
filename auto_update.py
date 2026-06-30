@@ -8,7 +8,7 @@ print("Starting automated data update...")
 # --- UPDATE NSE F&O DATA ---
 print("\n[1/2] Updating NSE F&O Data (20y)...")
 nse_symbols = [item["symbol"] for item in FNO_STOCKS]
-nse_tickers = [s + ".NS" for s in nse_symbols]
+nse_tickers = [s + ".NS" if not s.endswith(".NS") and not s.startswith("^") else s for s in nse_symbols]
 
 try:
     nse_data = yf.download(nse_tickers, period="20y", interval="1d", progress=False, group_by="ticker", threads=False)
