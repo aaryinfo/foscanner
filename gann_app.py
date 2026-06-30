@@ -55,6 +55,10 @@ init_db()
 
 # ── F&O Stocks Universe (211 Stocks) ──────────────────────────────────────────
 FNO_STOCKS = [
+    {"symbol": "^NSEI", "name": "NIFTY 50 INDEX"},
+    {"symbol": "^NSEBANK", "name": "NIFTY BANK INDEX"},
+    {"symbol": "NIFTY_FIN_SERVICE.NS", "name": "NIFTY FIN SERVICE INDEX"},
+    {"symbol": "^NSEMDCP50", "name": "NIFTY MIDCAP 50 INDEX"},
     {"symbol": "360ONE", "name": "360 ONE WAM LIMITED"},
     {"symbol": "ABB", "name": "ABB India Limited"},
     {"symbol": "APLAPOLLO", "name": "APL Apollo Tubes Limited"},
@@ -316,7 +320,7 @@ def fetch_data(symbol: str, market: str = "NSE", period: str = "2y") -> pd.DataF
     if key in _cache and (time.time() - _cache[key]["ts"]) < CACHE_TTL:
         return _cache[key]["df"]
 
-    search_sym = f"{symbol}.NS" if market == "NSE" and not symbol.endswith(".NS") else symbol
+    search_sym = f"{symbol}.NS" if market == "NSE" and not symbol.endswith(".NS") and not symbol.startswith("^") else symbol
 
     # Use cached data to ensure report exactly matches the screener
     cache_file = Path("gann_data_20y.csv.gz") if market == "NSE" else Path("gann_global_10y.csv.gz")
@@ -627,15 +631,21 @@ def api_screener():
         "results": _screener_cache[market]["results"]
     })
 
-@app.route("/api/after_market_report")
+@app.route("/api/after_market_report", methods=["GET", "POST"])
 def api_after_market_report():
-    market = request.args.get("market", "NSE").upper()
-    
-    with SCREENER_LOCK:
-        if market not in _screener_cache or not _screener_cache[market].get("results"):
-            return jsonify({"error": "Screener results not available. Please run the scanner first."}), 400
-        # Use top 5 results as requested
-        cached_results = _screener_cache[market]["results"][:5]
+    if request.method == "POST":
+        data = request.json or {}
+        market = data.get("market", "NSE").upper()
+        cached_results = data.get("results", [])[:5]
+    else:
+        market = request.args.get("market", "NSE").upper()
+        with SCREENER_LOCK:
+            if market not in _screener_cache or not _screener_cache[market].get("results"):
+                return jsonify({"error": "Screener results not available. Please run the scanner first."}), 400
+            cached_results = _screener_cache[market]["results"][:5]
+
+    if not cached_results:
+        return jsonify({"error": "Screener results not available. Please run the scanner first."}), 400
     
     report_data = []
     import yfinance as yf
@@ -643,7 +653,7 @@ def api_after_market_report():
     target_date = cached_results[0]["date"]
     try:
         test_sym = cached_results[0]["symbol"]
-        if market == "NSE" and not test_sym.endswith(".NS"):
+        if market == "NSE" and not test_sym.endswith(".NS") and not test_sym.startswith("^"):
             test_sym += ".NS"
         test_hist = yf.Ticker(test_sym).history(period="5d", interval="5m")
         if not test_hist.empty:
@@ -661,7 +671,7 @@ def api_after_market_report():
     for setup in cached_results:
         sym = setup["symbol"]
         yf_sym = sym
-        if market == "NSE" and not sym.endswith(".NS"):
+        if market == "NSE" and not sym.endswith(".NS") and not sym.startswith("^"):
             yf_sym = sym + ".NS"
             
         try:

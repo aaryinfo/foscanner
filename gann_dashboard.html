@@ -594,6 +594,7 @@ let tvChart = null;
 let appData = null;
 let layers  = {cycles:true, confluence:true, swings:true, sq9:true};
 let currentMarket = "NSE";
+let currentScreenerResults = [];
 window.appStocks = { NSE: [], GLOBAL: [] };
 
 // ── Spin the side wheel ticks ─────────────────────────────────────────────────
@@ -721,6 +722,7 @@ async function refreshScreener(force = false) {
       refreshBtn.disabled = false;
       
       const results = json.results || [];
+      currentScreenerResults = results;
       if (results.length === 0) {
         tableBody.innerHTML = '';
         emptyMsg.classList.remove('hidden');
@@ -767,7 +769,11 @@ function openAfterMarketReport() {
   document.getElementById('amReportLoading').classList.remove('hidden');
   document.getElementById('amReportData').classList.add('hidden');
   
-  fetch(`/api/after_market_report?market=${currentMarket}`)
+  fetch(`/api/after_market_report`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ market: currentMarket, results: currentScreenerResults })
+  })
     .then(res => res.json())
     .then(data => {
       document.getElementById('amReportLoading').classList.add('hidden');
