@@ -1096,31 +1096,17 @@ def auth_login():
     conn.commit()
     conn.close()
     
-    # Check trial expiry (15 trading days)
+    # Check trial expiry (15 calendar days)
     trial_start = datetime.fromisoformat(trial_start_date)
+    trial_end = trial_start + timedelta(days=15)
     
-    # We calculate the trial end date by adding 15 trading days to the start date
-    from gann_engine import is_non_trading_day
-    
-    trading_days_added = 0
-    trial_end = trial_start
-    while trading_days_added < 15:
-        trial_end += timedelta(days=1)
-        if not is_non_trading_day(trial_end, "NSE"):
-            trading_days_added += 1
-            
     now = datetime.utcnow()
     
     if now > trial_end:
         return jsonify({"ok": True, "status": "expired"})
         
-    # Calculate remaining trading days
-    remaining_days = 0
-    curr = now
-    while curr < trial_end:
-        curr += timedelta(days=1)
-        if not is_non_trading_day(curr, "NSE"):
-            remaining_days += 1
+    # Calculate remaining calendar days
+    remaining_days = max(0, (trial_end - now).days)
             
     if not has_agreed_tos:
         return jsonify({"ok": True, "status": "needs_tos", "remaining_days": remaining_days})
