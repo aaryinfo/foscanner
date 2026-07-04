@@ -342,7 +342,7 @@ select:focus,input:focus{border-color:var(--gold)}
         <div style="display:grid;grid-template-columns:1fr;gap:8px;">
           <button class="btn" id="analyseBtn" onclick="runAnalysis()">▶ ANALYSE</button>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <button class="btn" id="scanBtn" onclick="openScreener()" style="background:#00D4FF;color:#000;box-shadow:0 0 10px rgba(0,212,255,0.2);padding:10px 5px;font-size:10px;">🔍 SCREENER</button>
+            <button class="btn" id="scanBtn" onclick="openScreener()" style="background:#00D4FF;color:#000;box-shadow:0 0 10px rgba(0,212,255,0.2);padding:10px 5px;font-size:10px;">🔍 INTRADAY SHORTLIST</button>
             <button class="btn" id="reportBtn" onclick="openReport()" style="background:#C9A84C;color:#000;box-shadow:0 0 10px rgba(201,168,76,0.2);padding:10px 5px;font-size:10px;">📊 REPORT</button>
           </div>
           <button class="btn" id="techBtn" onclick="openTechnical()" style="background:#5A6A88;color:#FFF;box-shadow:0 0 10px rgba(90,106,136,0.2);padding:10px 5px;font-size:10px;margin-top:2px;">📈 SWING STOCKS</button>
@@ -392,6 +392,9 @@ select:focus,input:focus{border-color:var(--gold)}
         <span style="color:var(--green)">▲</span> Swing Low  
         <span style="color:var(--cyan)">- - -</span> Price Levels
       </div>
+      <div id="gannPressureTimer" style="margin-left:15px; padding: 4px 10px; background: rgba(201,168,76,0.15); border: 1px solid var(--gold); border-radius: 4px; font-family: var(--mono); font-size: 11px; color: var(--gold); display: flex; align-items: center; gap: 8px;">
+        <span>⏳ NEXT PRESSURE POINT:</span> <strong id="pressureTime" style="font-size:13px;">--:--:--</strong>
+      </div>
     </div>
     <div id="chartBox">
       <!-- Lightweight Candlestick Chart renders here -->
@@ -431,7 +434,7 @@ select:focus,input:focus{border-color:var(--gold)}
     <!-- Topbar/Header -->
     <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
       <div>
-        <h2 id="screenerTitle" style="font-family:var(--mono);color:var(--gold);font-size:16px;letter-spacing:2px;text-transform:uppercase;">⚡ Market Screener</h2>
+        <h2 id="screenerTitle" style="font-family:var(--mono);color:var(--gold);font-size:16px;letter-spacing:2px;text-transform:uppercase;">⚡ Intraday Shortlist</h2>
         <div id="screenerDateText" style="font-size:12px;color:var(--gold);margin-top:4px;">Scanning Date: Loading...</div>
       </div>
       <div style="display:flex;gap:12px;align-items:center;">
@@ -676,7 +679,7 @@ function switchMarket(market) {
 let screenerInterval = null;
 
 function openScreener() {
-  document.getElementById('screenerTitle').textContent = `⚡ Market Screener (${currentMarket})`;
+  document.getElementById('screenerTitle').textContent = `⚡ Intraday Shortlist (${currentMarket})`;
   document.getElementById('screenerModal').classList.remove('hidden');
   refreshScreener(false);
 }
@@ -1586,5 +1589,46 @@ const cacheBuster = '?v=' + new Date().getTime();
 document.body.style.backgroundImage = `url('${randomBg}${cacheBuster}')`;
 </script>
 <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_ZGFybGluZy1yYXZlbi0xLmNsZXJrLmFjY291bnRzLmRldiQ" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js" type="text/javascript"></script>
+
+<script>
+// Gann Intraday Pressure Points Logic
+function updateGannPressureTimer() {
+    const now = new Date();
+    // Pressure point times in IST 
+    const pressureTimes = [
+        {h: 10, m: 30, name: '10:30 AM (1/8th Cycle)'},
+        {h: 11, m: 30, name: '11:30 AM (Mid-Day Shift)'},
+        {h: 13, m: 15, name: '01:15 PM (Euro Market)'},
+        {h: 14, m: 30, name: '02:30 PM (Final Sq)'}
+    ];
+    
+    let nextTime = null;
+    let nextName = '';
+
+    for (let pt of pressureTimes) {
+        let t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), pt.h, pt.m, 0);
+        if (t > now) {
+            nextTime = t;
+            nextName = pt.name;
+            break;
+        }
+    }
+    
+    if (!nextTime) {
+        document.getElementById('pressureTime').innerHTML = "SESSION OVER";
+        return;
+    }
+    
+    const diff = nextTime - now;
+    const m = Math.floor((diff / 1000 / 60) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+    const h = Math.floor((diff / 1000 / 60 / 60) % 24);
+    
+    let timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    document.getElementById('pressureTime').innerHTML = `${timeStr} <span style="font-size:9px;color:var(--muted)">(${nextName})</span>`;
+}
+setInterval(updateGannPressureTimer, 1000);
+updateGannPressureTimer();
+</script>
 </body>
 </html>
