@@ -1615,8 +1615,16 @@ function updateGannPressureTimer() {
     }
     
     if (!nextTime) {
-        document.getElementById('pressureTime').innerHTML = "SESSION OVER";
-        return;
+        // Roll over to next day's first pressure point (10:30 AM)
+        let nextDay = new Date(now);
+        nextDay.setDate(now.getDate() + 1);
+        
+        // Skip weekends
+        if (nextDay.getDay() === 6) nextDay.setDate(nextDay.getDate() + 2); // Saturday -> Monday
+        if (nextDay.getDay() === 0) nextDay.setDate(nextDay.getDate() + 1); // Sunday -> Monday
+        
+        nextTime = new Date(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate(), 10, 30, 0);
+        nextName = '10:30 AM (Next Day)';
     }
     
     const diff = nextTime - now;
