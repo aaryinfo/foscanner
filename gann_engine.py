@@ -236,7 +236,7 @@ def square_of_9(price: float) -> Dict:
     Returns resistance and support levels at 45°, 90°, 135°, 180°, 225°, 270°, 315°, 360°.
     """
     root    = math.sqrt(price)
-    angles  = [45, 90, 135, 180, 225, 270, 315, 360]
+    angles  = [11.25, 22.5, 33.75, 45, 90, 135, 180, 225, 270, 315, 360]
     levels  = {}
 
     for angle in angles:
@@ -273,41 +273,41 @@ def compute_intraday_levels(last_close: float, sq9: Dict, signal: str,
     
     if 'BULL' in signal.upper():
         bias = 'BULLISH'
-        entry = round(levels['+45°'], 2)
-        # Structural SL: anchor to -90° (strong Gann support)
-        sl_primary = round(levels['-90°'], 2)
-        sl_fallback = round(levels['-45°'], 2)
-        # Target cascade: try +90° → +180° → +360°
+        entry = round(levels['+22.5°'], 2)
+        # Structural SL: anchor to -45° (strong Gann support)
+        sl_primary = round(levels['-45°'], 2)
+        sl_fallback = round(levels['-22.5°'], 2)
+        # Target cascade: try +45° → +90° → +180°
         target_cascade = [
+            ('+45°',  round(levels['+45°'], 2)),
             ('+90°',  round(levels['+90°'], 2)),
             ('+180°', round(levels['+180°'], 2)),
-            ('+360°', round(levels['+360°'], 2)),
         ]
     else:
         bias = 'BEARISH'
-        entry = round(levels['-45°'], 2)
-        # Structural SL: anchor to +90° (strong Gann resistance)
-        sl_primary = round(levels['+90°'], 2)
-        sl_fallback = round(levels['+45°'], 2)
-        # Target cascade: try -90° → -180° → -360°
+        entry = round(levels['-22.5°'], 2)
+        # Structural SL: anchor to +45° (strong Gann resistance)
+        sl_primary = round(levels['+45°'], 2)
+        sl_fallback = round(levels['+22.5°'], 2)
+        # Target cascade: try -45° → -90° → -180°
         target_cascade = [
+            ('-45°',  round(levels['-45°'], 2)),
             ('-90°',  round(levels['-90°'], 2)),
             ('-180°', round(levels['-180°'], 2)),
-            ('-360°', round(levels['-360°'], 2)),
         ]
     
     if entry <= 0:
         return None
     
     # ── Stop Loss Optimization ────────────────────────────────────────────
-    # Use structural -90° level. If risk exceeds max_risk_pct, fall back to -45°
+    # Use structural -45° level. If risk exceeds max_risk_pct, fall back to -22.5°
     sl = sl_primary
     risk_check = round(abs(entry - sl) / entry * 100, 2)
-    sl_level = '-90°' if bias == 'BULLISH' else '+90°'
+    sl_level = '-45°' if bias == 'BULLISH' else '+45°'
     
     if risk_check > max_risk_pct:
         sl = sl_fallback
-        sl_level = '-45°' if bias == 'BULLISH' else '+45°'
+        sl_level = '-22.5°' if bias == 'BULLISH' else '+22.5°'
     
     risk = round(abs(entry - sl), 2)
     if risk <= 0:
