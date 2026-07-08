@@ -333,6 +333,15 @@ FNO_STOCKS = [
 ]
 
 GLOBAL_ASSETS = [
+    # US Indices & Broad Market
+    {"symbol": "^NDX", "name": "NASDAQ-100 Index"},
+    {"symbol": "^GSPC", "name": "S&P 500 Index"},
+    {"symbol": "^DJI", "name": "Dow Jones Industrial Average"},
+    {"symbol": "^IXIC", "name": "NASDAQ Composite Index"},
+    {"symbol": "^RUT", "name": "Russell 2000 Index"},
+    {"symbol": "VTI", "name": "Vanguard Total Stock Market ETF (All US Stocks)"},
+    
+    # Tech Stocks
     {"symbol": "AAPL", "name": "Apple Inc."},
     {"symbol": "MSFT", "name": "Microsoft Corporation"},
     {"symbol": "GOOGL", "name": "Alphabet Inc."},
@@ -340,10 +349,15 @@ GLOBAL_ASSETS = [
     {"symbol": "NVDA", "name": "NVIDIA Corporation"},
     {"symbol": "TSLA", "name": "Tesla Inc."},
     {"symbol": "META", "name": "Meta Platforms Inc."},
+    
+    # Crypto
     {"symbol": "BTC-USD", "name": "Bitcoin USD (TV: BTCUSD)"},
     {"symbol": "ETH-USD", "name": "Ethereum USD (TV: ETHUSD)"},
     {"symbol": "SOL-USD", "name": "Solana USD (TV: SOLUSD)"},
     {"symbol": "BNB-USD", "name": "Binance Coin USD (TV: BNBUSD)"},
+    
+    # Commodities & Forex
+    {"symbol": "XAUUSD=X", "name": "Gold / US Dollar (XAU/USD)"},
     {"symbol": "GC=F", "name": "Gold Futures (TV: GC1!)"},
     {"symbol": "SI=F", "name": "Silver Futures (TV: SI1!)"},
     {"symbol": "CL=F", "name": "Crude Oil Futures (TV: CL1!)"},
