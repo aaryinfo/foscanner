@@ -1183,20 +1183,19 @@ def api_daily_summary():
         rows = c.fetchall()
         
         all_picks = []
+        raw_results = []
         for market, results_json in rows:
             try:
                 results = json.loads(results_json)
             except:
                 continue
             for r in results:
-                trend = r.get("reversal_type", "")
+                trend = r.get("signal", "")
                 symbol = r.get("symbol", "")
-                intra = r.get("intraday_levels", {})
-                if not intra:
-                    continue
-                entry = intra.get("entry")
-                sl = intra.get("sl")
-                target = intra.get("t1")
+                
+                entry = r.get("entry")
+                sl = r.get("sl")
+                target = r.get("t1")
                 
                 if entry and sl and target:
                     all_picks.append({
