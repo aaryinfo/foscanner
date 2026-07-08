@@ -1134,6 +1134,10 @@ def auth_agree_tos():
 def serve_payment():
     return send_from_directory(".", "payment.html")
 
+@app.route("/monthly_report.html")
+def serve_monthly_report():
+    return send_from_directory(".", "monthly_report.html")
+
 @app.route("/subscription.html")
 def serve_subscription():
     return send_from_directory(".", "subscription.html")
