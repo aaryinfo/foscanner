@@ -631,10 +631,15 @@ def run_market_screener(market="NSE"):
                                      if c["date"] in target_dates and c["count"] >= 3]
                     
                     if matching_confs:
-                        # Use the strongest confluence for metadata
                         best_conf = max(matching_confs, key=lambda c: c["count"])
+                        has_confluence = True
+                    else:
+                        best_conf = {"date_display": next_trading_day.strftime("%Y-%m-%d"), "days_away": 0, "strength": "WEAK", "count": 0, "cycles": []}
+                        has_confluence = False
                         
+                    if True:
                         results.append({
+                            "confluence_match": has_confluence,
                             "symbol": sym,
                             "name": item["name"],
                             "last_close": res["last_close"],
