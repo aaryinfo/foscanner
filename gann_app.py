@@ -1191,14 +1191,12 @@ def api_daily_summary():
             for r in results:
                 trend = r.get("reversal_type", "")
                 symbol = r.get("symbol", "")
-                intra = r.get("intraday_sq9", {})
+                intra = r.get("intraday_levels", {})
                 if not intra:
                     continue
-                entry = intra.get("entry_level")
-                sl = intra.get("sl_level")
-                target = intra.get("target_level")
-                if not target or target == "NONE":
-                    target = intra.get("t1")
+                entry = intra.get("entry")
+                sl = intra.get("sl")
+                target = intra.get("t1")
                 
                 if entry and sl and target:
                     all_picks.append({
