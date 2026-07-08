@@ -1164,6 +1164,109 @@ def serve_assets(filename):
 def interactive_disclaimer_page():
     return send_from_directory(".", "interactive_disclaimer_spa.html")
 
+@app.route("/daily_summary.html")
+def serve_daily_summary():
+    return send_from_directory(".", "daily_summary.html")
+
+@app.route("/api/daily_summary")
+def api_daily_summary():
+    try:
+        conn, is_postgres = get_db_connection()
+        c = conn.cursor()
+        c.execute("SELECT MAX(scan_date) FROM screener_results")
+        row = c.fetchone()
+        if not row or not row[0]:
+            return jsonify({"ok": False, "error": "No scan data found in DB."})
+        
+        latest_date = row[0]
+        c.execute("SELECT market, results_json FROM screener_results WHERE scan_date = %s" if is_postgres else "SELECT market, results_json FROM screener_results WHERE scan_date = ?", (latest_date,))
+        rows = c.fetchall()
+        
+        all_picks = []
+        for market, results_json in rows:
+            try:
+                results = json.loads(results_json)
+            except:
+                continue
+            for r in results:
+                trend = r.get("reversal_type", "")
+                symbol = r.get("symbol", "")
+                intra = r.get("intraday_sq9", {})
+                if not intra:
+                    continue
+                entry = intra.get("entry_level")
+                sl = intra.get("sl_level")
+                target = intra.get("target_level")
+                if not target or target == "NONE":
+                    target = intra.get("t1")
+                
+                if entry and sl and target:
+                    all_picks.append({
+                        "symbol": symbol,
+                        "market": market,
+                        "trend": trend,
+                        "entry": float(entry),
+                        "target": float(target),
+                        "sl": float(sl)
+                    })
+        conn.close()
+        
+        if not all_picks:
+            return jsonify({"ok": True, "date": latest_date, "results": [], "success_rate": 0})
+            
+        symbols = list(set([p["symbol"] for p in all_picks]))
+        try:
+            hist = yf.download(symbols, period="5d", group_by="ticker", auto_adjust=False)
+        except Exception as e:
+            print("yf error:", e)
+            hist = None
+            
+        report = []
+        success_count = 0
+        total_count = 0
+        
+        for p in all_picks:
+            sym = p["symbol"]
+            status = "PENDING"
+            if hist is not None and not hist.empty:
+                try:
+                    df = hist if len(symbols) == 1 else (hist[sym] if sym in hist.columns.levels[0] else None)
+                    if df is not None and not df.empty:
+                        last_bar = df.iloc[-1]
+                        high = float(last_bar["High"])
+                        low = float(last_bar["Low"])
+                        close = float(last_bar["Close"])
+                        
+                        p["actual_high"] = round(high, 2)
+                        p["actual_low"] = round(low, 2)
+                        p["actual_close"] = round(close, 2)
+                        
+                        if p["trend"] == "BULL REVERSAL":
+                            if high >= p["target"]:
+                                status = "SUCCESS"
+                            elif low <= p["sl"]:
+                                status = "FAILED"
+                        else:
+                            if low <= p["target"]:
+                                status = "SUCCESS"
+                            elif high >= p["sl"]:
+                                status = "FAILED"
+                except Exception as e:
+                    print("Error checking price for", sym, e)
+            
+            if status != "PENDING":
+                total_count += 1
+                if status == "SUCCESS":
+                    success_count += 1
+            
+            p["status"] = status
+            report.append(p)
+            
+        success_rate = (success_count / total_count * 100) if total_count > 0 else 0
+        return jsonify({"ok": True, "date": latest_date, "results": report, "success_rate": round(success_rate, 2)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
 @app.route("/")
 def index():
     return send_from_directory(".", "gann_dashboard.html")

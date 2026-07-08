@@ -346,7 +346,10 @@ select:focus,input:focus{border-color:var(--gold)}
             <button class="btn" id="reportBtn" onclick="openReport()" style="background:#C9A84C;color:#000;box-shadow:0 0 10px rgba(201,168,76,0.2);padding:10px 5px;font-size:10px;">📊 REPORT</button>
           </div>
           <button class="btn" id="techBtn" onclick="openTechnical()" style="background:#5A6A88;color:#FFF;box-shadow:0 0 10px rgba(90,106,136,0.2);padding:10px 5px;font-size:10px;margin-top:2px;">📈 SWING STOCKS</button>
-          <button class="btn" onclick="window.open('/monthly_report.html', '_blank')" style="background:#FF3B5C;color:#FFF;box-shadow:0 0 10px rgba(255,59,92,0.2);padding:10px 5px;font-size:10px;margin-top:2px;">📅 MONTHLY LIST</button>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px;">
+            <button class="btn" onclick="window.open('/monthly_report.html', '_blank')" style="background:#FF3B5C;color:#FFF;box-shadow:0 0 10px rgba(255,59,92,0.2);padding:10px 5px;font-size:10px;">📅 MONTHLY</button>
+            <button class="btn" onclick="window.open('/daily_summary.html', '_blank')" style="background:#00C896;color:#FFF;box-shadow:0 0 10px rgba(0,200,150,0.2);padding:10px 5px;font-size:10px;">📉 DAILY SUMMARY</button>
+          </div>
         </div>
         <div class="error-msg" id="errMsg"></div>
       </div>
