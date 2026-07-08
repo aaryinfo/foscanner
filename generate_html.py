@@ -12,8 +12,11 @@ for i, line in enumerate(lines):
     if not line or line.startswith('|---'): continue
     parts = [p.strip() for p in line.split('|')[1:-1]]
     if i > 0 and len(parts) == 4:
+        symbol = parts[0]
+        market = "NSE" if symbol.endswith(".NS") or symbol.endswith(".BO") else "GLOBAL"
         data.append({
-            "symbol": parts[0],
+            "symbol": symbol,
+            "market": market,
             "from_date": parts[1],
             "to_date": parts[2],
             "trend": parts[3]
@@ -112,6 +115,14 @@ tr:hover{{background:rgba(255,255,255,0.02);}}
 
   <div class="controls">
     <div class="control-group">
+      <label>Market</label>
+      <select id="filterMarket" onchange="applyFilters()">
+        <option value="ALL">All Markets</option>
+        <option value="NSE">NSE F&O</option>
+        <option value="GLOBAL">Global Assets</option>
+      </select>
+    </div>
+    <div class="control-group">
       <label>Trend</label>
       <select id="filterTrend" onchange="applyFilters()">
         <option value="ALL">All Trends</option>
@@ -134,6 +145,7 @@ tr:hover{{background:rgba(255,255,255,0.02);}}
       <thead>
         <tr>
           <th>Symbol</th>
+          <th>Market</th>
           <th>From Date</th>
           <th>To Date</th>
           <th>Trend</th>
@@ -150,17 +162,19 @@ const globalData = {json.dumps(data)};
 
 function renderTable() {{
   const tbody = document.getElementById('tableBody');
+  const marketFilter = document.getElementById('filterMarket').value;
   const trendFilter = document.getElementById('filterTrend').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
 
   let filtered = globalData.filter(item => {{
+    if(marketFilter !== 'ALL' && item.market !== marketFilter) return false;
     if(trendFilter !== 'ALL' && item.trend !== trendFilter) return false;
     if(search && !item.symbol.toLowerCase().includes(search)) return false;
     return true;
   }});
 
   if(filtered.length === 0) {{
-    tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No matching records found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No matching records found.</td></tr>`;
     return;
   }}
 
@@ -172,6 +186,7 @@ function renderTable() {{
     html += `
       <tr>
         <td style="font-weight:600">${{row.symbol}}</td>
+        <td style="color:var(--muted);font-size:11px;">${{row.market}}</td>
         <td style="font-family:var(--mono)">${{row.from_date}}</td>
         <td style="font-family:var(--mono)">${{row.to_date}}</td>
         <td><span class="badge ${{badgeCls}}">${{row.trend}}</span></td>
