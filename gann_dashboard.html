@@ -739,7 +739,7 @@ async function refreshScreener(force = false) {
       const dataDate = json.data_date || 'unknown';
       document.getElementById('screenerDateText').textContent = `Scanning Date: ${scanDate}  |  Data: ${dataDate}`;
       
-      const screenerTopPicks = results.filter(r => r.confluence_match !== false);
+      const screenerTopPicks = results;
       if (screenerTopPicks.length === 0) {
         tableBody.innerHTML = '';
         emptyMsg.classList.remove('hidden');
