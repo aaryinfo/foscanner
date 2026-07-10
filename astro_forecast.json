@@ -415,7 +415,7 @@
     },
     {
         "date": "2026-04-20",
-        "score": -67,
+        "score": -65,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Rohini",
         "tithi": "Tithi 4 (Rikta/Challenging)",
@@ -737,7 +737,7 @@
     },
     {
         "date": "2026-04-27",
-        "score": -58,
+        "score": -57,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Purva Phalguni",
         "tithi": "Tithi 11",
@@ -1059,7 +1059,7 @@
     },
     {
         "date": "2026-05-04",
-        "score": -67,
+        "score": -65,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Jyeshtha",
         "tithi": "Tithi 18",
@@ -1151,7 +1151,7 @@
     },
     {
         "date": "2026-05-06",
-        "score": -77,
+        "score": -78,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Mula",
         "tithi": "Tithi 20",
@@ -1427,10 +1427,10 @@
     },
     {
         "date": "2026-05-12",
-        "score": -62,
+        "score": -63,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Purva Bhadrapada",
-        "tithi": "Tithi 25",
+        "tithi": "Tithi 26",
         "eclipse": "No Eclipse",
         "numerology_vib": 9,
         "sector_bias": [
@@ -1749,7 +1749,7 @@
     },
     {
         "date": "2026-05-19",
-        "score": -98,
+        "score": -97,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Ardra",
         "tithi": "Tithi 4 (Rikta/Challenging)",
@@ -2025,7 +2025,7 @@
     },
     {
         "date": "2026-05-25",
-        "score": -31,
+        "score": -32,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Uttara Phalguni",
         "tithi": "Tithi 10",
@@ -2071,7 +2071,7 @@
     },
     {
         "date": "2026-05-26",
-        "score": -48,
+        "score": -49,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Hasta",
         "tithi": "Tithi 11",
@@ -3865,7 +3865,7 @@
     },
     {
         "date": "2026-07-04",
-        "score": -72,
+        "score": -73,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Dhanishta",
         "tithi": "Tithi 20",
@@ -4463,7 +4463,7 @@
     },
     {
         "date": "2026-07-17",
-        "score": -99,
+        "score": -98,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Magha",
         "tithi": "Tithi 4 (Rikta/Challenging)",
