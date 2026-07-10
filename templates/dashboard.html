@@ -168,6 +168,7 @@
             <div id="backtest-container" style="display:flex; justify-content:space-around; align-items:center; padding: 20px 0; text-align:center;">
                 <div style="color: #94a3b8;">Loading backtest data... (This may take a few seconds)</div>
             </div>
+            <div id="history-container"></div>
         </div>
     </div>
 
@@ -259,6 +260,8 @@
         function loadBacktest(ticker) {
             const container = document.getElementById('backtest-container');
             container.innerHTML = '<div style="color: #94a3b8;">Loading backtest data... (This may take a few seconds)</div>';
+            const historyContainer = document.getElementById('history-container');
+            if (historyContainer) historyContainer.innerHTML = '';
             
             fetch(`/api/backtest?ticker=${encodeURIComponent(ticker)}`)
                 .then(async res => {
@@ -283,7 +286,7 @@
                                     <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Date</th>
                                     <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Bias</th>
                                     <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Score</th>
-                                    <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Nifty Move</th>
+                                    <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Move (%)</th>
                                     <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Result</th>
                                 </tr>
                             </thead>
@@ -336,7 +339,12 @@
                 `;
                 
                 // Append the day by day history table directly to the parent container
-                container.parentElement.insertAdjacentHTML('beforeend', historyHtml);
+                const historyContainer = document.getElementById('history-container');
+                if (historyContainer) {
+                    historyContainer.innerHTML = historyHtml;
+                } else {
+                    container.parentElement.insertAdjacentHTML('beforeend', historyHtml);
+                }
             })
             .catch(err => {
                 document.getElementById('backtest-container').innerHTML = `<div style="color:var(--danger)">Failed to load backtest data. <br> <span style="font-size:0.8rem">${err.message}</span></div>`;
