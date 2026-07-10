@@ -126,6 +126,15 @@
                 <!-- Populated by JS -->
             </div>
         </div>
+
+        <!-- Backtest Accuracy Panel -->
+        <div class="panel full-width">
+            <h2>📊 Model Accuracy (Nifty 50)</h2>
+            <p style="text-align: center; color: #94a3b8;">Historical correlation between Astro Bias Score and next-day market direction (past 60 days).</p>
+            <div id="backtest-container" style="display:flex; justify-content:space-around; align-items:center; padding: 20px 0; text-align:center;">
+                <div style="color: #94a3b8;">Loading backtest data... (This may take a few seconds)</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -175,6 +184,38 @@
             .catch(error => {
                 console.error("Error fetching data:", error);
                 document.getElementById('date-display').innerText = "Error loading data.";
+            });
+
+        // Fetch Backtest Data
+        fetch('/api/backtest')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('backtest-container');
+                if(data.error) {
+                    container.innerHTML = `<div style="color:var(--danger)">Error: ${data.error}</div>`;
+                    return;
+                }
+                
+                let hitRateColor = data.hit_rate >= 55 ? 'var(--success)' : (data.hit_rate < 45 ? 'var(--danger)' : 'var(--warning)');
+                
+                container.innerHTML = `
+                    <div>
+                        <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">Total Signals</div>
+                        <div style="font-size:1.5rem; font-weight:bold;">${data.total_signals}</div>
+                        <div style="font-size:0.8rem; color:#64748b; margin-top:5px;">over ${data.days_tested} days</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">Historical Hit Rate</div>
+                        <div style="font-size:3rem; font-weight:bold; color:${hitRateColor};">${data.hit_rate}%</div>
+                    </div>
+                    <div style="text-align:left;">
+                        <div style="margin-bottom:8px;"><span style="color:var(--success)">Bullish Signals:</span> <b>${data.bullish_signals}</b></div>
+                        <div><span style="color:var(--danger)">Bearish Signals:</span> <b>${data.bearish_signals}</b></div>
+                    </div>
+                `;
+            })
+            .catch(err => {
+                document.getElementById('backtest-container').innerHTML = `<div style="color:var(--danger)">Failed to load backtest data.</div>`;
             });
     </script>
 </body>

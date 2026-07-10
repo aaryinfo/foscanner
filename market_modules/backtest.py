@@ -18,7 +18,7 @@ def run_backtest(df: pd.DataFrame) -> dict:
     
     # Just run on a sample to not take too long in a demo
     # In production, this would be pre-calculated and cached in the DB
-    sample_size = min(len(df), 252) # up to 1 year
+    sample_size = min(len(df), 60) # up to 60 days (approx 3 months)
     sample_df = df.tail(sample_size).dropna()
     
     bullish_hits = 0

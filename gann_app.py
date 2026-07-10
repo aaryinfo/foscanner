@@ -45,7 +45,8 @@ except Exception as e:
 # Import AstroMarket modules
 try:
     from market_modules.scoring import calculate_daily_astro_score, get_top_5_turn_date_stocks
-    from market_modules.data_fetcher import get_all_tickers, get_current_price
+    from market_modules.data_fetcher import get_all_tickers, get_current_price, fetch_historical_data
+    from market_modules.backtest import run_backtest
     from email_alerts import send_email_alert
 except ImportError as e:
     print(f"AstroMarket dependencies missing: {e}")
@@ -1376,6 +1377,15 @@ def get_today_data():
         "score_data": score_data,
         "top_stocks": stocks_data
     })
+
+@app.route('/api/backtest')
+def get_backtest_data():
+    df = fetch_historical_data("^NSEI", period="1y")
+    if df.empty:
+        return jsonify({"error": "Failed to fetch Nifty data"}), 500
+        
+    results = run_backtest(df)
+    return jsonify(results)
 
 @app.route('/api/cron/run-astro')
 def run_astro_cron():
