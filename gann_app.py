@@ -162,7 +162,17 @@ def init_db():
                 alignment TEXT
             )
         ''')
-    
+        
+    # Safely attempt to add new column if it doesn't exist
+    try:
+        if is_postgres:
+            conn.commit()
+            c.execute("ALTER TABLE astro_daily_scores ADD COLUMN sector_bias TEXT")
+            conn.commit()
+        else:
+            c.execute("ALTER TABLE astro_daily_scores ADD COLUMN sector_bias TEXT")
+    except Exception as e:
+        if is_postgres: conn.rollback()
     conn.commit()
     conn.close()
 
@@ -1338,7 +1348,7 @@ def get_today_data():
     c = conn.cursor()
     today_str = datetime.utcnow().strftime("%Y-%m-%d")
     
-    c.execute("SELECT date, score, bias, nakshatra, tithi, eclipse, numerology_vib FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
+    c.execute("SELECT date, score, bias, nakshatra, tithi, eclipse, numerology_vib, sector_bias FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
     score_row = c.fetchone()
     
     c.execute("SELECT ticker, price, orb, alignment FROM top_stock_turn_dates WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
@@ -1349,6 +1359,7 @@ def get_today_data():
     if not score_row:
         # Fallback if cron hasn't run
         live_report = calculate_daily_astro_score(datetime.utcnow())
+        live_sectors = calculate_sector_bias(datetime.utcnow())
         score_data = {
             "date": live_report['date'],
             "score": live_report['score'],
@@ -1356,9 +1367,13 @@ def get_today_data():
             "nakshatra": live_report['nakshatra'],
             "tithi": live_report['tithi'],
             "eclipse": live_report['eclipse'],
-            "numerology_vib": live_report['numerology']
+            "numerology_vib": live_report['numerology'],
+            "sector_bias": live_sectors
         }
     else:
+        import json
+        sec_bias_raw = score_row[7]
+        sec_bias = json.loads(sec_bias_raw) if sec_bias_raw else []
         score_data = {
             "date": str(score_row[0]),
             "score": score_row[1],
@@ -1366,7 +1381,8 @@ def get_today_data():
             "nakshatra": score_row[3],
             "tithi": score_row[4],
             "eclipse": score_row[5],
-            "numerology_vib": score_row[6]
+            "numerology_vib": score_row[6],
+            "sector_bias": sec_bias
         }
         
     stocks_data = [
@@ -1397,6 +1413,7 @@ def run_astro_cron():
         
     today = datetime.utcnow()
     score_report = calculate_daily_astro_score(today)
+    sector_report = calculate_sector_bias(today)
     
     tickers = get_all_tickers()
     current_prices = {}
@@ -1414,12 +1431,15 @@ def run_astro_cron():
     today_str = today.strftime("%Y-%m-%d")
     
     # Check if exists
+    import json
+    sector_json = json.dumps(sector_report)
+    
     c.execute("SELECT id FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
     if not c.fetchone():
         c.execute("""
-            INSERT INTO astro_daily_scores (date, score, bias, nakshatra, tithi, eclipse, numerology_vib)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """, (today_str, score_report['score'], score_report['bias'], score_report['nakshatra'], score_report['tithi'], score_report['eclipse'], score_report['numerology']))
+            INSERT INTO astro_daily_scores (date, score, bias, nakshatra, tithi, eclipse, numerology_vib, sector_bias)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (today_str, score_report['score'], score_report['bias'], score_report['nakshatra'], score_report['tithi'], score_report['eclipse'], score_report['numerology'], sector_json))
         
         for item in top_5:
             c.execute("""
@@ -1429,6 +1449,13 @@ def run_astro_cron():
         conn.commit()
     conn.close()
     
+    # Format Sector Email HTML
+    sectors_html = "<h3>Sector Outlook</h3><ul>"
+    for s in sector_report:
+        color = "green" if s['bias'] == "Bullish" else "red" if s['bias'] == "Bearish" else "gray"
+        sectors_html += f"<li>{s['emoji']} <b>{s['sector']}</b>: <span style='color:{color}'>{s['bias']}</span> ({s['reason']})</li>"
+    sectors_html += "</ul>"
+    
     # Send Email
     html_body = f"""
     <h2>AstroMarket Pro - Daily Weather Report</h2>
@@ -1437,6 +1464,7 @@ def run_astro_cron():
     <p><b>Nakshatra:</b> {score_report['nakshatra']} ({score_report['nakshatra_tag']})</p>
     <p><b>Tithi:</b> {score_report['tithi']}</p>
     <p><b>Eclipse Status:</b> {score_report['eclipse']}</p>
+    {sectors_html}
     <br>
     <h3>Top 5 Stocks with Turn Dates</h3>
     <ul>

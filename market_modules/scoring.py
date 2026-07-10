@@ -134,6 +134,87 @@ def get_top_5_turn_date_stocks(date_obj: datetime.datetime, tickers: List[str], 
     
     return results[:5]
 
+def get_dignity(planet: str, sign_idx: int) -> str:
+    """Returns basic planetary dignity (Exalted, Own Sign, Debilitated, Neutral)"""
+    exaltations = {
+        'Sun': 0, 'Moon': 1, 'Mars': 9, 'Mercury': 5, 
+        'Jupiter': 3, 'Venus': 11, 'Saturn': 6, 'Rahu': 1, 'Ketu': 7
+    }
+    debilitations = {
+        'Sun': 6, 'Moon': 7, 'Mars': 3, 'Mercury': 11, 
+        'Jupiter': 9, 'Venus': 5, 'Saturn': 0, 'Rahu': 7, 'Ketu': 1
+    }
+    own_signs = {
+        'Sun': [4], 'Moon': [3], 'Mars': [0, 7], 'Mercury': [2, 5],
+        'Jupiter': [8, 11], 'Venus': [1, 6], 'Saturn': [9, 10]
+    }
+    
+    if exaltations.get(planet) == sign_idx: return "Exalted"
+    if debilitations.get(planet) == sign_idx: return "Debilitated"
+    if sign_idx in own_signs.get(planet, []): return "Own Sign"
+    return "Neutral"
+
+def calculate_sector_bias(date_obj: datetime.datetime) -> List[Dict]:
+    """
+    Determines astrological bias for market sectors based on planetary dignity.
+    """
+    pos = get_planetary_positions(date_obj, sidereal=True)
+    
+    sectors = [
+        {"name": "Banking & Finance", "planet": "Jupiter", "emoji": "🏦"},
+        {"name": "IT & Tech", "planet": "Mercury", "emoji": "💻"},
+        {"name": "Auto & FMCG", "planet": "Venus", "emoji": "🚗"},
+        {"name": "Metals & Real Estate", "planet": "Mars", "emoji": "🏗️"},
+        {"name": "Energy & Pharma", "planet": "Sun", "emoji": "⚡"}
+    ]
+    
+    signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", 
+             "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+    
+    results = []
+    
+    for sec in sectors:
+        planet = sec['planet']
+        if planet not in pos:
+            continue
+            
+        p_data = pos[planet]
+        sign_idx = p_data['sign']
+        dignity = get_dignity(planet, sign_idx)
+        is_retro = p_data.get('is_retrograde', False)
+        
+        score = 0
+        if dignity == 'Exalted' or dignity == 'Own Sign':
+            score = 2
+        elif dignity == 'Debilitated':
+            score = -2
+            
+        if is_retro and planet not in ['Sun', 'Moon']:
+            score -= 1  # Retrograde creates uncertainty/weakness
+            
+        bias = "Neutral"
+        if score >= 1:
+            bias = "Bullish"
+        elif score <= -1:
+            bias = "Bearish"
+            
+        sign_name = signs[sign_idx]
+        reason = f"{planet} is in {sign_name}"
+        if dignity != "Neutral":
+            reason += f" ({dignity})"
+        if is_retro:
+            reason += " [Retrograde]"
+            
+        results.append({
+            "sector": sec['name'],
+            "emoji": sec['emoji'],
+            "planet": planet,
+            "bias": bias,
+            "reason": reason
+        })
+        
+    return results
+
 if __name__ == "__main__":
     today = datetime.datetime.utcnow()
     report = calculate_daily_astro_score(today)
