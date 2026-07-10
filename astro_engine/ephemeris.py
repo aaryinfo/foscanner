@@ -90,8 +90,6 @@ def get_planetary_positions(date_obj: datetime.datetime, sidereal: bool = True) 
             res, ret_flag = swe.calc_ut(jd, swe_id, flags)
             
             longitude = res[0]
-        declination = res[1] # Actually latitude in ecliptic coordinates, but useful for 2D. True declination requires equatorial.
-        speed = res[3]
             declination = res[1] # Actually latitude in ecliptic coordinates, but useful for 2D. True declination requires equatorial.
             speed = res[3]
             
