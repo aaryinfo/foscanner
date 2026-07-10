@@ -4,8 +4,8 @@ import logging
 import os
 
 try:
-    if os.environ.get('VERCEL'):
-        logging.warning("Vercel detected. Forcing mock ephemeris and skipping swisseph import.")
+    if os.environ.get('VERCEL') or os.environ.get('VERCEL_REGION') or os.environ.get('AWS_EXECUTION_ENV'):
+        logging.warning("Vercel/Lambda detected. Forcing mock ephemeris and skipping swisseph import.")
         HAS_SWE = False
     else:
         import swisseph as swe
