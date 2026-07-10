@@ -28,4 +28,35 @@ try:
 except Exception as e:
     print(f"[ERROR] Failed to update Global data: {e}")
 
+print("\n[3/3] Generating Astro Forecast for next 10 days...")
+try:
+    from datetime import datetime, timedelta
+    import json
+    from market_modules.scoring import calculate_daily_astro_score, calculate_sector_bias
+    
+    forecast = []
+    base_date = datetime.utcnow()
+    for i in range(10):
+        target_date = base_date + timedelta(days=i)
+        score_data = calculate_daily_astro_score(target_date)
+        sector_bias = calculate_sector_bias(target_date)
+        forecast.append({
+            "date": score_data['date'],
+            "score": score_data['score'],
+            "bias": score_data['bias'],
+            "nakshatra": score_data['nakshatra'],
+            "tithi": score_data['tithi'],
+            "eclipse": score_data['eclipse'],
+            "numerology_vib": score_data['numerology'],
+            "sector_bias": sector_bias
+        })
+    
+    with open('astro_forecast.json', 'w', encoding='utf-8') as f:
+        json.dump(forecast, f, indent=4)
+    print(f"[OK] Successfully generated astro_forecast.json")
+except Exception as e:
+    import traceback
+    print(f"[ERROR] Failed to generate Astro forecast: {e}")
+    traceback.print_exc()
+
 print("\nUpdate process completed successfully!")

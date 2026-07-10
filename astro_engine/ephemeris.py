@@ -26,7 +26,14 @@ if not HAS_SWE:
         @staticmethod
         def julday(y, m, d, h): return 2451545.0 + d
         @staticmethod
-        def calc_ut(jd, body, flags): return ([0.0, 0.0, 0.0, 1.0], 0)
+        def calc_ut(jd, body, flags):
+            # Return different mock longitudes to avoid artificial eclipses and -100 scores
+            mock_longs = {
+                0: 30.0, # Sun at 30 deg
+                1: 150.0, # Moon at 150 deg
+                10: 210.0, # True Node at 210 deg
+            }
+            return ([mock_longs.get(body, float(body * 10)), 0.0, 0.0, 1.0], 0)
     swe = MockSwe()
 
 # Define the celestial bodies we care about

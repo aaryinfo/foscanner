@@ -41,7 +41,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add gann_data_20y.csv.gz gann_data_global.csv.gz
+          git add gann_data_20y.csv.gz gann_data_global.csv.gz astro_forecast.json
           
           # Only commit if there are changes
           if git diff-index --quiet HEAD --; then
