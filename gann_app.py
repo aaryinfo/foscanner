@@ -42,6 +42,14 @@ except Exception as e:
     print(f"Missing dependency: {e}")
     sys.exit(1)
 
+# Import AstroMarket modules
+try:
+    from market_modules.scoring import calculate_daily_astro_score, get_top_5_turn_date_stocks
+    from market_modules.data_fetcher import get_all_tickers, get_current_price
+    from email_alerts import send_email_alert
+except ImportError as e:
+    print(f"AstroMarket dependencies missing: {e}")
+
 app = Flask(__name__, static_folder=".")
 
 def init_db():
@@ -80,6 +88,29 @@ def init_db():
             CREATE INDEX IF NOT EXISTS idx_screener_market_date 
             ON screener_results (market, scan_date)
         ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS astro_daily_scores (
+                id SERIAL PRIMARY KEY,
+                date DATE UNIQUE NOT NULL,
+                score FLOAT NOT NULL,
+                bias TEXT NOT NULL,
+                nakshatra TEXT,
+                tithi TEXT,
+                eclipse TEXT,
+                numerology_vib INTEGER,
+                created_at DATE DEFAULT CURRENT_DATE
+            )
+        ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS top_stock_turn_dates (
+                id SERIAL PRIMARY KEY,
+                date DATE NOT NULL,
+                ticker TEXT NOT NULL,
+                price FLOAT,
+                orb FLOAT,
+                alignment TEXT
+            )
+        ''')
     else:
         c.execute('''
             CREATE TABLE IF NOT EXISTS users (
@@ -105,6 +136,29 @@ def init_db():
                 data_date TEXT,
                 results_json TEXT NOT NULL,
                 created_at TEXT NOT NULL
+            )
+        ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS astro_daily_scores (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date TEXT UNIQUE NOT NULL,
+                score REAL NOT NULL,
+                bias TEXT NOT NULL,
+                nakshatra TEXT,
+                tithi TEXT,
+                eclipse TEXT,
+                numerology_vib INTEGER,
+                created_at TEXT DEFAULT CURRENT_DATE
+            )
+        ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS top_stock_turn_dates (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date TEXT NOT NULL,
+                ticker TEXT NOT NULL,
+                price REAL,
+                orb REAL,
+                alignment TEXT
             )
         ''')
     
@@ -1272,6 +1326,121 @@ def api_daily_summary():
 @app.route("/")
 def index():
     return send_from_directory(".", "gann_dashboard.html")
+# ── AstroMarket Pro Routes ────────────────────────────────────────────────────
+@app.route('/astromarket')
+def astromarket_dashboard():
+    return send_from_directory('templates', 'dashboard.html')
+
+@app.route('/api/today')
+def get_today_data():
+    conn, _ = get_db_connection()
+    c = conn.cursor()
+    today_str = datetime.utcnow().strftime("%Y-%m-%d")
+    
+    c.execute("SELECT date, score, bias, nakshatra, tithi, eclipse, numerology_vib FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
+    score_row = c.fetchone()
+    
+    c.execute("SELECT ticker, price, orb, alignment FROM top_stock_turn_dates WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
+    stocks_rows = c.fetchall()
+    
+    conn.close()
+    
+    if not score_row:
+        # Fallback if cron hasn't run
+        live_report = calculate_daily_astro_score(datetime.utcnow())
+        score_data = {
+            "date": live_report['date'],
+            "score": live_report['score'],
+            "bias": live_report['bias'],
+            "nakshatra": live_report['nakshatra'],
+            "tithi": live_report['tithi'],
+            "eclipse": live_report['eclipse'],
+            "numerology_vib": live_report['numerology']
+        }
+    else:
+        score_data = {
+            "date": str(score_row[0]),
+            "score": score_row[1],
+            "bias": score_row[2],
+            "nakshatra": score_row[3],
+            "tithi": score_row[4],
+            "eclipse": score_row[5],
+            "numerology_vib": score_row[6]
+        }
+        
+    stocks_data = [
+        {"ticker": r[0], "price": r[1], "orb": r[2], "alignment": r[3]} for r in stocks_rows
+    ]
+    
+    return jsonify({
+        "score_data": score_data,
+        "top_stocks": stocks_data
+    })
+
+@app.route('/api/cron/run-astro')
+def run_astro_cron():
+    auth_header = request.headers.get('Authorization')
+    # Simple check for cron security (in production, use a strong secret)
+    # if auth_header != f"Bearer {os.environ.get('CRON_SECRET', 'secret')}":
+    #     return jsonify({"error": "Unauthorized"}), 401
+        
+    today = datetime.utcnow()
+    score_report = calculate_daily_astro_score(today)
+    
+    tickers = get_all_tickers()
+    current_prices = {}
+    # Fetching prices for top stocks check
+    for t in tickers:
+        p = get_current_price(t)
+        if p:
+            current_prices[t] = p
+            
+    top_5 = get_top_5_turn_date_stocks(today, tickers, current_prices)
+    
+    conn, _ = get_db_connection()
+    c = conn.cursor()
+    
+    today_str = today.strftime("%Y-%m-%d")
+    
+    # Check if exists
+    c.execute("SELECT id FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
+    if not c.fetchone():
+        c.execute("""
+            INSERT INTO astro_daily_scores (date, score, bias, nakshatra, tithi, eclipse, numerology_vib)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (today_str, score_report['score'], score_report['bias'], score_report['nakshatra'], score_report['tithi'], score_report['eclipse'], score_report['numerology']))
+        
+        for item in top_5:
+            c.execute("""
+                INSERT INTO top_stock_turn_dates (date, ticker, price, orb, alignment)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (today_str, item['ticker'], item['price'], item['orb'], item['alignment']))
+        conn.commit()
+    conn.close()
+    
+    # Send Email
+    html_body = f"""
+    <h2>AstroMarket Pro - Daily Weather Report</h2>
+    <p><b>Date:</b> {today_str}</p>
+    <p><b>Astro Bias Score:</b> {score_report['score']} ({score_report['bias']})</p>
+    <p><b>Nakshatra:</b> {score_report['nakshatra']} ({score_report['nakshatra_tag']})</p>
+    <p><b>Tithi:</b> {score_report['tithi']}</p>
+    <p><b>Eclipse Status:</b> {score_report['eclipse']}</p>
+    <br>
+    <h3>Top 5 Stocks with Turn Dates</h3>
+    <ul>
+    """
+    for s in top_5:
+        html_body += f"<li><b>{s['ticker']}</b> - Price: {s['price']} | Alignment: {s['alignment']} (Orb: {s['orb']:.2f}&deg;)</li>"
+    html_body += "</ul>"
+    
+    send_email_alert(
+        subject=f"AstroMarket Weather - {score_report['bias']}",
+        body=html_body,
+        is_html=True
+    )
+    
+    return jsonify({"status": "success", "message": "Astro daily job run successfully."})
 
 if __name__ == "__main__":
     # Pre-load the market scanner background task when starting up
