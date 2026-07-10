@@ -54,6 +54,24 @@ try:
     with open('astro_forecast.json', 'w', encoding='utf-8') as f:
         json.dump(forecast, f, indent=4)
     print(f"[OK] Successfully generated astro_forecast.json")
+
+    print("\n[4/4] Generating Top 5 Turn Date Stocks for Today...")
+    from market_modules.data_fetcher import get_all_tickers, get_current_price
+    from market_modules.scoring import get_top_5_turn_date_stocks
+    
+    tickers = get_all_tickers()
+    current_prices = {}
+    for t in tickers:
+        p = get_current_price(t)
+        if p:
+            current_prices[t] = p
+            
+    top_5 = get_top_5_turn_date_stocks(base_date, tickers, current_prices)
+    
+    with open('top_stocks.json', 'w', encoding='utf-8') as f:
+        json.dump(top_5, f, indent=4)
+    print(f"[OK] Successfully generated top_stocks.json")
+
 except Exception as e:
     import traceback
     print(f"[ERROR] Failed to generate Astro forecast: {e}")

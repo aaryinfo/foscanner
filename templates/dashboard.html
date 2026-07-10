@@ -150,8 +150,21 @@
 
         <!-- Backtest Accuracy Panel -->
         <div class="panel full-width">
-            <h2>📊 Model Accuracy (Nifty 50)</h2>
-            <p style="text-align: center; color: #94a3b8;">Historical correlation between Astro Bias Score and next-day market direction (past 60 days).</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>📊 Model Accuracy</h2>
+                <select id="backtest-ticker" style="padding: 8px; border-radius: 6px; background: #1e293b; color: white; border: 1px solid #334155; font-family: inherit;" onchange="loadBacktest(this.value)">
+                    <option value="^NSEI">Nifty 50 Index</option>
+                    <option value="RELIANCE.NS">Reliance</option>
+                    <option value="HDFCBANK.NS">HDFC Bank</option>
+                    <option value="TCS.NS">TCS</option>
+                    <option value="INFY.NS">Infosys</option>
+                    <option value="ICICIBANK.NS">ICICI Bank</option>
+                    <option value="SBIN.NS">SBI</option>
+                    <option value="BHARTIARTL.NS">Bharti Airtel</option>
+                    <option value="ITC.NS">ITC</option>
+                </select>
+            </div>
+            <p style="text-align: left; color: #94a3b8; margin-top: 5px;">Historical correlation between Astro Bias Score and next-day market direction (past 60 days).</p>
             <div id="backtest-container" style="display:flex; justify-content:space-around; align-items:center; padding: 20px 0; text-align:center;">
                 <div style="color: #94a3b8;">Loading backtest data... (This may take a few seconds)</div>
             </div>
@@ -243,17 +256,20 @@
             });
 
         // Fetch Backtest Data
-        fetch('/api/backtest')
-            .then(async res => {
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(`HTTP ${res.status}: ${text.substring(0, 50)}...`);
-                }
-                return res.json();
-            })
-            .then(data => {
-                const container = document.getElementById('backtest-container');
-                if(data.error) {
+        function loadBacktest(ticker) {
+            const container = document.getElementById('backtest-container');
+            container.innerHTML = '<div style="color: #94a3b8;">Loading backtest data... (This may take a few seconds)</div>';
+            
+            fetch(`/api/backtest?ticker=${encodeURIComponent(ticker)}`)
+                .then(async res => {
+                    if (!res.ok) {
+                        const text = await res.text();
+                        throw new Error(`HTTP ${res.status}: ${text.substring(0, 50)}...`);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if(data.error) {
                     container.innerHTML = `<div style="color:var(--danger)">Error: ${data.error}</div>`;
                     return;
                 }
@@ -325,6 +341,10 @@
             .catch(err => {
                 document.getElementById('backtest-container').innerHTML = `<div style="color:var(--danger)">Failed to load backtest data. <br> <span style="font-size:0.8rem">${err.message}</span></div>`;
             });
+        }
+        
+        // Initial load
+        loadBacktest('^NSEI');
     </script>
 </body>
 </html>
