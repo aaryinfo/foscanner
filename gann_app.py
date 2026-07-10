@@ -44,7 +44,7 @@ except Exception as e:
 
 # Import AstroMarket modules
 try:
-    from market_modules.scoring import calculate_daily_astro_score, get_top_5_turn_date_stocks
+    from market_modules.scoring import calculate_daily_astro_score, get_top_5_turn_date_stocks, calculate_sector_bias
     from market_modules.data_fetcher import get_all_tickers, get_current_price, fetch_historical_data
     from market_modules.backtest import run_backtest
     from email_alerts import send_email_alert
