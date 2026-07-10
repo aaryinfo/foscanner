@@ -553,7 +553,7 @@
     },
     {
         "date": "2026-04-23",
-        "score": -45,
+        "score": -44,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Punarvasu",
         "tithi": "Tithi 7",
@@ -1105,9 +1105,9 @@
     },
     {
         "date": "2026-05-05",
-        "score": -79,
+        "score": -94,
         "bias": "Highly Volatile (Eclipse Window)",
-        "nakshatra": "Jyeshtha",
+        "nakshatra": "Mula",
         "tithi": "Tithi 19 (Rikta/Challenging)",
         "eclipse": "No Eclipse",
         "numerology_vib": 2,
@@ -1565,7 +1565,7 @@
     },
     {
         "date": "2026-05-15",
-        "score": -62,
+        "score": -61,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Ashwini",
         "tithi": "Tithi 29 (Rikta/Challenging)",
@@ -1749,7 +1749,7 @@
     },
     {
         "date": "2026-05-19",
-        "score": -99,
+        "score": -98,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Ardra",
         "tithi": "Tithi 4 (Rikta/Challenging)",
@@ -2899,7 +2899,7 @@
     },
     {
         "date": "2026-06-13",
-        "score": -66,
+        "score": -68,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Krittika",
         "tithi": "Tithi 28",
@@ -3405,7 +3405,7 @@
     },
     {
         "date": "2026-06-24",
-        "score": -61,
+        "score": -63,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Chitra",
         "tithi": "Tithi 10",
@@ -3589,7 +3589,7 @@
     },
     {
         "date": "2026-06-28",
-        "score": -82,
+        "score": -83,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Jyeshtha",
         "tithi": "Tithi 14 (Rikta/Challenging)",
@@ -3727,7 +3727,7 @@
     },
     {
         "date": "2026-07-01",
-        "score": -59,
+        "score": -57,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Uttara Ashadha",
         "tithi": "Tithi 17",
@@ -4143,7 +4143,7 @@
         "date": "2026-07-10",
         "score": -82,
         "bias": "Highly Volatile (Eclipse Window)",
-        "nakshatra": "Bharani",
+        "nakshatra": "Krittika",
         "tithi": "Tithi 26",
         "eclipse": "No Eclipse",
         "numerology_vib": 9,
@@ -4325,7 +4325,7 @@
     },
     {
         "date": "2026-07-14",
-        "score": -72,
+        "score": -71,
         "bias": "Highly Volatile (Eclipse Window)",
         "nakshatra": "Punarvasu",
         "tithi": "Amavasya (New Moon) - Volatile",
