@@ -22,6 +22,7 @@ if not HAS_SWE:
         FLG_SWIEPH = 2
         FLG_SPEED = 256
         FLG_SIDEREAL = 64 * 1024
+        FLG_MOSEPH = 4
         
         @staticmethod
         def set_ephe_path(path): pass
