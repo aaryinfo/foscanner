@@ -1,8 +1,8 @@
 import pandas as pd
 import datetime
-from .scoring import calculate_daily_astro_score
+from .scoring import calculate_daily_astro_score, calculate_stock_astro_score
 
-def run_backtest(df: pd.DataFrame) -> dict:
+def run_backtest(df: pd.DataFrame, ticker: str = "^NSEI") -> dict:
     """
     Run backtest on historical dataframe to see correlation of 
     Astro Bias Score with Next Day Return.
@@ -51,13 +51,10 @@ def run_backtest(df: pd.DataFrame) -> dict:
             
         date_str = date_obj.strftime("%Y-%m-%d")
         
-        # Look up precalculated score first, fallback to live calculation
-        if date_str in precalculated_scores:
-            score_report = precalculated_scores[date_str]
-            score = score_report['score']
-        else:
-            score_report = calculate_daily_astro_score(date_obj)
-            score = score_report['score']
+        # Stock-specific calculations require live math
+        price = row['Close']
+        score_report = calculate_stock_astro_score(date_obj, ticker, price)
+        score = score_report['score']
             
         next_ret = row['Next_Day_Return']
         

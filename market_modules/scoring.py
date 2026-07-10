@@ -8,7 +8,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from astro_engine.ephemeris import get_planetary_positions, get_moon_nakshatra
-from astro_engine.gann_astro import get_daily_aspects
+from astro_engine.gann_astro import get_daily_aspects, price_to_angle
 from astro_engine.vedic import get_nakshatra_info, calculate_tithi, check_combustion, check_eclipse_proximity
 from astro_engine.numerology import get_date_vibration
 
@@ -84,6 +84,53 @@ def calculate_daily_astro_score(date_obj: datetime.datetime) -> Dict[str, Any]:
         "retrogrades": retrogrades,
         "numerology": date_vib
     }
+
+def calculate_stock_astro_score(date_obj: datetime.datetime, ticker: str, price: float) -> Dict[str, Any]:
+    """
+    Computes a stock-specific Astro Bias Score by combining the global macro score
+    with the Gann Square of 9 alignment of the stock's price to the Sun's longitude.
+    """
+    macro_report = calculate_daily_astro_score(date_obj)
+    base_score = macro_report['score']
+    
+    if not price or price <= 0:
+        return macro_report # Fallback to macro if no price
+        
+    import math
+    
+    price_angle = price_to_angle(price)
+    
+    # We need planetary positions for this date
+    pos = get_planetary_positions(date_obj, sidereal=True)
+    sun_long = pos['Sun']['longitude']
+    moon_long = pos['Moon']['longitude']
+    
+    # Continuous scoring function based on Gann angles
+    # Gann considers 0, 90, 180, 270 as Hard/Volatile aspects.
+    # A cosine wave with frequency 4 peaks at these angles.
+    # We multiply by -30 so that hard aspects give -30 (Bearish/Volatile).
+    sun_modifier = -math.cos(math.radians((sun_long - price_angle) * 4)) * 25
+    
+    # Moon moves faster, so it gives short term nuance
+    moon_modifier = -math.cos(math.radians((moon_long - price_angle) * 4)) * 15
+    
+    price_modifier = int(sun_modifier + moon_modifier)
+    
+    total_score = base_score + price_modifier
+    total_score = max(-100, min(100, total_score))
+    
+    bias = "Neutral"
+    if total_score >= 30: bias = "Bullish"
+    elif total_score <= -30: bias = "Bearish/Volatile"
+    
+    # Copy macro report and update with stock specific data
+    stock_report = macro_report.copy()
+    stock_report['score'] = total_score
+    stock_report['bias'] = bias
+    stock_report['price_modifier'] = price_modifier
+    
+    return stock_report
+
 
 def get_top_5_turn_date_stocks(date_obj: datetime.datetime, tickers: List[str], current_prices: Dict[str, float]) -> List[Dict]:
     """

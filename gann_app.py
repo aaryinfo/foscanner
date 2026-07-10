@@ -1410,7 +1410,7 @@ def get_backtest_data():
     if df.empty:
         return jsonify({"error": f"Failed to fetch {ticker} data from Yahoo Finance. Vercel IP might be blocked or ticker is invalid."}), 500
         
-    results = run_backtest(df)
+    results = run_backtest(df, ticker)
     return jsonify(results)
 
 @app.route('/api/migrate')
