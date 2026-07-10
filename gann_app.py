@@ -1348,11 +1348,18 @@ def get_today_data():
     c = conn.cursor()
     today_str = datetime.utcnow().strftime("%Y-%m-%d")
     
-    c.execute("SELECT date, score, bias, nakshatra, tithi, eclipse, numerology_vib, sector_bias FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
-    score_row = c.fetchone()
-    
-    c.execute("SELECT ticker, price, orb, alignment FROM top_stock_turn_dates WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
-    stocks_rows = c.fetchall()
+    try:
+        c.execute("SELECT date, score, bias, nakshatra, tithi, eclipse, numerology_vib, sector_bias FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
+        score_row = c.fetchone()
+    except Exception as e:
+        conn.rollback() # Important for Postgres aborted transactions
+        score_row = None
+        
+    try:
+        c.execute("SELECT ticker, price, orb, alignment FROM top_stock_turn_dates WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
+        stocks_rows = c.fetchall()
+    except Exception as e:
+        stocks_rows = []
     
     conn.close()
     
