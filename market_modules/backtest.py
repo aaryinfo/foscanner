@@ -28,6 +28,20 @@ def run_backtest(df: pd.DataFrame) -> dict:
     
     day_by_day = []
     
+    # 1. Pre-load Astro Forecast JSON to avoid heavy computation on Vercel
+    precalculated_scores = {}
+    try:
+        import json
+        import os
+        json_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'astro_forecast.json')
+        if os.path.exists(json_path):
+            with open(json_path, 'r', encoding='utf-8') as f:
+                forecasts = json.load(f)
+                for f_data in forecasts:
+                    precalculated_scores[f_data['date']] = f_data['score']
+    except Exception as e:
+        print(f"Error loading historical astro scores: {e}")
+        
     for _, row in sample_df.iterrows():
         date_obj = row['Date']
         if isinstance(date_obj, str):
@@ -35,8 +49,15 @@ def run_backtest(df: pd.DataFrame) -> dict:
         elif isinstance(date_obj, pd.Timestamp):
             date_obj = date_obj.to_pydatetime()
             
-        score_report = calculate_daily_astro_score(date_obj)
-        score = score_report['score']
+        date_str = date_obj.strftime("%Y-%m-%d")
+        
+        # Look up precalculated score first, fallback to live calculation
+        if date_str in precalculated_scores:
+            score = precalculated_scores[date_str]
+        else:
+            score_report = calculate_daily_astro_score(date_obj)
+            score = score_report['score']
+            
         next_ret = row['Next_Day_Return']
         
         is_hit = None

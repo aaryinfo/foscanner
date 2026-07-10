@@ -28,7 +28,7 @@ try:
 except Exception as e:
     print(f"[ERROR] Failed to update Global data: {e}")
 
-print("\n[3/3] Generating Astro Forecast for next 10 days...")
+print("\n[3/3] Generating Astro Forecast (-90 to +10 days)...")
 try:
     from datetime import datetime, timedelta
     import json
@@ -36,7 +36,7 @@ try:
     
     forecast = []
     base_date = datetime.utcnow()
-    for i in range(10):
+    for i in range(-90, 15):
         target_date = base_date + timedelta(days=i)
         score_data = calculate_daily_astro_score(target_date)
         sector_bias = calculate_sector_bias(target_date)
