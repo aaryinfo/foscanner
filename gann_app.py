@@ -1344,62 +1344,70 @@ def astromarket_dashboard():
 
 @app.route('/api/today')
 def get_today_data():
-    conn, _ = get_db_connection()
-    c = conn.cursor()
-    today_str = datetime.utcnow().strftime("%Y-%m-%d")
-    
     try:
-        c.execute("SELECT date, score, bias, nakshatra, tithi, eclipse, numerology_vib, sector_bias FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
-        score_row = c.fetchone()
-    except Exception as e:
-        conn.rollback() # Important for Postgres aborted transactions
-        score_row = None
+        conn, is_postgres = get_db_connection()
+        c = conn.cursor()
+        today_str = datetime.utcnow().strftime("%Y-%m-%d")
         
-    try:
-        c.execute("SELECT ticker, price, orb, alignment FROM top_stock_turn_dates WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
-        stocks_rows = c.fetchall()
-    except Exception as e:
-        stocks_rows = []
-    
-    conn.close()
-    
-    if not score_row:
-        # Fallback if cron hasn't run
-        live_report = calculate_daily_astro_score(datetime.utcnow())
-        live_sectors = calculate_sector_bias(datetime.utcnow())
-        score_data = {
-            "date": live_report['date'],
-            "score": live_report['score'],
-            "bias": live_report['bias'],
-            "nakshatra": live_report['nakshatra'],
-            "tithi": live_report['tithi'],
-            "eclipse": live_report['eclipse'],
-            "numerology_vib": live_report['numerology'],
-            "sector_bias": live_sectors
-        }
-    else:
-        import json
-        sec_bias_raw = score_row[7]
-        sec_bias = json.loads(sec_bias_raw) if sec_bias_raw else []
-        score_data = {
-            "date": str(score_row[0]),
-            "score": score_row[1],
-            "bias": score_row[2],
-            "nakshatra": score_row[3],
-            "tithi": score_row[4],
-            "eclipse": score_row[5],
-            "numerology_vib": score_row[6],
-            "sector_bias": sec_bias
-        }
+        try:
+            c.execute("SELECT date, score, bias, nakshatra, tithi, eclipse, numerology_vib, sector_bias FROM astro_daily_scores WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
+            score_row = c.fetchone()
+        except Exception as e:
+            if is_postgres: conn.rollback()
+            score_row = None
+            
+        try:
+            c.execute("SELECT ticker, price, orb, alignment FROM top_stock_turn_dates WHERE date::text LIKE %s OR date = %s", (f"{today_str}%", today_str))
+            stocks_rows = c.fetchall()
+        except Exception as e:
+            stocks_rows = []
         
-    stocks_data = [
-        {"ticker": r[0], "price": r[1], "orb": r[2], "alignment": r[3]} for r in stocks_rows
-    ]
-    
-    return jsonify({
-        "score_data": score_data,
-        "top_stocks": stocks_data
-    })
+        conn.close()
+        
+        if not score_row:
+            # Fallback if cron hasn't run
+            live_report = calculate_daily_astro_score(datetime.utcnow())
+            live_sectors = calculate_sector_bias(datetime.utcnow())
+            score_data = {
+                "date": live_report['date'],
+                "score": live_report['score'],
+                "bias": live_report['bias'],
+                "nakshatra": live_report['nakshatra'],
+                "tithi": live_report['tithi'],
+                "eclipse": live_report['eclipse'],
+                "numerology_vib": live_report['numerology'],
+                "sector_bias": live_sectors
+            }
+        else:
+            import json
+            sec_bias_raw = score_row[7]
+            try:
+                sec_bias = json.loads(sec_bias_raw) if sec_bias_raw else []
+            except Exception:
+                sec_bias = []
+                
+            score_data = {
+                "date": str(score_row[0]),
+                "score": score_row[1],
+                "bias": score_row[2],
+                "nakshatra": score_row[3],
+                "tithi": score_row[4],
+                "eclipse": score_row[5],
+                "numerology_vib": score_row[6],
+                "sector_bias": sec_bias
+            }
+            
+        stocks_data = [
+            {"ticker": r[0], "price": r[1], "orb": r[2], "alignment": r[3]} for r in stocks_rows
+        ]
+        
+        return jsonify({
+            "score_data": score_data,
+            "top_stocks": stocks_data
+        })
+    except Exception as e:
+        import traceback
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
 
 @app.route('/api/backtest')
 def get_backtest_data():
@@ -1410,6 +1418,19 @@ def get_backtest_data():
         
     results = run_backtest(df)
     return jsonify(results)
+
+@app.route('/api/migrate')
+def manual_migrate():
+    try:
+        conn, is_postgres = get_db_connection()
+        c = conn.cursor()
+        c.execute("ALTER TABLE astro_daily_scores ADD COLUMN sector_bias TEXT")
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "msg": "Column added!"})
+    except Exception as e:
+        import traceback
+        return jsonify({"ok": False, "error": str(e), "trace": traceback.format_exc()})
 
 @app.route('/api/cron/run-astro')
 def run_astro_cron():
