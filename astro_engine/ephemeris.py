@@ -6,9 +6,6 @@ import os
 try:
     import swisseph as swe
     HAS_SWE = True
-    if os.environ.get('VERCEL'):
-        logging.warning("Vercel detected. Forcing mock ephemeris since data files are missing.")
-        HAS_SWE = False
 except ImportError:
     HAS_SWE = False
     
@@ -71,31 +68,40 @@ def get_planetary_positions(date_obj: datetime.datetime, sidereal: bool = True) 
     jd = get_julian_day(date_obj)
     
     positions = {}
-    flags = swe.FLG_SWIEPH | swe.FLG_SPEED
+    
+    # Use Moshier ephemeris (4) which is built-in and does not require .se1 data files.
+    # This prevents pyswisseph from crashing on Vercel serverless functions.
+    FLG_MOSEPH = 4
+    flags = FLG_MOSEPH | swe.FLG_SPEED
     if sidereal:
         flags |= swe.FLG_SIDEREAL
 
     for name, swe_id in PLANETS.items():
-        # calc_ut returns a tuple: (longitude, latitude, distance, speed_long, speed_lat, speed_dist)
-        res, ret_flag = swe.calc_ut(jd, swe_id, flags)
-        
-        longitude = res[0]
+        try:
+            # calc_ut returns a tuple: (longitude, latitude, distance, speed_long, speed_lat, speed_dist)
+            res, ret_flag = swe.calc_ut(jd, swe_id, flags)
+            
+            longitude = res[0]
         declination = res[1] # Actually latitude in ecliptic coordinates, but useful for 2D. True declination requires equatorial.
         speed = res[3]
-        
-        is_retrograde = speed < 0
-        
-        # Determine current sign (0-11)
-        sign_idx = int(longitude / 30)
-        degree_in_sign = longitude % 30
-        
-        positions[name] = {
-            'longitude': longitude,
-            'sign': sign_idx,
-            'degree_in_sign': degree_in_sign,
-            'speed': speed,
-            'is_retrograde': is_retrograde
-        }
+            declination = res[1] # Actually latitude in ecliptic coordinates, but useful for 2D. True declination requires equatorial.
+            speed = res[3]
+            
+            is_retrograde = speed < 0
+            
+            # Determine current sign (0-11)
+            sign_idx = int(longitude / 30)
+            degree_in_sign = longitude % 30
+            
+            positions[name] = {
+                'longitude': longitude,
+                'sign': sign_idx,
+                'degree_in_sign': degree_in_sign,
+                'speed': speed,
+                'is_retrograde': is_retrograde
+            }
+        except Exception as e:
+            logging.error(f"Error calculating {name}: {e}")
         
     # Calculate Ketu (always opposite to Rahu in mean/true calculations)
     if 'Rahu' in positions:
