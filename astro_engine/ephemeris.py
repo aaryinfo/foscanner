@@ -1,14 +1,19 @@
 import datetime
 from typing import Dict, List, Tuple, Any
 import logging
+import os
 
 try:
     import swisseph as swe
     HAS_SWE = True
+    if os.environ.get('VERCEL'):
+        logging.warning("Vercel detected. Forcing mock ephemeris since data files are missing.")
+        HAS_SWE = False
 except ImportError:
     HAS_SWE = False
-    logging.warning("pyswisseph is not installed. Using mock ephemeris data. Please install Microsoft C++ Build Tools to use real ephemeris locally.")
-    # Mock some swe constants
+    
+if not HAS_SWE:
+    logging.warning("Using mock ephemeris data.")
     class MockSwe:
         SUN = 0; MOON = 1; MERCURY = 2; VENUS = 3; MARS = 4; JUPITER = 5; SATURN = 6
         URANUS = 7; NEPTUNE = 8; PLUTO = 9; TRUE_NODE = 10
