@@ -1,0 +1,141 @@
+import datetime
+import math
+from typing import Dict, List, Any
+
+# Ensure absolute imports since this will be run as a module or from app.py
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from astro_engine.ephemeris import get_planetary_positions, get_moon_nakshatra
+from astro_engine.gann_astro import get_daily_aspects
+from astro_engine.vedic import get_nakshatra_info, calculate_tithi, check_combustion, check_eclipse_proximity
+from astro_engine.numerology import get_date_vibration
+
+def calculate_daily_astro_score(date_obj: datetime.datetime) -> Dict[str, Any]:
+    """
+    Computes a composite Astro Bias Score (-100 to +100) for a given date.
+    """
+    pos = get_planetary_positions(date_obj, sidereal=True)
+    
+    # 1. Vedic Layer
+    moon_long = pos['Moon']['longitude']
+    sun_long = pos['Sun']['longitude']
+    rahu_long = pos.get('Rahu', {}).get('longitude', 0)
+    ketu_long = pos.get('Ketu', {}).get('longitude', 0)
+    
+    nak_idx, _ = get_moon_nakshatra(moon_long)
+    nak_info = get_nakshatra_info(nak_idx)
+    tithi_idx, tithi_name = calculate_tithi(sun_long, moon_long)
+    eclipse_status = check_eclipse_proximity(sun_long, moon_long, rahu_long, ketu_long)
+    
+    # 2. Aspect Intensity
+    aspects = get_daily_aspects(pos)
+    aspect_score = sum(asp['score'] for asp in aspects)
+    
+    # 3. Numerology
+    date_vib = get_date_vibration(date_obj)
+    
+    # 4. Retrograde Penalty (Mercury/Venus/Mars retrogrades often cause choppiness)
+    retrogrades = []
+    retro_penalty = 0
+    for p in ['Mercury', 'Venus', 'Mars']:
+        if p in pos and pos[p]['is_retrograde']:
+            retrogrades.append(p)
+            retro_penalty -= 10
+            
+    # Composite Score Calculation
+    base_score = 0
+    
+    if nak_info['tag'] == 'Volatile':
+        base_score -= 15
+    elif nak_info['tag'] == 'Highly Volatile':
+        base_score -= 30
+    elif nak_info['tag'] == 'Stable':
+        base_score += 10
+        
+    if "Volatile" in tithi_name or "Challenging" in tithi_name:
+        base_score -= 15
+        
+    if "Eclipse" in eclipse_status:
+        base_score -= 50 # Eclipses dominate and create high volatility/reversals
+        
+    total_score = base_score + aspect_score + retro_penalty
+    
+    # Clamp to -100, +100
+    total_score = max(-100, min(100, total_score))
+    
+    bias = "Neutral"
+    if total_score >= 30: bias = "Bullish"
+    elif total_score <= -30: bias = "Bearish/Volatile"
+    
+    if "Eclipse" in eclipse_status:
+        bias = "Highly Volatile (Eclipse Window)"
+        
+    return {
+        "date": date_obj.strftime("%Y-%m-%d"),
+        "score": total_score,
+        "bias": bias,
+        "nakshatra": nak_info['name'],
+        "nakshatra_tag": nak_info['tag'],
+        "tithi": tithi_name,
+        "eclipse": eclipse_status,
+        "aspects": aspects,
+        "retrogrades": retrogrades,
+        "numerology": date_vib
+    }
+
+def get_top_5_turn_date_stocks(date_obj: datetime.datetime, tickers: List[str], current_prices: Dict[str, float]) -> List[Dict]:
+    """
+    Calculate the "Top 5 Stocks with Turn Dates" for a given day.
+    Checks if Sun's longitude matches the Square of 9 angles of the stock's price.
+    """
+    pos = get_planetary_positions(date_obj, sidereal=True)
+    sun_long = pos['Sun']['longitude']
+    
+    results = []
+    
+    for ticker in tickers:
+        price = current_prices.get(ticker)
+        if not price or price <= 0:
+            continue
+            
+        # Price to angle
+        price_angle = (math.sqrt(price) * 180) - 225
+        price_angle = price_angle % 360
+        
+        # Check alignment with Sun
+        diff = abs(sun_long - price_angle)
+        if diff > 180:
+            diff = 360 - diff
+            
+        # Standard Gann Square of 9 aspects (0, 45, 90, 120, 135, 180)
+        strong_angles = [0, 45, 90, 120, 135, 180]
+        min_orb = 360
+        aligned_angle = None
+        
+        for ang in strong_angles:
+            orb = abs(diff - ang)
+            if orb < min_orb:
+                min_orb = orb
+                aligned_angle = ang
+                
+        # If orb is very tight (e.g., < 2 degrees), flag it as a turn date
+        if min_orb <= 2.0:
+            results.append({
+                "ticker": ticker,
+                "price": price,
+                "orb": min_orb,
+                "alignment": f"Sun aligned with Square of 9 price level (Aspect: {aligned_angle}°)"
+            })
+            
+    # Sort by tightest orb
+    results = sorted(results, key=lambda x: x['orb'])
+    
+    return results[:5]
+
+if __name__ == "__main__":
+    today = datetime.datetime.utcnow()
+    report = calculate_daily_astro_score(today)
+    import json
+    print(json.dumps(report, indent=2))

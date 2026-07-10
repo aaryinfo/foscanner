@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroMarket Pro</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent: #38bdf8;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: var(--accent);
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .panel {
+            background-color: var(--panel-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .score-card {
+            text-align: center;
+            padding: 20px;
+        }
+        .score-val {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .bullish { color: var(--success); }
+        .bearish { color: var(--danger); }
+        .neutral { color: var(--warning); }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        th {
+            background-color: #0f172a;
+            color: var(--accent);
+        }
+        .top-stocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stock-card {
+            background-color: #334155;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid var(--accent);
+        }
+        .stock-ticker {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        .stock-price {
+            font-size: 1rem;
+            color: var(--success);
+            margin: 5px 0;
+        }
+        .stock-orb {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AstroMarket Pro 🌌</h1>
+    <p style="text-align: center; color: #94a3b8;">Financial Astrology & Gann Planetary Dashboard</p>
+
+    <div class="container" id="app">
+        <!-- Daily Score Panel -->
+        <div class="panel score-card full-width">
+            <h2>Daily Astro Weather Report</h2>
+            <div id="date-display" style="font-size: 1.2rem; color: #94a3b8;">Loading...</div>
+            <div id="score-val" class="score-val neutral">--</div>
+            <div id="bias-val" style="font-size: 1.5rem; font-weight: bold;">--</div>
+            
+            <div style="display: flex; justify-content: space-around; margin-top: 20px; font-size: 0.9rem;">
+                <div><b>Nakshatra:</b> <span id="nak-val">--</span></div>
+                <div><b>Tithi:</b> <span id="tithi-val">--</span></div>
+                <div><b>Numerology Vib:</b> <span id="num-val">--</span></div>
+                <div><b>Eclipse Status:</b> <span id="eclipse-val">--</span></div>
+            </div>
+        </div>
+
+        <!-- Top 5 Stocks -->
+        <div class="panel full-width">
+            <h2>🔥 Top 5 Stocks with Turn Dates Today</h2>
+            <p style="text-align: center; color: #94a3b8;">Stocks where Planetary Longitude aligns precisely with Gann Square of 9 levels.</p>
+            <div class="top-stocks-grid" id="top-stocks-container">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch Data from API
+        fetch('/api/today')
+            .then(response => response.json())
+            .then(data => {
+                const scoreData = data.score_data;
+                const stocks = data.top_stocks;
+                
+                // Update Score Panel
+                document.getElementById('date-display').innerText = scoreData.date;
+                const scoreEl = document.getElementById('score-val');
+                scoreEl.innerText = scoreData.score;
+                
+                if(scoreData.score >= 30) {
+                    scoreEl.className = 'score-val bullish';
+                } else if(scoreData.score <= -30) {
+                    scoreEl.className = 'score-val bearish';
+                } else {
+                    scoreEl.className = 'score-val neutral';
+                }
+                
+                document.getElementById('bias-val').innerText = scoreData.bias;
+                document.getElementById('nak-val').innerText = `${scoreData.nakshatra}`;
+                document.getElementById('tithi-val').innerText = scoreData.tithi;
+                document.getElementById('num-val').innerText = scoreData.numerology_vib;
+                document.getElementById('eclipse-val').innerText = scoreData.eclipse;
+                
+                // Update Top Stocks
+                const stocksContainer = document.getElementById('top-stocks-container');
+                if(stocks.length === 0) {
+                    stocksContainer.innerHTML = `<p style="text-align:center; width: 100%;">No highly aligned turn dates found today.</p>`;
+                } else {
+                    stocksContainer.innerHTML = '';
+                    stocks.forEach(s => {
+                        stocksContainer.innerHTML += `
+                            <div class="stock-card">
+                                <div class="stock-ticker">${s.ticker}</div>
+                                <div class="stock-price">₹${s.price ? s.price.toFixed(2) : '--'}</div>
+                                <div class="stock-orb">Orb: ${s.orb.toFixed(2)}°</div>
+                            </div>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+                document.getElementById('date-display').innerText = "Error loading data.";
+            });
+    </script>
+</body>
+</html>
