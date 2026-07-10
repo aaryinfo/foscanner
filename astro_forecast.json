@@ -1,0 +1,462 @@
+[
+    {
+        "date": "2026-07-10",
+        "score": -82,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Bharani",
+        "tithi": "Tithi 26",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 9,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Gemini"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-11",
+        "score": -59,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Rohini",
+        "tithi": "Tithi 27",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 1,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Gemini"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-12",
+        "score": -68,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Mrigashira",
+        "tithi": "Tithi 28",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 2,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Gemini"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-13",
+        "score": -100,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Ardra",
+        "tithi": "Tithi 29 (Rikta/Challenging)",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 3,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Gemini"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-14",
+        "score": -72,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Punarvasu",
+        "tithi": "Amavasya (New Moon) - Volatile",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 4,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Gemini"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-15",
+        "score": -52,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Pushya",
+        "tithi": "Tithi 2",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 5,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Gemini"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-16",
+        "score": -78,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Ashlesha",
+        "tithi": "Tithi 3",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 6,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Gemini"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-17",
+        "score": -99,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Magha",
+        "tithi": "Tithi 4 (Rikta/Challenging)",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 7,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Gemini"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-18",
+        "score": -63,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Purva Phalguni",
+        "tithi": "Tithi 5",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 8,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Cancer"
+            }
+        ]
+    },
+    {
+        "date": "2026-07-19",
+        "score": -50,
+        "bias": "Highly Volatile (Eclipse Window)",
+        "nakshatra": "Uttara Phalguni",
+        "tithi": "Tithi 6",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 9,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Gemini (Own Sign) [Retrograde]"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Leo"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Taurus"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Cancer"
+            }
+        ]
+    }
+]
