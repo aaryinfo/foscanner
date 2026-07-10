@@ -1,9 +1,9 @@
 [
     {
         "date": "2026-04-11",
-        "score": -51,
+        "score": -52,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Uttara Ashadha",
+        "nakshatra": "Shravana",
         "tithi": "Tithi 24 (Rikta/Challenging)",
         "eclipse": "No Eclipse",
         "numerology_vib": 7,
@@ -19,8 +19,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mercury is in Pisces (Debilitated)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -47,9 +47,9 @@
     },
     {
         "date": "2026-04-12",
-        "score": -39,
+        "score": -49,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Shravana",
+        "nakshatra": "Dhanishta",
         "tithi": "Tithi 25",
         "eclipse": "No Eclipse",
         "numerology_vib": 8,
@@ -93,9 +93,9 @@
     },
     {
         "date": "2026-04-13",
-        "score": -53,
+        "score": -69,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Dhanishta",
+        "nakshatra": "Shatabhisha",
         "tithi": "Tithi 26",
         "eclipse": "No Eclipse",
         "numerology_vib": 9,
@@ -139,9 +139,9 @@
     },
     {
         "date": "2026-04-14",
-        "score": -64,
+        "score": -60,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Shatabhisha",
+        "nakshatra": "Purva Bhadrapada",
         "tithi": "Tithi 27",
         "eclipse": "No Eclipse",
         "numerology_vib": 1,
@@ -185,9 +185,9 @@
     },
     {
         "date": "2026-04-15",
-        "score": -66,
+        "score": -40,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Purva Bhadrapada",
+        "nakshatra": "Uttara Bhadrapada",
         "tithi": "Tithi 28",
         "eclipse": "No Eclipse",
         "numerology_vib": 2,
@@ -231,9 +231,9 @@
     },
     {
         "date": "2026-04-16",
-        "score": -60,
+        "score": -61,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Uttara Bhadrapada",
+        "nakshatra": "Revati",
         "tithi": "Tithi 29 (Rikta/Challenging)",
         "eclipse": "No Eclipse",
         "numerology_vib": 3,
@@ -277,10 +277,10 @@
     },
     {
         "date": "2026-04-17",
-        "score": -70,
+        "score": -55,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ashwini",
-        "tithi": "Amavasya (New Moon) - Volatile",
+        "tithi": "Tithi 1",
         "eclipse": "No Eclipse",
         "numerology_vib": 4,
         "sector_bias": [
@@ -415,7 +415,7 @@
     },
     {
         "date": "2026-04-20",
-        "score": -65,
+        "score": -64,
         "bias": "Bearish/Volatile",
         "nakshatra": "Rohini",
         "tithi": "Tithi 4 (Rikta/Challenging)",
@@ -461,7 +461,7 @@
     },
     {
         "date": "2026-04-21",
-        "score": -55,
+        "score": -57,
         "bias": "Bearish/Volatile",
         "nakshatra": "Mrigashira",
         "tithi": "Tithi 5",
@@ -507,7 +507,7 @@
     },
     {
         "date": "2026-04-22",
-        "score": -85,
+        "score": -88,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ardra",
         "tithi": "Tithi 6",
@@ -553,7 +553,7 @@
     },
     {
         "date": "2026-04-23",
-        "score": -44,
+        "score": -42,
         "bias": "Bearish/Volatile",
         "nakshatra": "Punarvasu",
         "tithi": "Tithi 7",
@@ -599,10 +599,10 @@
     },
     {
         "date": "2026-04-24",
-        "score": -40,
+        "score": -59,
         "bias": "Bearish/Volatile",
         "nakshatra": "Pushya",
-        "tithi": "Tithi 8",
+        "tithi": "Tithi 9 (Rikta/Challenging)",
         "eclipse": "No Eclipse",
         "numerology_vib": 2,
         "sector_bias": [
@@ -645,10 +645,10 @@
     },
     {
         "date": "2026-04-25",
-        "score": -88,
+        "score": -73,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ashlesha",
-        "tithi": "Tithi 9 (Rikta/Challenging)",
+        "tithi": "Tithi 10",
         "eclipse": "No Eclipse",
         "numerology_vib": 3,
         "sector_bias": [
@@ -694,7 +694,7 @@
         "score": -79,
         "bias": "Bearish/Volatile",
         "nakshatra": "Magha",
-        "tithi": "Tithi 10",
+        "tithi": "Tithi 11",
         "eclipse": "No Eclipse",
         "numerology_vib": 4,
         "sector_bias": [
@@ -740,7 +740,7 @@
         "score": -57,
         "bias": "Bearish/Volatile",
         "nakshatra": "Purva Phalguni",
-        "tithi": "Tithi 11",
+        "tithi": "Tithi 12",
         "eclipse": "No Eclipse",
         "numerology_vib": 5,
         "sector_bias": [
@@ -783,10 +783,10 @@
     },
     {
         "date": "2026-04-28",
-        "score": -49,
+        "score": -52,
         "bias": "Bearish/Volatile",
         "nakshatra": "Uttara Phalguni",
-        "tithi": "Tithi 12",
+        "tithi": "Tithi 13",
         "eclipse": "No Eclipse",
         "numerology_vib": 6,
         "sector_bias": [
@@ -875,7 +875,7 @@
     },
     {
         "date": "2026-04-30",
-        "score": -91,
+        "score": -90,
         "bias": "Bearish/Volatile",
         "nakshatra": "Chitra",
         "tithi": "Tithi 14 (Rikta/Challenging)",
@@ -893,8 +893,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Bearish",
-                "reason": "Mercury is in Pisces (Debilitated)"
+                "bias": "Neutral",
+                "reason": "Mercury is in Aries"
             },
             {
                 "sector": "Auto & FMCG",
@@ -921,7 +921,7 @@
     },
     {
         "date": "2026-05-01",
-        "score": -81,
+        "score": -83,
         "bias": "Bearish/Volatile",
         "nakshatra": "Swati",
         "tithi": "Purnima (Full Moon) - Volatile",
@@ -967,7 +967,7 @@
     },
     {
         "date": "2026-05-02",
-        "score": -51,
+        "score": -52,
         "bias": "Bearish/Volatile",
         "nakshatra": "Vishakha",
         "tithi": "Tithi 16",
@@ -1013,7 +1013,7 @@
     },
     {
         "date": "2026-05-03",
-        "score": -47,
+        "score": -49,
         "bias": "Bearish/Volatile",
         "nakshatra": "Anuradha",
         "tithi": "Tithi 17",
@@ -1059,7 +1059,7 @@
     },
     {
         "date": "2026-05-04",
-        "score": -65,
+        "score": -66,
         "bias": "Bearish/Volatile",
         "nakshatra": "Jyeshtha",
         "tithi": "Tithi 18",
@@ -1151,9 +1151,9 @@
     },
     {
         "date": "2026-05-06",
-        "score": -78,
+        "score": -50,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Mula",
+        "nakshatra": "Purva Ashadha",
         "tithi": "Tithi 20",
         "eclipse": "No Eclipse",
         "numerology_vib": 3,
@@ -1197,7 +1197,7 @@
     },
     {
         "date": "2026-05-07",
-        "score": -52,
+        "score": -51,
         "bias": "Bearish/Volatile",
         "nakshatra": "Purva Ashadha",
         "tithi": "Tithi 21",
@@ -1243,7 +1243,7 @@
     },
     {
         "date": "2026-05-08",
-        "score": -36,
+        "score": -37,
         "bias": "Bearish/Volatile",
         "nakshatra": "Uttara Ashadha",
         "tithi": "Tithi 22",
@@ -1289,7 +1289,7 @@
     },
     {
         "date": "2026-05-09",
-        "score": -41,
+        "score": -43,
         "bias": "Bearish/Volatile",
         "nakshatra": "Shravana",
         "tithi": "Tithi 23",
@@ -1335,7 +1335,7 @@
     },
     {
         "date": "2026-05-10",
-        "score": -68,
+        "score": -70,
         "bias": "Bearish/Volatile",
         "nakshatra": "Dhanishta",
         "tithi": "Tithi 24 (Rikta/Challenging)",
@@ -1381,10 +1381,10 @@
     },
     {
         "date": "2026-05-11",
-        "score": -84,
+        "score": -68,
         "bias": "Bearish/Volatile",
         "nakshatra": "Shatabhisha",
-        "tithi": "Tithi 24 (Rikta/Challenging)",
+        "tithi": "Tithi 25",
         "eclipse": "No Eclipse",
         "numerology_vib": 8,
         "sector_bias": [
@@ -1459,8 +1459,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Pisces"
+                "bias": "Bullish",
+                "reason": "Mars is in Aries (Own Sign)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -1473,7 +1473,7 @@
     },
     {
         "date": "2026-05-13",
-        "score": -42,
+        "score": -41,
         "bias": "Bearish/Volatile",
         "nakshatra": "Uttara Bhadrapada",
         "tithi": "Tithi 27",
@@ -1565,7 +1565,7 @@
     },
     {
         "date": "2026-05-15",
-        "score": -61,
+        "score": -63,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ashwini",
         "tithi": "Tithi 29 (Rikta/Challenging)",
@@ -1611,9 +1611,9 @@
     },
     {
         "date": "2026-05-16",
-        "score": -82,
+        "score": -81,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Bharani",
+        "nakshatra": "Krittika",
         "tithi": "Amavasya (New Moon) - Volatile",
         "eclipse": "No Eclipse",
         "numerology_vib": 4,
@@ -1657,9 +1657,9 @@
     },
     {
         "date": "2026-05-17",
-        "score": -75,
+        "score": -48,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Krittika",
+        "nakshatra": "Rohini",
         "tithi": "Tithi 1",
         "eclipse": "No Eclipse",
         "numerology_vib": 5,
@@ -1703,10 +1703,10 @@
     },
     {
         "date": "2026-05-18",
-        "score": -57,
+        "score": -56,
         "bias": "Bearish/Volatile",
         "nakshatra": "Mrigashira",
-        "tithi": "Tithi 2",
+        "tithi": "Tithi 3",
         "eclipse": "No Eclipse",
         "numerology_vib": 6,
         "sector_bias": [
@@ -1749,7 +1749,7 @@
     },
     {
         "date": "2026-05-19",
-        "score": -97,
+        "score": -98,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ardra",
         "tithi": "Tithi 4 (Rikta/Challenging)",
@@ -1795,7 +1795,7 @@
     },
     {
         "date": "2026-05-20",
-        "score": -44,
+        "score": -43,
         "bias": "Bearish/Volatile",
         "nakshatra": "Punarvasu",
         "tithi": "Tithi 5",
@@ -1841,7 +1841,7 @@
     },
     {
         "date": "2026-05-21",
-        "score": -33,
+        "score": -34,
         "bias": "Bearish/Volatile",
         "nakshatra": "Pushya",
         "tithi": "Tithi 6",
@@ -1887,7 +1887,7 @@
     },
     {
         "date": "2026-05-22",
-        "score": -58,
+        "score": -59,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ashlesha",
         "tithi": "Tithi 7",
@@ -1933,7 +1933,7 @@
     },
     {
         "date": "2026-05-23",
-        "score": -63,
+        "score": -65,
         "bias": "Bearish/Volatile",
         "nakshatra": "Magha",
         "tithi": "Tithi 8",
@@ -1979,7 +1979,7 @@
     },
     {
         "date": "2026-05-24",
-        "score": -58,
+        "score": -59,
         "bias": "Bearish/Volatile",
         "nakshatra": "Purva Phalguni",
         "tithi": "Tithi 9 (Rikta/Challenging)",
@@ -2117,7 +2117,7 @@
     },
     {
         "date": "2026-05-27",
-        "score": -68,
+        "score": -67,
         "bias": "Bearish/Volatile",
         "nakshatra": "Chitra",
         "tithi": "Tithi 12",
@@ -2163,7 +2163,7 @@
     },
     {
         "date": "2026-05-28",
-        "score": -58,
+        "score": -61,
         "bias": "Bearish/Volatile",
         "nakshatra": "Swati",
         "tithi": "Tithi 13",
@@ -2209,7 +2209,7 @@
     },
     {
         "date": "2026-05-29",
-        "score": -66,
+        "score": -64,
         "bias": "Bearish/Volatile",
         "nakshatra": "Vishakha",
         "tithi": "Tithi 14 (Rikta/Challenging)",
@@ -2255,7 +2255,7 @@
     },
     {
         "date": "2026-05-30",
-        "score": -57,
+        "score": -59,
         "bias": "Bearish/Volatile",
         "nakshatra": "Anuradha",
         "tithi": "Purnima (Full Moon) - Volatile",
@@ -2301,9 +2301,9 @@
     },
     {
         "date": "2026-05-31",
-        "score": -40,
+        "score": -63,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Anuradha",
+        "nakshatra": "Jyeshtha",
         "tithi": "Tithi 16",
         "eclipse": "No Eclipse",
         "numerology_vib": 1,
@@ -2350,7 +2350,7 @@
         "score": -65,
         "bias": "Bearish/Volatile",
         "nakshatra": "Jyeshtha",
-        "tithi": "Tithi 16",
+        "tithi": "Tithi 17",
         "eclipse": "No Eclipse",
         "numerology_vib": 8,
         "sector_bias": [
@@ -2393,10 +2393,10 @@
     },
     {
         "date": "2026-06-02",
-        "score": -79,
+        "score": -80,
         "bias": "Bearish/Volatile",
         "nakshatra": "Mula",
-        "tithi": "Tithi 17",
+        "tithi": "Tithi 18",
         "eclipse": "No Eclipse",
         "numerology_vib": 9,
         "sector_bias": [
@@ -2485,7 +2485,7 @@
     },
     {
         "date": "2026-06-04",
-        "score": -57,
+        "score": -53,
         "bias": "Bearish/Volatile",
         "nakshatra": "Uttara Ashadha",
         "tithi": "Tithi 19 (Rikta/Challenging)",
@@ -2531,7 +2531,7 @@
     },
     {
         "date": "2026-06-05",
-        "score": -41,
+        "score": -40,
         "bias": "Bearish/Volatile",
         "nakshatra": "Shravana",
         "tithi": "Tithi 20",
@@ -2577,7 +2577,7 @@
     },
     {
         "date": "2026-06-06",
-        "score": -53,
+        "score": -54,
         "bias": "Bearish/Volatile",
         "nakshatra": "Dhanishta",
         "tithi": "Tithi 21",
@@ -2588,8 +2588,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Gemini"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Cancer (Exalted)"
             },
             {
                 "sector": "IT & Tech",
@@ -2623,7 +2623,7 @@
     },
     {
         "date": "2026-06-07",
-        "score": -75,
+        "score": -72,
         "bias": "Bearish/Volatile",
         "nakshatra": "Shatabhisha",
         "tithi": "Tithi 22",
@@ -2669,7 +2669,7 @@
     },
     {
         "date": "2026-06-08",
-        "score": -71,
+        "score": -70,
         "bias": "Bearish/Volatile",
         "nakshatra": "Purva Bhadrapada",
         "tithi": "Tithi 23",
@@ -2715,7 +2715,7 @@
     },
     {
         "date": "2026-06-09",
-        "score": -58,
+        "score": -61,
         "bias": "Bearish/Volatile",
         "nakshatra": "Uttara Bhadrapada",
         "tithi": "Tithi 24 (Rikta/Challenging)",
@@ -2761,7 +2761,7 @@
     },
     {
         "date": "2026-06-10",
-        "score": -48,
+        "score": -47,
         "bias": "Bearish/Volatile",
         "nakshatra": "Revati",
         "tithi": "Tithi 25",
@@ -2807,7 +2807,7 @@
     },
     {
         "date": "2026-06-11",
-        "score": -55,
+        "score": -52,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ashwini",
         "tithi": "Tithi 26",
@@ -2899,10 +2899,10 @@
     },
     {
         "date": "2026-06-13",
-        "score": -68,
+        "score": -85,
         "bias": "Bearish/Volatile",
         "nakshatra": "Krittika",
-        "tithi": "Tithi 28",
+        "tithi": "Tithi 29 (Rikta/Challenging)",
         "eclipse": "No Eclipse",
         "numerology_vib": 2,
         "sector_bias": [
@@ -2991,7 +2991,7 @@
     },
     {
         "date": "2026-06-15",
-        "score": -45,
+        "score": -44,
         "bias": "Bearish/Volatile",
         "nakshatra": "Mrigashira",
         "tithi": "Tithi 1",
@@ -3037,9 +3037,9 @@
     },
     {
         "date": "2026-06-16",
-        "score": -79,
+        "score": -38,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Ardra",
+        "nakshatra": "Punarvasu",
         "tithi": "Tithi 2",
         "eclipse": "No Eclipse",
         "numerology_vib": 5,
@@ -3083,7 +3083,7 @@
     },
     {
         "date": "2026-06-17",
-        "score": -36,
+        "score": -33,
         "bias": "Bearish/Volatile",
         "nakshatra": "Pushya",
         "tithi": "Tithi 3",
@@ -3129,10 +3129,10 @@
     },
     {
         "date": "2026-06-18",
-        "score": -72,
+        "score": -59,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ashlesha",
-        "tithi": "Tithi 4 (Rikta/Challenging)",
+        "tithi": "Tithi 5",
         "eclipse": "No Eclipse",
         "numerology_vib": 7,
         "sector_bias": [
@@ -3175,10 +3175,10 @@
     },
     {
         "date": "2026-06-19",
-        "score": -63,
+        "score": -65,
         "bias": "Bearish/Volatile",
         "nakshatra": "Magha",
-        "tithi": "Tithi 5",
+        "tithi": "Tithi 6",
         "eclipse": "No Eclipse",
         "numerology_vib": 8,
         "sector_bias": [
@@ -3224,7 +3224,7 @@
         "score": -47,
         "bias": "Bearish/Volatile",
         "nakshatra": "Purva Phalguni",
-        "tithi": "Tithi 6",
+        "tithi": "Tithi 7",
         "eclipse": "No Eclipse",
         "numerology_vib": 9,
         "sector_bias": [
@@ -3270,7 +3270,7 @@
         "score": -35,
         "bias": "Bearish/Volatile",
         "nakshatra": "Uttara Phalguni",
-        "tithi": "Tithi 7",
+        "tithi": "Tithi 8",
         "eclipse": "No Eclipse",
         "numerology_vib": 1,
         "sector_bias": [
@@ -3313,10 +3313,10 @@
     },
     {
         "date": "2026-06-22",
-        "score": -49,
+        "score": -65,
         "bias": "Bearish/Volatile",
         "nakshatra": "Hasta",
-        "tithi": "Tithi 8",
+        "tithi": "Tithi 9 (Rikta/Challenging)",
         "eclipse": "No Eclipse",
         "numerology_vib": 2,
         "sector_bias": [
@@ -3359,10 +3359,10 @@
     },
     {
         "date": "2026-06-23",
-        "score": -80,
+        "score": -64,
         "bias": "Bearish/Volatile",
         "nakshatra": "Chitra",
-        "tithi": "Tithi 9 (Rikta/Challenging)",
+        "tithi": "Tithi 10",
         "eclipse": "No Eclipse",
         "numerology_vib": 3,
         "sector_bias": [
@@ -3405,10 +3405,10 @@
     },
     {
         "date": "2026-06-24",
-        "score": -63,
+        "score": -64,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Chitra",
-        "tithi": "Tithi 10",
+        "nakshatra": "Swati",
+        "tithi": "Tithi 11",
         "eclipse": "No Eclipse",
         "numerology_vib": 4,
         "sector_bias": [
@@ -3451,9 +3451,9 @@
     },
     {
         "date": "2026-06-25",
-        "score": -65,
+        "score": -50,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Swati",
+        "nakshatra": "Vishakha",
         "tithi": "Tithi 11",
         "eclipse": "No Eclipse",
         "numerology_vib": 5,
@@ -3497,7 +3497,7 @@
     },
     {
         "date": "2026-06-26",
-        "score": -50,
+        "score": -52,
         "bias": "Bearish/Volatile",
         "nakshatra": "Vishakha",
         "tithi": "Tithi 12",
@@ -3543,7 +3543,7 @@
     },
     {
         "date": "2026-06-27",
-        "score": -44,
+        "score": -41,
         "bias": "Bearish/Volatile",
         "nakshatra": "Anuradha",
         "tithi": "Tithi 13",
@@ -3589,7 +3589,7 @@
     },
     {
         "date": "2026-06-28",
-        "score": -83,
+        "score": -84,
         "bias": "Bearish/Volatile",
         "nakshatra": "Jyeshtha",
         "tithi": "Tithi 14 (Rikta/Challenging)",
@@ -3635,7 +3635,7 @@
     },
     {
         "date": "2026-06-29",
-        "score": -96,
+        "score": -99,
         "bias": "Bearish/Volatile",
         "nakshatra": "Mula",
         "tithi": "Purnima (Full Moon) - Volatile",
@@ -3773,7 +3773,7 @@
     },
     {
         "date": "2026-07-02",
-        "score": -55,
+        "score": -56,
         "bias": "Bearish/Volatile",
         "nakshatra": "Shravana",
         "tithi": "Tithi 18",
@@ -3865,9 +3865,9 @@
     },
     {
         "date": "2026-07-04",
-        "score": -73,
+        "score": -87,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Dhanishta",
+        "nakshatra": "Shatabhisha",
         "tithi": "Tithi 20",
         "eclipse": "No Eclipse",
         "numerology_vib": 3,
@@ -3913,7 +3913,7 @@
         "date": "2026-07-05",
         "score": -80,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Shatabhisha",
+        "nakshatra": "Purva Bhadrapada",
         "tithi": "Tithi 21",
         "eclipse": "No Eclipse",
         "numerology_vib": 4,
@@ -3957,9 +3957,9 @@
     },
     {
         "date": "2026-07-06",
-        "score": -78,
+        "score": -53,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Purva Bhadrapada",
+        "nakshatra": "Uttara Bhadrapada",
         "tithi": "Tithi 22",
         "eclipse": "No Eclipse",
         "numerology_vib": 5,
@@ -4005,7 +4005,7 @@
         "date": "2026-07-07",
         "score": -58,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Uttara Bhadrapada",
+        "nakshatra": "Revati",
         "tithi": "Tithi 23",
         "eclipse": "No Eclipse",
         "numerology_vib": 6,
@@ -4049,9 +4049,9 @@
     },
     {
         "date": "2026-07-08",
-        "score": -71,
+        "score": -80,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Revati",
+        "nakshatra": "Ashwini",
         "tithi": "Tithi 24 (Rikta/Challenging)",
         "eclipse": "No Eclipse",
         "numerology_vib": 7,
@@ -4095,9 +4095,9 @@
     },
     {
         "date": "2026-07-09",
-        "score": -69,
+        "score": -84,
         "bias": "Bearish/Volatile",
-        "nakshatra": "Ashwini",
+        "nakshatra": "Bharani",
         "tithi": "Tithi 25",
         "eclipse": "No Eclipse",
         "numerology_vib": 8,
@@ -4141,7 +4141,7 @@
     },
     {
         "date": "2026-07-10",
-        "score": -82,
+        "score": -84,
         "bias": "Bearish/Volatile",
         "nakshatra": "Krittika",
         "tithi": "Tithi 26",
@@ -4233,7 +4233,7 @@
     },
     {
         "date": "2026-07-12",
-        "score": -68,
+        "score": -67,
         "bias": "Bearish/Volatile",
         "nakshatra": "Mrigashira",
         "tithi": "Tithi 28",
@@ -4282,7 +4282,7 @@
         "score": -100,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ardra",
-        "tithi": "Tithi 29 (Rikta/Challenging)",
+        "tithi": "Amavasya (New Moon) - Volatile",
         "eclipse": "No Eclipse",
         "numerology_vib": 3,
         "sector_bias": [
@@ -4325,10 +4325,10 @@
     },
     {
         "date": "2026-07-14",
-        "score": -71,
+        "score": -55,
         "bias": "Bearish/Volatile",
         "nakshatra": "Punarvasu",
-        "tithi": "Amavasya (New Moon) - Volatile",
+        "tithi": "Tithi 1",
         "eclipse": "No Eclipse",
         "numerology_vib": 4,
         "sector_bias": [
@@ -4371,7 +4371,7 @@
     },
     {
         "date": "2026-07-15",
-        "score": -52,
+        "score": -53,
         "bias": "Bearish/Volatile",
         "nakshatra": "Pushya",
         "tithi": "Tithi 2",
@@ -4417,7 +4417,7 @@
     },
     {
         "date": "2026-07-16",
-        "score": -78,
+        "score": -79,
         "bias": "Bearish/Volatile",
         "nakshatra": "Ashlesha",
         "tithi": "Tithi 3",
@@ -4463,7 +4463,7 @@
     },
     {
         "date": "2026-07-17",
-        "score": -98,
+        "score": -94,
         "bias": "Bearish/Volatile",
         "nakshatra": "Magha",
         "tithi": "Tithi 4 (Rikta/Challenging)",
@@ -4555,7 +4555,7 @@
     },
     {
         "date": "2026-07-19",
-        "score": -50,
+        "score": -49,
         "bias": "Bearish/Volatile",
         "nakshatra": "Uttara Phalguni",
         "tithi": "Tithi 6",
@@ -4601,7 +4601,7 @@
     },
     {
         "date": "2026-07-20",
-        "score": -64,
+        "score": -63,
         "bias": "Bearish/Volatile",
         "nakshatra": "Hasta",
         "tithi": "Tithi 7",
@@ -4647,7 +4647,7 @@
     },
     {
         "date": "2026-07-21",
-        "score": -73,
+        "score": -72,
         "bias": "Bearish/Volatile",
         "nakshatra": "Chitra",
         "tithi": "Tithi 8",
@@ -4693,7 +4693,7 @@
     },
     {
         "date": "2026-07-22",
-        "score": -93,
+        "score": -92,
         "bias": "Bearish/Volatile",
         "nakshatra": "Swati",
         "tithi": "Tithi 9 (Rikta/Challenging)",
@@ -4739,7 +4739,7 @@
     },
     {
         "date": "2026-07-23",
-        "score": -62,
+        "score": -64,
         "bias": "Bearish/Volatile",
         "nakshatra": "Vishakha",
         "tithi": "Tithi 10",
@@ -4785,7 +4785,7 @@
     },
     {
         "date": "2026-07-24",
-        "score": -42,
+        "score": -40,
         "bias": "Bearish/Volatile",
         "nakshatra": "Anuradha",
         "tithi": "Tithi 11",
