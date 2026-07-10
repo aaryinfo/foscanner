@@ -80,7 +80,8 @@ def get_planetary_positions(date_obj: datetime.datetime, sidereal: bool = True) 
     
     positions = {}
     
-    flags = swe.FLG_SWIEPH | swe.FLG_SPEED
+    # Use Moshier ephemeris because we don't have .se1 files in the repo anymore
+    flags = swe.FLG_MOSEPH | swe.FLG_SPEED
     if sidereal:
         flags |= swe.FLG_SIDEREAL
 
