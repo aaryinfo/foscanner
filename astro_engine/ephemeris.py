@@ -6,6 +6,9 @@ import os
 try:
     import swisseph as swe
     HAS_SWE = True
+    if os.environ.get('VERCEL'):
+        logging.warning("Vercel detected. Forcing mock ephemeris.")
+        HAS_SWE = False
 except ImportError:
     HAS_SWE = False
     
@@ -76,10 +79,7 @@ def get_planetary_positions(date_obj: datetime.datetime, sidereal: bool = True) 
     
     positions = {}
     
-    # Use Moshier ephemeris (4) which is built-in and does not require .se1 data files.
-    # This prevents pyswisseph from crashing on Vercel serverless functions.
-    FLG_MOSEPH = 4
-    flags = FLG_MOSEPH | swe.FLG_SPEED
+    flags = swe.FLG_SWIEPH | swe.FLG_SPEED
     if sidereal:
         flags |= swe.FLG_SIDEREAL
 
