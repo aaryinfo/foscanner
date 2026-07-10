@@ -26,6 +26,8 @@ def run_backtest(df: pd.DataFrame) -> dict:
     bearish_hits = 0
     bearish_total = 0
     
+    day_by_day = []
+    
     for _, row in sample_df.iterrows():
         date_obj = row['Date']
         if isinstance(date_obj, str):
@@ -37,23 +39,43 @@ def run_backtest(df: pd.DataFrame) -> dict:
         score = score_report['score']
         next_ret = row['Next_Day_Return']
         
+        is_hit = None
+        
         if score >= 30: # Bullish signal
             bullish_total += 1
             if next_ret > 0:
                 bullish_hits += 1
+                is_hit = True
+            else:
+                is_hit = False
         elif score <= -30: # Bearish signal
             bearish_total += 1
             if next_ret < 0:
                 bearish_hits += 1
+                is_hit = True
+            else:
+                is_hit = False
+                
+        day_by_day.append({
+            "date": date_obj.strftime("%Y-%m-%d"),
+            "score": score,
+            "bias": score_report['bias'],
+            "actual_return": round(next_ret, 2) if pd.notnull(next_ret) else 0.0,
+            "is_hit": is_hit
+        })
                 
     total_signals = bullish_total + bearish_total
     total_hits = bullish_hits + bearish_hits
     hit_rate = (total_hits / total_signals * 100) if total_signals > 0 else 0
+    
+    # Reverse so most recent is first
+    day_by_day.reverse()
     
     return {
         "days_tested": sample_size,
         "total_signals": total_signals,
         "hit_rate": round(hit_rate, 2),
         "bullish_signals": bullish_total,
-        "bearish_signals": bearish_total
+        "bearish_signals": bearish_total,
+        "history": day_by_day
     }

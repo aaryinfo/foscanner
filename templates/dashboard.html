@@ -196,23 +196,68 @@
                     return;
                 }
                 
-                let hitRateColor = data.hit_rate >= 55 ? 'var(--success)' : (data.hit_rate < 45 ? 'var(--danger)' : 'var(--warning)');
+                let historyHtml = `
+                    <div style="margin-top:20px; text-align:left; max-height:250px; overflow-y:auto; border: 1px solid #334155; border-radius: 8px;">
+                        <table style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
+                            <thead style="position: sticky; top: 0; background: #0f172a; z-index: 1;">
+                                <tr>
+                                    <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Date</th>
+                                    <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Bias</th>
+                                    <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Score</th>
+                                    <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Nifty Move</th>
+                                    <th style="padding: 10px; border-bottom: 1px solid #334155; color: var(--accent);">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
                 
+                if (data.history && data.history.length > 0) {
+                    data.history.forEach(day => {
+                        let resultBadge = '';
+                        if (day.is_hit === true) resultBadge = '<span style="color:var(--success); font-weight:bold;">HIT ✓</span>';
+                        else if (day.is_hit === false) resultBadge = '<span style="color:var(--danger); font-weight:bold;">MISS ✗</span>';
+                        else resultBadge = '<span style="color:#64748b;">Neutral</span>';
+                        
+                        let biasColor = '#94a3b8';
+                        if (day.score >= 30) biasColor = 'var(--success)';
+                        else if (day.score <= -30) biasColor = 'var(--danger)';
+                        
+                        let moveColor = day.actual_return > 0 ? 'var(--success)' : (day.actual_return < 0 ? 'var(--danger)' : '#94a3b8');
+                        
+                        historyHtml += `
+                            <tr>
+                                <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b;">${day.date}</td>
+                                <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b; color:${biasColor}; font-weight:bold;">${day.bias}</td>
+                                <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b;">${day.score}</td>
+                                <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b; color:${moveColor};">${day.actual_return > 0 ? '+' : ''}${day.actual_return}%</td>
+                                <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b;">${resultBadge}</td>
+                            </tr>
+                        `;
+                    });
+                }
+                
+                historyHtml += `</tbody></table></div>`;
+
                 container.innerHTML = `
-                    <div>
-                        <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">Total Signals</div>
-                        <div style="font-size:1.5rem; font-weight:bold;">${data.total_signals}</div>
-                        <div style="font-size:0.8rem; color:#64748b; margin-top:5px;">over ${data.days_tested} days</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">Historical Hit Rate</div>
-                        <div style="font-size:3rem; font-weight:bold; color:${hitRateColor};">${data.hit_rate}%</div>
-                    </div>
-                    <div style="text-align:left;">
-                        <div style="margin-bottom:8px;"><span style="color:var(--success)">Bullish Signals:</span> <b>${data.bullish_signals}</b></div>
-                        <div><span style="color:var(--danger)">Bearish Signals:</span> <b>${data.bearish_signals}</b></div>
+                    <div style="display:flex; justify-content:space-around; align-items:center; width: 100%; flex-wrap: wrap;">
+                        <div>
+                            <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">Total Signals</div>
+                            <div style="font-size:1.5rem; font-weight:bold;">${data.total_signals}</div>
+                            <div style="font-size:0.8rem; color:#64748b; margin-top:5px;">over ${data.days_tested} days</div>
+                        </div>
+                        <div>
+                            <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">Historical Hit Rate</div>
+                            <div style="font-size:3rem; font-weight:bold; color:${hitRateColor};">${data.hit_rate}%</div>
+                        </div>
+                        <div style="text-align:left;">
+                            <div style="margin-bottom:8px;"><span style="color:var(--success)">Bullish Signals:</span> <b>${data.bullish_signals}</b></div>
+                            <div><span style="color:var(--danger)">Bearish Signals:</span> <b>${data.bearish_signals}</b></div>
+                        </div>
                     </div>
                 `;
+                
+                // Append the day by day history table directly to the parent container
+                container.parentElement.insertAdjacentHTML('beforeend', historyHtml);
             })
             .catch(err => {
                 document.getElementById('backtest-container').innerHTML = `<div style="color:var(--danger)">Failed to load backtest data.</div>`;
