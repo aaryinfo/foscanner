@@ -4,11 +4,12 @@ import logging
 import os
 
 try:
-    import swisseph as swe
-    HAS_SWE = True
     if os.environ.get('VERCEL'):
-        logging.warning("Vercel detected. Forcing mock ephemeris.")
+        logging.warning("Vercel detected. Forcing mock ephemeris and skipping swisseph import.")
         HAS_SWE = False
+    else:
+        import swisseph as swe
+        HAS_SWE = True
 except ImportError:
     HAS_SWE = False
     
