@@ -69,7 +69,7 @@ def calculate_daily_astro_score(date_obj: datetime.datetime) -> Dict[str, Any]:
     if total_score >= 30: bias = "Bullish"
     elif total_score <= -30: bias = "Bearish/Volatile"
     
-    if "Eclipse" in eclipse_status:
+    if eclipse_status != "No Eclipse":
         bias = "Highly Volatile (Eclipse Window)"
         
     return {
