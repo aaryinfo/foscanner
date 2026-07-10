@@ -38,7 +38,7 @@ def run_backtest(df: pd.DataFrame) -> dict:
             with open(json_path, 'r', encoding='utf-8') as f:
                 forecasts = json.load(f)
                 for f_data in forecasts:
-                    precalculated_scores[f_data['date']] = f_data['score']
+                    precalculated_scores[f_data['date']] = f_data
     except Exception as e:
         print(f"Error loading historical astro scores: {e}")
         
@@ -53,7 +53,8 @@ def run_backtest(df: pd.DataFrame) -> dict:
         
         # Look up precalculated score first, fallback to live calculation
         if date_str in precalculated_scores:
-            score = precalculated_scores[date_str]
+            score_report = precalculated_scores[date_str]
+            score = score_report['score']
         else:
             score_report = calculate_daily_astro_score(date_obj)
             score = score_report['score']
