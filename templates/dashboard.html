@@ -161,7 +161,13 @@
     <script>
         // Fetch Data from API
         fetch('/api/today')
-            .then(response => response.json())
+            .then(async response => {
+                const data = await response.json();
+                if (!response.ok || data.error) {
+                    throw new Error(data.error || `HTTP ${response.status}`);
+                }
+                return data;
+            })
             .then(data => {
                 const scoreData = data.score_data;
                 const stocks = data.top_stocks;
