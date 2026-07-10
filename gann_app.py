@@ -1380,9 +1380,10 @@ def get_today_data():
 
 @app.route('/api/backtest')
 def get_backtest_data():
-    df = fetch_historical_data("^NSEI", period="1y")
+    # Only fetch 3 months to prevent Vercel serverless function timeouts
+    df = fetch_historical_data("^NSEI", period="3mo")
     if df.empty:
-        return jsonify({"error": "Failed to fetch Nifty data"}), 500
+        return jsonify({"error": "Failed to fetch Nifty data from Yahoo Finance. Vercel IP might be blocked."}), 500
         
     results = run_backtest(df)
     return jsonify(results)

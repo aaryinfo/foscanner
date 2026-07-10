@@ -188,7 +188,13 @@
 
         // Fetch Backtest Data
         fetch('/api/backtest')
-            .then(res => res.json())
+            .then(async res => {
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${text.substring(0, 50)}...`);
+                }
+                return res.json();
+            })
             .then(data => {
                 const container = document.getElementById('backtest-container');
                 if(data.error) {
@@ -260,7 +266,7 @@
                 container.parentElement.insertAdjacentHTML('beforeend', historyHtml);
             })
             .catch(err => {
-                document.getElementById('backtest-container').innerHTML = `<div style="color:var(--danger)">Failed to load backtest data.</div>`;
+                document.getElementById('backtest-container').innerHTML = `<div style="color:var(--danger)">Failed to load backtest data. <br> <span style="font-size:0.8rem">${err.message}</span></div>`;
             });
     </script>
 </body>
