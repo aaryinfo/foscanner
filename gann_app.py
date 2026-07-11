@@ -1393,10 +1393,11 @@ def get_today_data():
                     stocks_data = json.load(f)
         except Exception as e:
             print(f"Error reading top_stocks.json: {e}")
-        
+        from gann_engine import is_non_trading_day
         return jsonify({
             "score_data": score_data,
-            "top_stocks": stocks_data
+            "top_stocks": stocks_data,
+            "is_holiday": is_non_trading_day(datetime.utcnow())
         })
     except Exception as e:
         import traceback

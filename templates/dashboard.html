@@ -103,6 +103,12 @@
     <p style="text-align: center; color: #94a3b8;">Financial Astrology & Gann Planetary Dashboard</p>
 
     <div class="container" id="app">
+        
+        <!-- Holiday Banner -->
+        <div id="holiday-banner" style="display: none; background-color: var(--warning); color: #000; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+            ⚠️ Today is a market holiday / weekend.
+        </div>
+        
         <!-- Daily Score Panel -->
         <div class="panel score-card full-width">
             <h2>Daily Astro Weather Report</h2>
@@ -388,6 +394,10 @@
             .then(data => {
                 const scoreData = data.score_data;
                 const stocks = data.top_stocks;
+                
+                if (data.is_holiday) {
+                    document.getElementById('holiday-banner').style.display = 'block';
+                }
                 
                 // Update Score Panel
                 document.getElementById('date-display').innerText = scoreData.date;
