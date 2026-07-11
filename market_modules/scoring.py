@@ -36,13 +36,16 @@ def calculate_daily_astro_score(date_obj: datetime.datetime) -> Dict[str, Any]:
     # 3. Numerology
     date_vib = get_date_vibration(date_obj)
     
-    # 4. Retrograde Penalty (Mercury/Venus/Mars retrogrades often cause choppiness)
+    # 4. Retrograde Penalty/Bonus (Mercury/Venus/Mars retrogrades often cause choppiness)
     retrogrades = []
     retro_penalty = 0
     for p in ['Mercury', 'Venus', 'Mars']:
         if p in pos and pos[p]['is_retrograde']:
             retrogrades.append(p)
             retro_penalty -= 10
+            
+    if len(retrogrades) == 0:
+        retro_penalty += 15 # Bonus for clear, direct planetary motion
             
     # Composite Score Calculation
     base_score = 0
@@ -52,10 +55,14 @@ def calculate_daily_astro_score(date_obj: datetime.datetime) -> Dict[str, Any]:
     elif nak_info['tag'] == 'Highly Volatile':
         base_score -= 30
     elif nak_info['tag'] == 'Stable':
-        base_score += 10
+        base_score += 20 # Increased from 10 to balance
+    elif nak_info['tag'] == 'Neutral':
+        base_score += 5
         
     if "Volatile" in tithi_name or "Challenging" in tithi_name:
         base_score -= 15
+    else:
+        base_score += 15 # Positive score for normal/favorable lunar days
         
     if "Eclipse" in eclipse_status:
         base_score -= 50 # Eclipses dominate and create high volatility/reversals
