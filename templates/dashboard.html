@@ -511,20 +511,27 @@
                         let resultBadge = '';
                         if (day.is_hit === true) resultBadge = '<span style="color:var(--success); font-weight:bold;">HIT ✓</span>';
                         else if (day.is_hit === false) resultBadge = '<span style="color:var(--danger); font-weight:bold;">MISS ✗</span>';
+                        else if (day.is_hit === 'Holiday') resultBadge = '<span style="color:#64748b; font-weight:bold;">Holiday 🌴</span>';
+                        else if (day.is_hit === 'Pending') resultBadge = '<span style="color:#eab308; font-weight:bold;">Pending ⏳</span>';
                         else resultBadge = '<span style="color:#64748b;">Neutral</span>';
                         
                         let biasColor = '#94a3b8';
                         if (day.score >= 30) biasColor = 'var(--success)';
                         else if (day.score <= -30) biasColor = 'var(--danger)';
                         
-                        let moveColor = day.actual_return > 0 ? 'var(--success)' : (day.actual_return < 0 ? 'var(--danger)' : '#94a3b8');
+                        let moveColor = '#94a3b8';
+                        let actualReturnStr = day.actual_return;
+                        if (typeof day.actual_return === 'number') {
+                            moveColor = day.actual_return > 0 ? 'var(--success)' : (day.actual_return < 0 ? 'var(--danger)' : '#94a3b8');
+                            actualReturnStr = (day.actual_return > 0 ? '+' : '') + day.actual_return + '%';
+                        }
                         
                         historyHtml += `
                             <tr>
                                 <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b;">${day.date}</td>
                                 <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b; color:${biasColor}; font-weight:bold;">${day.bias}</td>
                                 <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b;">${day.score}</td>
-                                <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b; color:${moveColor};">${day.actual_return > 0 ? '+' : ''}${day.actual_return}%</td>
+                                <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b; color:${moveColor};">${actualReturnStr}</td>
                                 <td style="padding: 8px 10px; border-bottom: 1px solid #1e293b;">${resultBadge}</td>
                             </tr>
                         `;
