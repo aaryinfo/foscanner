@@ -48,7 +48,9 @@ try:
             "tithi": score_data['tithi'],
             "eclipse": score_data['eclipse'],
             "numerology_vib": score_data['numerology'],
-            "sector_bias": sector_bias
+            "sector_bias": sector_bias,
+            "sun_long": score_data.get('sun_long', 30.0),
+            "moon_long": score_data.get('moon_long', 150.0)
         })
     
     with open('astro_forecast.json', 'w', encoding='utf-8') as f:

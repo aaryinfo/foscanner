@@ -89,15 +89,18 @@ def calculate_daily_astro_score(date_obj: datetime.datetime) -> Dict[str, Any]:
         "eclipse": eclipse_status,
         "aspects": aspects,
         "retrogrades": retrogrades,
-        "numerology": date_vib
+        "numerology": date_vib,
+        "sun_long": sun_long,
+        "moon_long": moon_long
     }
 
-def calculate_stock_astro_score(date_obj: datetime.datetime, ticker: str, price: float) -> Dict[str, Any]:
+def calculate_stock_astro_score(date_obj: datetime.datetime, ticker: str, price: float, macro_report: Dict[str, Any] = None) -> Dict[str, Any]:
     """
     Computes a stock-specific Astro Bias Score by combining the global macro score
     with the Gann Square of 9 alignment of the stock's price to the Sun's longitude.
     """
-    macro_report = calculate_daily_astro_score(date_obj)
+    if macro_report is None:
+        macro_report = calculate_daily_astro_score(date_obj)
     base_score = macro_report['score']
     
     if not price or price <= 0:
@@ -108,9 +111,13 @@ def calculate_stock_astro_score(date_obj: datetime.datetime, ticker: str, price:
     price_angle = price_to_angle(price)
     
     # We need planetary positions for this date
-    pos = get_planetary_positions(date_obj, sidereal=True)
-    sun_long = pos['Sun']['longitude']
-    moon_long = pos['Moon']['longitude']
+    if 'sun_long' in macro_report and 'moon_long' in macro_report:
+        sun_long = macro_report['sun_long']
+        moon_long = macro_report['moon_long']
+    else:
+        pos = get_planetary_positions(date_obj, sidereal=True)
+        sun_long = pos['Sun']['longitude']
+        moon_long = pos['Moon']['longitude']
     
     # Continuous scoring function based on Gann angles
     # Gann considers 0, 90, 180, 270 as Hard/Volatile aspects.

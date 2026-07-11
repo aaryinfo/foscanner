@@ -53,7 +53,8 @@ def run_backtest(df: pd.DataFrame, ticker: str = "^NSEI") -> dict:
         
         # Stock-specific calculations require live math
         price = row['Close']
-        score_report = calculate_stock_astro_score(date_obj, ticker, price)
+        macro_report = precalculated_scores.get(date_str)
+        score_report = calculate_stock_astro_score(date_obj, ticker, price, macro_report)
         score = score_report['score']
             
         next_ret = row['Next_Day_Return']
