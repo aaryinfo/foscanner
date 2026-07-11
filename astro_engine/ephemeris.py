@@ -14,32 +14,90 @@ except ImportError:
     HAS_SWE = False
     
 if not HAS_SWE:
-    logging.warning("Using mock ephemeris data.")
-    class MockSwe:
-        SUN = 0; MOON = 1; MERCURY = 2; VENUS = 3; MARS = 4; JUPITER = 5; SATURN = 6
-        URANUS = 7; NEPTUNE = 8; PLUTO = 9; TRUE_NODE = 10
-        SIDM_LAHIRI = 1
-        FLG_SWIEPH = 2
-        FLG_SPEED = 256
-        FLG_SIDEREAL = 64 * 1024
-        FLG_MOSEPH = 4
-        
-        @staticmethod
-        def set_ephe_path(path): pass
-        @staticmethod
-        def set_sid_mode(mode): pass
-        @staticmethod
-        def julday(y, m, d, h): return 2451545.0 + d
-        @staticmethod
-        def calc_ut(jd, body, flags):
-            # Return different mock longitudes to avoid artificial eclipses and -100 scores
-            mock_longs = {
-                0: 30.0, # Sun at 30 deg
-                1: 150.0, # Moon at 150 deg
-                10: 210.0, # True Node at 210 deg
+    import logging
+    try:
+        import ephem
+        import math
+        logging.warning("Using ephem library for planetary positions.")
+        class MockSwe:
+            SUN = 0; MOON = 1; MERCURY = 2; VENUS = 3; MARS = 4; JUPITER = 5; SATURN = 6
+            URANUS = 7; NEPTUNE = 8; PLUTO = 9; TRUE_NODE = 10
+            SIDM_LAHIRI = 1
+            FLG_SWIEPH = 2
+            FLG_SPEED = 256
+            FLG_SIDEREAL = 64 * 1024
+            FLG_MOSEPH = 4
+            
+            _bodies = {
+                0: ephem.Sun, 1: ephem.Moon, 2: ephem.Mercury, 3: ephem.Venus,
+                4: ephem.Mars, 5: ephem.Jupiter, 6: ephem.Saturn, 7: ephem.Uranus,
+                8: ephem.Neptune, 9: ephem.Pluto
             }
-            return ([mock_longs.get(body, float(body * 10)), 0.0, 0.0, 1.0], 0)
-    swe = MockSwe()
+            
+            @staticmethod
+            def set_ephe_path(path): pass
+            @staticmethod
+            def set_sid_mode(mode): pass
+            @staticmethod
+            def julday(y, m, d, h): return 2451545.0 + d
+            
+            @staticmethod
+            def calc_ut(jd, body_id, flags):
+                try:
+                    # Convert jd to ephem datetime (JD 2415020.0 = Dec 31 1899)
+                    d_ephem = ephem.Date(jd - 2415020.0)
+                    date_obj = d_ephem.datetime()
+                    
+                    # Lahiri Ayanamsa approximation
+                    year = date_obj.year + (date_obj.timetuple().tm_yday / 365.25)
+                    ayanamsa = 24.1 + (year - 2000) * 0.01396
+                    
+                    if body_id == 10:
+                        # Rahu (True Node) moves retrograde ~19.34 deg/year
+                        # Epoch Jan 1, 2026 (JD ~2461041.5) = Sidereal 333.5
+                        rahu_lon = (333.5 - (jd - 2461041.5) * 0.05295) % 360
+                        return ([rahu_lon, 0.0, 0.0, -0.05295], 0)
+                        
+                    body = MockSwe._bodies[body_id](date_obj)
+                    ecl = ephem.Ecliptic(body)
+                    tropical_lon = math.degrees(ecl.lon)
+                    sidereal_lon = (tropical_lon - ayanamsa) % 360
+                    
+                    # Calculate speed
+                    d_tmrw = ephem.Date(jd + 1 - 2415020.0)
+                    body_tmrw = MockSwe._bodies[body_id](d_tmrw.datetime())
+                    ecl_tmrw = ephem.Ecliptic(body_tmrw)
+                    speed = math.degrees(ecl_tmrw.lon) - tropical_lon
+                    if speed > 180: speed -= 360
+                    elif speed < -180: speed += 360
+                    
+                    return ([sidereal_lon, 0.0, 0.0, speed], 0)
+                except Exception as e:
+                    logging.error(f"Ephem failed: {e}")
+                    return ([30.0, 0, 0, 1.0], 0)
+        swe = MockSwe()
+    except ImportError:
+        logging.warning("Using hardcoded mock ephemeris data (ephem not installed).")
+        class MockSwe:
+            SUN = 0; MOON = 1; MERCURY = 2; VENUS = 3; MARS = 4; JUPITER = 5; SATURN = 6
+            URANUS = 7; NEPTUNE = 8; PLUTO = 9; TRUE_NODE = 10
+            SIDM_LAHIRI = 1
+            FLG_SWIEPH = 2
+            FLG_SPEED = 256
+            FLG_SIDEREAL = 64 * 1024
+            FLG_MOSEPH = 4
+            
+            @staticmethod
+            def set_ephe_path(path): pass
+            @staticmethod
+            def set_sid_mode(mode): pass
+            @staticmethod
+            def julday(y, m, d, h): return 2451545.0 + d
+            @staticmethod
+            def calc_ut(jd, body, flags):
+                mock_longs = {0: 30.0, 1: 150.0, 10: 210.0}
+                return ([mock_longs.get(body, float(body * 10)), 0.0, 0.0, 1.0], 0)
+        swe = MockSwe()
 
 # Define the celestial bodies we care about
 PLANETS = {

@@ -1,26 +1,8 @@
 [
     {
-        "ticker": "^NDX",
-        "price": 29727.099609375,
-        "orb": 0.21262609086261364,
-        "alignment": "Sun aligned with Square of 9 price level (Aspect: 180\u00b0)"
-    },
-    {
-        "ticker": "TSLA",
-        "price": 406.54998779296875,
-        "orb": 0.6447398343343593,
-        "alignment": "Sun aligned with Square of 9 price level (Aspect: 135\u00b0)"
-    },
-    {
-        "ticker": "HDFCBANK.NS",
-        "price": 826.0,
-        "orb": 1.7611692480304555,
-        "alignment": "Sun aligned with Square of 9 price level (Aspect: 120\u00b0)"
-    },
-    {
-        "ticker": "INFY.NS",
-        "price": 1067.800048828125,
-        "orb": 1.8977874518732278,
+        "ticker": "TCS.NS",
+        "price": 2069.0,
+        "orb": 0.0352156221460973,
         "alignment": "Sun aligned with Square of 9 price level (Aspect: 135\u00b0)"
     }
 ]

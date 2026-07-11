@@ -8,3 +8,4 @@ pyswisseph
 APScheduler
 SQLAlchemy
 python-dotenv
+ephem

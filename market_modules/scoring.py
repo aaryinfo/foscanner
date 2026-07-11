@@ -64,7 +64,7 @@ def calculate_daily_astro_score(date_obj: datetime.datetime) -> Dict[str, Any]:
     else:
         base_score += 15 # Positive score for normal/favorable lunar days
         
-    if "Eclipse" in eclipse_status:
+    if eclipse_status != "No Eclipse":
         base_score -= 50 # Eclipses dominate and create high volatility/reversals
         
     total_score = base_score + aspect_score + retro_penalty
