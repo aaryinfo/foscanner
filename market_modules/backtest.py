@@ -91,15 +91,19 @@ def run_backtest(df: pd.DataFrame, ticker: str = "^NSEI") -> dict:
             # Pending result
             if score >= 30:
                 bullish_total += 1
+                is_hit_status = "Pending"
             elif score <= -30:
                 bearish_total += 1
+                is_hit_status = "Pending"
+            else:
+                is_hit_status = None
             
             day_by_day.append({
                 "date": date_str,
                 "score": score,
                 "bias": score_report['bias'],
                 "actual_return": "-",
-                "is_hit": "Pending"
+                "is_hit": is_hit_status
             })
             continue
 
