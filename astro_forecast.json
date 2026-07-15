@@ -1,197 +1,5 @@
 [
     {
-        "date": "2026-04-12",
-        "score": 54,
-        "bias": "Bullish",
-        "nakshatra": "Uttara Bhadrapada",
-        "tithi": "Tithi 7",
-        "eclipse": "No Eclipse",
-        "numerology_vib": 8,
-        "sector_bias": [
-            {
-                "sector": "Banking & Finance",
-                "emoji": "\ud83c\udfe6",
-                "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
-            },
-            {
-                "sector": "IT & Tech",
-                "emoji": "\ud83d\udcbb",
-                "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
-            },
-            {
-                "sector": "Auto & FMCG",
-                "emoji": "\ud83d\ude97",
-                "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
-            },
-            {
-                "sector": "Metals & Real Estate",
-                "emoji": "\ud83c\udfd7\ufe0f",
-                "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
-            },
-            {
-                "sector": "Energy & Pharma",
-                "emoji": "\u26a1",
-                "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
-            }
-        ],
-        "sun_long": 268.51075910632886,
-        "moon_long": 345.29559338243143
-    },
-    {
-        "date": "2026-04-13",
-        "score": 56,
-        "bias": "Bullish",
-        "nakshatra": "Revati",
-        "tithi": "Tithi 8",
-        "eclipse": "No Eclipse",
-        "numerology_vib": 9,
-        "sector_bias": [
-            {
-                "sector": "Banking & Finance",
-                "emoji": "\ud83c\udfe6",
-                "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
-            },
-            {
-                "sector": "IT & Tech",
-                "emoji": "\ud83d\udcbb",
-                "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
-            },
-            {
-                "sector": "Auto & FMCG",
-                "emoji": "\ud83d\ude97",
-                "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
-            },
-            {
-                "sector": "Metals & Real Estate",
-                "emoji": "\ud83c\udfd7\ufe0f",
-                "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
-            },
-            {
-                "sector": "Energy & Pharma",
-                "emoji": "\u26a1",
-                "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
-            }
-        ],
-        "sun_long": 269.5294516491799,
-        "moon_long": 358.7008340234781
-    },
-    {
-        "date": "2026-04-14",
-        "score": 6,
-        "bias": "Neutral",
-        "nakshatra": "Ashwini",
-        "tithi": "Tithi 9 (Rikta/Challenging)",
-        "eclipse": "No Eclipse",
-        "numerology_vib": 1,
-        "sector_bias": [
-            {
-                "sector": "Banking & Finance",
-                "emoji": "\ud83c\udfe6",
-                "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
-            },
-            {
-                "sector": "IT & Tech",
-                "emoji": "\ud83d\udcbb",
-                "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
-            },
-            {
-                "sector": "Auto & FMCG",
-                "emoji": "\ud83d\ude97",
-                "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
-            },
-            {
-                "sector": "Metals & Real Estate",
-                "emoji": "\ud83c\udfd7\ufe0f",
-                "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
-            },
-            {
-                "sector": "Energy & Pharma",
-                "emoji": "\u26a1",
-                "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
-            }
-        ],
-        "sun_long": 270.5479465515951,
-        "moon_long": 12.474771416595129
-    },
-    {
-        "date": "2026-04-15",
-        "score": 14,
-        "bias": "Neutral",
-        "nakshatra": "Bharani",
-        "tithi": "Tithi 10",
-        "eclipse": "No Eclipse",
-        "numerology_vib": 2,
-        "sector_bias": [
-            {
-                "sector": "Banking & Finance",
-                "emoji": "\ud83c\udfe6",
-                "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
-            },
-            {
-                "sector": "IT & Tech",
-                "emoji": "\ud83d\udcbb",
-                "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
-            },
-            {
-                "sector": "Auto & FMCG",
-                "emoji": "\ud83d\ude97",
-                "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
-            },
-            {
-                "sector": "Metals & Real Estate",
-                "emoji": "\ud83c\udfd7\ufe0f",
-                "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
-            },
-            {
-                "sector": "Energy & Pharma",
-                "emoji": "\u26a1",
-                "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
-            }
-        ],
-        "sun_long": 271.5662339514488,
-        "moon_long": 26.6249699109013
-    },
-    {
         "date": "2026-04-16",
         "score": 58,
         "bias": "Bullish",
@@ -211,8 +19,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -225,8 +33,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -266,8 +74,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bearish",
+                "reason": "Venus is in Scorpio (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -321,8 +129,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -348,8 +156,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -369,15 +177,15 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 275.63728902070585,
@@ -403,8 +211,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -424,8 +232,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 276.6545611723635,
@@ -444,8 +252,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -458,8 +266,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -492,8 +300,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -506,8 +314,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -561,8 +369,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -602,8 +410,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Venus is in Sagittarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -616,8 +424,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 280.7219865406508,
@@ -643,8 +451,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -684,8 +492,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -698,8 +506,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -739,15 +547,15 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -760,8 +568,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 283.7709292697744,
@@ -787,8 +595,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -801,8 +609,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -897,15 +705,15 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 286.8183019602388,
@@ -938,15 +746,15 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Conj Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -986,15 +794,15 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Conj Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -1020,8 +828,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -1068,15 +876,15 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Conj Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -1089,8 +897,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -1123,8 +931,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Conj Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -1144,8 +952,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Conj Moon)"
             }
         ],
         "sun_long": 261.3761907163715,
@@ -1164,8 +972,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -1192,8 +1000,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Conj Moon)"
             }
         ],
         "sun_long": 262.395742685262,
@@ -1226,8 +1034,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -1308,8 +1116,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -1329,8 +1137,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Conj Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -1363,22 +1171,22 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bearish",
+                "reason": "Venus is in Scorpio (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Conj Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -1432,8 +1240,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 267.49188356964896,
@@ -1466,8 +1274,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -1500,22 +1308,22 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Conj Moon)"
             },
             {
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Mercury is in Sagittarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -1528,8 +1336,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Sun is in Sagittarius (Hard Aspect Moon)"
             }
         ],
         "sun_long": 269.5294516491799,
@@ -1569,8 +1377,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -1603,8 +1411,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -1624,8 +1432,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 271.5662339514488,
@@ -1651,8 +1459,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -1665,8 +1473,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -1706,8 +1514,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bearish",
+                "reason": "Venus is in Scorpio (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -1761,8 +1569,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -1788,8 +1596,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -1809,15 +1617,15 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 275.63728902070585,
@@ -1843,8 +1651,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -1864,8 +1672,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 276.6545611723635,
@@ -1884,8 +1692,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -1898,8 +1706,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -1932,8 +1740,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -1946,8 +1754,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -2001,8 +1809,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -2042,8 +1850,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Venus is in Sagittarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -2056,8 +1864,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 280.7219865406508,
@@ -2083,8 +1891,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -2124,8 +1932,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -2138,8 +1946,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -2179,15 +1987,15 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -2200,8 +2008,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 283.7709292697744,
@@ -2227,8 +2035,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -2241,8 +2049,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -2337,15 +2145,15 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 286.8183019602388,
@@ -2364,15 +2172,15 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -2385,8 +2193,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -2426,15 +2234,15 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Conj Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -2474,15 +2282,15 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Conj Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -2508,8 +2316,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -2556,15 +2364,15 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Conj Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -2577,8 +2385,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -2611,8 +2419,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Conj Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -2632,8 +2440,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Conj Moon)"
             }
         ],
         "sun_long": 261.3761907163715,
@@ -2652,8 +2460,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -2680,8 +2488,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Conj Moon)"
             }
         ],
         "sun_long": 262.395742685262,
@@ -2714,8 +2522,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -2796,8 +2604,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -2817,8 +2625,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Conj Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -2851,22 +2659,22 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bearish",
+                "reason": "Venus is in Scorpio (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Conj Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -2920,8 +2728,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 267.49188356964896,
@@ -2954,8 +2762,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -2988,22 +2796,22 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Conj Moon)"
             },
             {
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Mercury is in Sagittarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -3016,8 +2824,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Sun is in Sagittarius (Hard Aspect Moon)"
             }
         ],
         "sun_long": 269.5294516491799,
@@ -3057,8 +2865,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -3091,8 +2899,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -3112,8 +2920,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 271.5662339514488,
@@ -3139,8 +2947,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -3153,8 +2961,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -3194,8 +3002,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bearish",
+                "reason": "Venus is in Scorpio (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -3249,8 +3057,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -3276,8 +3084,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -3297,15 +3105,15 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 275.63728902070585,
@@ -3331,8 +3139,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -3352,8 +3160,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 276.6545611723635,
@@ -3372,8 +3180,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -3386,8 +3194,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -3420,8 +3228,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -3434,8 +3242,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -3489,8 +3297,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -3530,8 +3338,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Venus is in Sagittarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -3544,8 +3352,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 280.7219865406508,
@@ -3571,8 +3379,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -3612,8 +3420,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -3626,8 +3434,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -3667,15 +3475,15 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -3688,8 +3496,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 283.7709292697744,
@@ -3715,8 +3523,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -3729,8 +3537,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -3825,15 +3633,15 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 286.8183019602388,
@@ -3866,15 +3674,15 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Conj Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -3914,15 +3722,15 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Conj Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -3948,8 +3756,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -3996,15 +3804,15 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Conj Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -4017,8 +3825,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -4051,8 +3859,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Conj Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -4072,8 +3880,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Conj Moon)"
             }
         ],
         "sun_long": 261.3761907163715,
@@ -4092,8 +3900,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -4120,8 +3928,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Conj Moon)"
             }
         ],
         "sun_long": 262.395742685262,
@@ -4154,8 +3962,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -4236,8 +4044,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -4257,8 +4065,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Conj Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -4291,22 +4099,22 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Mercury is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bearish",
+                "reason": "Venus is in Scorpio (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Conj Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -4360,8 +4168,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Sun is in Sagittarius (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 267.49188356964896,
@@ -4394,8 +4202,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -4428,22 +4236,22 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Conj Moon)"
             },
             {
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Mercury is in Sagittarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bullish",
+                "reason": "Venus is in Scorpio (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -4456,8 +4264,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Sagittarius"
+                "bias": "Bearish",
+                "reason": "Sun is in Sagittarius (Hard Aspect Moon)"
             }
         ],
         "sun_long": 269.5294516491799,
@@ -4497,8 +4305,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -4531,8 +4339,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -4552,8 +4360,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
             }
         ],
         "sun_long": 271.5662339514488,
@@ -4579,8 +4387,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -4593,8 +4401,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -4634,8 +4442,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Scorpio"
+                "bias": "Bearish",
+                "reason": "Venus is in Scorpio (Hard Aspect Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -4689,8 +4497,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -4716,8 +4524,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -4737,15 +4545,15 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 275.63728902070585,
@@ -4771,8 +4579,8 @@
                 "sector": "IT & Tech",
                 "emoji": "\ud83d\udcbb",
                 "planet": "Mercury",
-                "bias": "Neutral",
-                "reason": "Mercury is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
             },
             {
                 "sector": "Auto & FMCG",
@@ -4792,8 +4600,8 @@
                 "sector": "Energy & Pharma",
                 "emoji": "\u26a1",
                 "planet": "Sun",
-                "bias": "Neutral",
-                "reason": "Sun is in Capricorn"
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
             }
         ],
         "sun_long": 276.6545611723635,
@@ -4812,8 +4620,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -4826,8 +4634,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -4860,8 +4668,8 @@
                 "sector": "Banking & Finance",
                 "emoji": "\ud83c\udfe6",
                 "planet": "Jupiter",
-                "bias": "Neutral",
-                "reason": "Jupiter is in Aries"
+                "bias": "Bullish",
+                "reason": "Jupiter is in Aries (Trine/Sextile Moon)"
             },
             {
                 "sector": "IT & Tech",
@@ -4874,8 +4682,8 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
-                "bias": "Neutral",
-                "reason": "Venus is in Sagittarius"
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
             },
             {
                 "sector": "Metals & Real Estate",
@@ -4929,8 +4737,8 @@
                 "sector": "Metals & Real Estate",
                 "emoji": "\ud83c\udfd7\ufe0f",
                 "planet": "Mars",
-                "bias": "Neutral",
-                "reason": "Mars is in Aquarius"
+                "bias": "Bearish",
+                "reason": "Mars is in Aquarius (Hard Aspect Moon)"
             },
             {
                 "sector": "Energy & Pharma",
@@ -4970,6 +4778,54 @@
                 "sector": "Auto & FMCG",
                 "emoji": "\ud83d\ude97",
                 "planet": "Venus",
+                "bias": "Bearish",
+                "reason": "Venus is in Sagittarius (Hard Aspect Moon)"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Aquarius"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Bullish",
+                "reason": "Sun is in Capricorn (Trine/Sextile Moon)"
+            }
+        ],
+        "sun_long": 280.7219865406508,
+        "moon_long": 157.48393395411986
+    },
+    {
+        "date": "2026-07-25",
+        "score": 38,
+        "bias": "Bullish",
+        "nakshatra": "Hasta",
+        "tithi": "Tithi 21",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 6,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Neutral",
+                "reason": "Jupiter is in Aries"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bullish",
+                "reason": "Mercury is in Capricorn (Trine/Sextile Moon)"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
                 "bias": "Neutral",
                 "reason": "Venus is in Sagittarius"
             },
@@ -4988,17 +4844,161 @@
                 "reason": "Sun is in Capricorn"
             }
         ],
-        "sun_long": 280.7219865406508,
-        "moon_long": 157.48393395411986
+        "sun_long": 281.7384578405337,
+        "moon_long": 170.5820205408994
     },
     {
-        "date": "2026-07-25",
-        "score": 38,
-        "bias": "Bullish",
-        "nakshatra": "Hasta",
-        "tithi": "Tithi 21",
+        "date": "2026-07-26",
+        "score": 6,
+        "bias": "Neutral",
+        "nakshatra": "Chitra",
+        "tithi": "Tithi 22",
         "eclipse": "No Eclipse",
-        "numerology_vib": 6,
+        "numerology_vib": 7,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Bearish",
+                "reason": "Jupiter is in Aries (Hard Aspect Moon)"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Neutral",
+                "reason": "Mercury is in Capricorn"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Aquarius"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Capricorn"
+            }
+        ],
+        "sun_long": 282.7547745113627,
+        "moon_long": 183.2885301147395
+    },
+    {
+        "date": "2026-07-27",
+        "score": 5,
+        "bias": "Neutral",
+        "nakshatra": "Swati",
+        "tithi": "Tithi 23",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 8,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Neutral",
+                "reason": "Jupiter is in Aries"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Bullish",
+                "reason": "Venus is in Sagittarius (Trine/Sextile Moon)"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Neutral",
+                "reason": "Mars is in Aquarius"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Bearish",
+                "reason": "Sun is in Capricorn (Hard Aspect Moon)"
+            }
+        ],
+        "sun_long": 283.7709292697744,
+        "moon_long": 195.66444495405824
+    },
+    {
+        "date": "2026-07-28",
+        "score": -7,
+        "bias": "Neutral",
+        "nakshatra": "Vishakha",
+        "tithi": "Tithi 24 (Rikta/Challenging)",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 9,
+        "sector_bias": [
+            {
+                "sector": "Banking & Finance",
+                "emoji": "\ud83c\udfe6",
+                "planet": "Jupiter",
+                "bias": "Neutral",
+                "reason": "Jupiter is in Aries"
+            },
+            {
+                "sector": "IT & Tech",
+                "emoji": "\ud83d\udcbb",
+                "planet": "Mercury",
+                "bias": "Bearish",
+                "reason": "Mercury is in Capricorn (Hard Aspect Moon)"
+            },
+            {
+                "sector": "Auto & FMCG",
+                "emoji": "\ud83d\ude97",
+                "planet": "Venus",
+                "bias": "Neutral",
+                "reason": "Venus is in Sagittarius"
+            },
+            {
+                "sector": "Metals & Real Estate",
+                "emoji": "\ud83c\udfd7\ufe0f",
+                "planet": "Mars",
+                "bias": "Bullish",
+                "reason": "Mars is in Aquarius (Trine/Sextile Moon)"
+            },
+            {
+                "sector": "Energy & Pharma",
+                "emoji": "\u26a1",
+                "planet": "Sun",
+                "bias": "Neutral",
+                "reason": "Sun is in Capricorn"
+            }
+        ],
+        "sun_long": 284.78691141547483,
+        "moon_long": 207.78278530696048
+    },
+    {
+        "date": "2026-07-29",
+        "score": 48,
+        "bias": "Bullish",
+        "nakshatra": "Anuradha",
+        "tithi": "Tithi 25",
+        "eclipse": "No Eclipse",
+        "numerology_vib": 1,
         "sector_bias": [
             {
                 "sector": "Banking & Finance",
@@ -5036,7 +5036,7 @@
                 "reason": "Sun is in Capricorn"
             }
         ],
-        "sun_long": 281.7384578405337,
-        "moon_long": 170.5820205408994
+        "sun_long": 285.8027074934682,
+        "moon_long": 219.72119963046924
     }
 ]

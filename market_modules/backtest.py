@@ -67,7 +67,7 @@ def run_backtest(df: pd.DataFrame, ticker: str = "^NSEI") -> dict:
             day_by_day.append({
                 "date": date_str,
                 "score": "-",
-                "bias": "Pending/No Data",
+                "bias": "Awaiting Market Data (YF Delay)",
                 "actual_return": "-",
                 "is_hit": "Pending"
             })
