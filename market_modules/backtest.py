@@ -98,7 +98,7 @@ def run_backtest(df: pd.DataFrame, ticker: str = "^NSEI") -> dict:
                 "date": date_str,
                 "score": score,
                 "bias": score_report['bias'],
-                "actual_return": round(row['Daily_Return'], 2) if pd.notnull(row['Daily_Return']) else 0.0,
+                "actual_return": "-",
                 "is_hit": "Pending"
             })
             continue
