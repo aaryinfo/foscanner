@@ -51,7 +51,13 @@ def get_current_price(ticker: str) -> Optional[float]:
     return None
 
 def get_all_tickers() -> List[str]:
-    return list(NSE_INDICES.values()) + list(US_INDICES.values()) + NSE_STOCKS + US_STOCKS
+    try:
+        from gann_app import FNO_STOCKS, GLOBAL_ASSETS
+        nse_tickers = [item["symbol"] + ".NS" if not item["symbol"].endswith(".NS") and not item["symbol"].startswith("^") else item["symbol"] for item in FNO_STOCKS]
+        global_tickers = [item["symbol"] for item in GLOBAL_ASSETS]
+        return list(NSE_INDICES.values()) + nse_tickers + global_tickers
+    except ImportError:
+        return list(NSE_INDICES.values()) + list(US_INDICES.values()) + NSE_STOCKS + US_STOCKS
 
 if __name__ == "__main__":
     df = fetch_historical_data("^NSEI", period="1mo")

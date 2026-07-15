@@ -253,6 +253,24 @@ def calculate_sector_bias(date_obj: datetime.datetime) -> List[Dict]:
         if is_retro and planet not in ['Sun', 'Moon']:
             score -= 1  # Retrograde creates uncertainty/weakness
             
+        # Add dynamic daily factor based on Moon's aspect to the planet
+        moon_long = pos['Moon']['longitude']
+        planet_long = p_data['longitude']
+        diff = abs(moon_long - planet_long)
+        if diff > 180:
+            diff = 360 - diff
+            
+        moon_aspect_str = ""
+        if diff <= 10:  # Conjunction
+            score += 1
+            moon_aspect_str = " (Conj Moon)"
+        elif abs(diff - 120) <= 8 or abs(diff - 60) <= 6: # Trine / Sextile
+            score += 1
+            moon_aspect_str = " (Trine/Sextile Moon)"
+        elif abs(diff - 90) <= 8 or abs(diff - 180) <= 10: # Square / Opposition
+            score -= 1
+            moon_aspect_str = " (Hard Aspect Moon)"
+            
         bias = "Neutral"
         if score >= 1:
             bias = "Bullish"
@@ -265,6 +283,8 @@ def calculate_sector_bias(date_obj: datetime.datetime) -> List[Dict]:
             reason += f" ({dignity})"
         if is_retro:
             reason += " [Retrograde]"
+        if moon_aspect_str:
+            reason += moon_aspect_str
             
         results.append({
             "sector": sec['name'],
